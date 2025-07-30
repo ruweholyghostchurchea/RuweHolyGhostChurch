@@ -4,8 +4,8 @@ from members.models import Member
 
 class Service(models.Model):
     SERVICE_TYPES = [
-        ('sunday_morning', 'Sunday Morning Service'),
-        ('sunday_evening', 'Sunday Evening Service'),
+        ('saturday_morning', 'Saturday Morning Sabbath'),
+        ('saturday_evening', 'Saturday Evening Service'),
         ('wednesday', 'Wednesday Service'),
         ('prayer_meeting', 'Prayer Meeting'),
         ('bible_study', 'Bible Study'),

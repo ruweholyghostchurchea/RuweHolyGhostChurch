@@ -63,8 +63,8 @@ def index(request):
     # Upcoming events (can be moved to a separate Event model later)
     upcoming_events = [
         {
-            'title': 'Sunday Morning Service',
-            'date': 'Dec 29, 2024',
+            'title': 'Saturday Sabbath Service',
+            'date': 'Dec 28, 2024',
             'time': '9:00 AM',
             'location': 'Main Sanctuary'
         },

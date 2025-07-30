@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #dc2626 0%, #1f2937 50%, #000000 100%);
+    background: #1a1a1a;
     min-height: 100vh;
     color: #ffffff;
 }
@@ -21,8 +21,7 @@ body {
 /* Sidebar */
 .sidebar {
     width: 280px;
-    background: linear-gradient(180deg, rgba(220, 38, 38, 0.9) 0%, rgba(31, 41, 55, 0.95) 50%, rgba(0, 0, 0, 0.9) 100%);
-    backdrop-filter: blur(10px);
+    background: #2d2d2d;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     padding: 20px 0;
     position: fixed;
@@ -98,13 +97,11 @@ body {
     margin-left: 280px;
     flex: 1;
     padding: 0;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+    background: #242424;
 }
 
 .topbar {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
+    background: #333333;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 20px 30px;
     display: flex;
@@ -136,13 +133,12 @@ body {
 
 /* Cards */
 .card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: #363636;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 25px;
     margin-bottom: 25px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -173,8 +169,7 @@ body {
 }
 
 .stat-card {
-    background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-    backdrop-filter: blur(10px);
+    background: #404040;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 25px;
@@ -183,7 +178,7 @@ body {
 }
 
 .stat-card:hover {
-    background: linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(255, 255, 255, 0.15) 100%);
+    background: #4a4a4a;
     transform: translateY(-5px);
 }
 
@@ -253,11 +248,10 @@ body {
 .form-control {
     width: 100%;
     padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.1);
+    background: #404040;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     color: #ffffff;
-    backdrop-filter: blur(10px);
 }
 
 .form-control:focus {
@@ -273,7 +267,7 @@ body {
 /* Tables */
 .table-responsive {
     overflow-x: auto;
-    background: rgba(255, 255, 255, 0.05);
+    background: #363636;
     border-radius: 10px;
     padding: 20px;
 }
@@ -291,7 +285,7 @@ body {
 }
 
 .table th {
-    background: rgba(220, 38, 38, 0.2);
+    background: #dc2626;
     color: #ffffff;
     font-weight: 600;
 }
@@ -301,7 +295,7 @@ body {
 }
 
 .table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: #404040;
 }
 
 /* Responsive design */
