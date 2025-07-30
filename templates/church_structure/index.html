@@ -6,229 +6,215 @@
 {% block page_title %}Church Structure{% endblock %}
 
 {% block content %}
-<!-- Statistics Cards -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <i class="fas fa-globe"></i>
-        <h3>{{ stats.countries }}</h3>
-        <p>Countries</p>
-    </div>
-    <div class="stat-card">
-        <i class="fas fa-crown"></i>
-        <h3>{{ stats.total_dioceses }}</h3>
-        <p>Dioceses</p>
-    </div>
-    <div class="stat-card">
-        <i class="fas fa-users"></i>
-        <h3>{{ stats.total_pastorates }}</h3>
-        <p>Pastorates</p>
-    </div>
-    <div class="stat-card">
-        <i class="fas fa-church"></i>
-        <h3>{{ stats.total_churches }}</h3>
-        <p>Churches</p>
-    </div>
-</div>
-
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
-    <!-- Church Hierarchy -->
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px;">
+    <!-- Diocese Management -->
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">
-                <i class="fas fa-sitemap" style="color: #dc2626; margin-right: 10px;"></i>
-                Church Hierarchy
+                <i class="fas fa-church" style="color: #dc2626; margin-right: 10px;"></i>
+                Diocese Management
             </h5>
         </div>
-        <div style="padding: 20px;">
-            <div style="background: rgba(220, 38, 38, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <h6 style="color: #dc2626; margin: 0; font-weight: 600;">
-                    <i class="fas fa-crown" style="margin-right: 8px;"></i>
-                    HEADQUARTERS - RUWE SUBLOCATION
-                </h6>
-                <p style="margin: 5px 0 0 0; color: #e5e7eb; font-size: 0.9rem;">
-                    Archbishop at Siaya County
-                </p>
-            </div>
-            
-            {% for diocese in dioceses|slice:":5" %}
-            <div style="margin-left: 20px; margin-bottom: 10px;">
-                <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 6px; border-left: 3px solid #dc2626;">
-                    <h6 style="color: #ffffff; margin: 0; font-weight: 500;">
-                        <i class="fas fa-map-marked-alt" style="margin-right: 8px; color: #dc2626;"></i>
-                        {{ diocese.name }} - {{ diocese.country }}
-                    </h6>
-                    <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 0.8rem;">
-                        Bishop: {{ diocese.bishop_name }}
-                    </p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">
-                <i class="fas fa-plus-circle" style="color: #dc2626; margin-right: 10px;"></i>
-                Add New Structure
-            </h5>
-        </div>
-        <div style="padding: 20px;">
-            <!-- Add Diocese Form -->
-            <form method="post" action="{% url 'church_structure:add_diocese' %}" style="margin-bottom: 25px;">
+        <div style="margin-top: 20px;">
+            <form method="POST" action="{% url 'church_structure:add_diocese' %}" style="margin-bottom: 20px;">
                 {% csrf_token %}
-                <h6 style="color: #ffffff; margin-bottom: 15px;">Add New Diocese</h6>
-                <div style="margin-bottom: 10px;">
-                    <input type="text" name="name" placeholder="Diocese Name" required
-                           style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <select name="country" required
-                            style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                        <option value="">Select Country</option>
-                        <option value="Kenya">Kenya</option>
-                        <option value="Uganda">Uganda</option>
-                        <option value="Tanzania">Tanzania</option>
-                    </select>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <input type="text" name="bishop_name" placeholder="Bishop Name" required
-                           style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                </div>
+                <input type="text" name="name" placeholder="Diocese Name" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="text" name="location" placeholder="Location" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="text" name="bishop" placeholder="Bishop Name" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Diocese</button>
             </form>
+            
+            <div class="dioceses-list">
+                <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Dioceses ({{ dioceses.count }})</h6>
+                {% for diocese in dioceses %}
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+                    <strong style="color: #ffffff;">{{ diocese.name }}</strong><br>
+                    <small style="color: #9ca3af;">{{ diocese.location }} - Bishop: {{ diocese.bishop }}</small>
+                </div>
+                {% empty %}
+                <p style="color: #9ca3af; font-style: italic;">No dioceses added yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-            <!-- Add Pastorate Form -->
-            <form method="post" action="{% url 'church_structure:add_pastorate' %}" style="margin-bottom: 25px;">
+    <!-- Pastorate Management -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-users" style="color: #dc2626; margin-right: 10px;"></i>
+                Pastorate Management
+            </h5>
+        </div>
+        <div style="margin-top: 20px;">
+            <form method="POST" action="{% url 'church_structure:add_pastorate' %}" style="margin-bottom: 20px;">
                 {% csrf_token %}
-                <h6 style="color: #ffffff; margin-bottom: 15px;">Add New Pastorate</h6>
-                <div style="margin-bottom: 10px;">
-                    <select name="diocese_id" id="diocese-select" required
-                            style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                        <option value="">Select Diocese</option>
-                        {% for diocese in dioceses %}
-                        <option value="{{ diocese.id }}">{{ diocese.name }} - {{ diocese.country }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <input type="text" name="name" placeholder="Pastorate Name" required
-                           style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <input type="text" name="pastor_name" placeholder="Pastor Name" required
-                           style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                </div>
+                <select name="diocese" required 
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Diocese</option>
+                    {% for diocese in dioceses %}
+                    <option value="{{ diocese.id }}">{{ diocese.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="name" placeholder="Pastorate Name" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="text" name="location" placeholder="Location" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="text" name="pastor" placeholder="Pastor Name" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Pastorate</button>
             </form>
+            
+            <div class="pastorates-list">
+                <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Pastorates ({{ pastorates.count }})</h6>
+                {% for pastorate in pastorates %}
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+                    <strong style="color: #ffffff;">{{ pastorate.name }}</strong><br>
+                    <small style="color: #9ca3af;">{{ pastorate.location }} - Pastor: {{ pastorate.pastor }}</small><br>
+                    <small style="color: #dc2626;">Diocese: {{ pastorate.diocese.name }}</small>
+                </div>
+                {% empty %}
+                <p style="color: #9ca3af; font-style: italic;">No pastorates added yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-            <!-- Add Church Form -->
-            <form method="post" action="{% url 'church_structure:add_church' %}">
+    <!-- Church Management -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-home" style="color: #dc2626; margin-right: 10px;"></i>
+                Church Management
+            </h5>
+        </div>
+        <div style="margin-top: 20px;">
+            <form method="POST" action="{% url 'church_structure:add_church' %}" style="margin-bottom: 20px;">
                 {% csrf_token %}
-                <h6 style="color: #ffffff; margin-bottom: 15px;">Add New Church</h6>
-                <div style="margin-bottom: 10px;">
-                    <select name="diocese_id" id="church-diocese-select" required onchange="loadPastorates(this.value, 'church-pastorate-select')"
-                            style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                        <option value="">Select Diocese</option>
-                        {% for diocese in dioceses %}
-                        <option value="{{ diocese.id }}">{{ diocese.name }} - {{ diocese.country }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <select name="pastorate_id" id="church-pastorate-select" required
-                            style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                        <option value="">Select Pastorate</option>
-                    </select>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <input type="text" name="name" placeholder="Church Name" required
-                           style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <input type="text" name="address" placeholder="Church Address" required
-                           style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <input type="text" name="head_teacher_name" placeholder="Head Teacher Name" required
-                           style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #ffffff;">
-                </div>
+                <select name="diocese" id="diocese-select" required 
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Diocese</option>
+                    {% for diocese in dioceses %}
+                    <option value="{{ diocese.id }}">{{ diocese.name }}</option>
+                    {% endfor %}
+                </select>
+                <select name="pastorate" id="pastorate-select" required 
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Pastorate</option>
+                </select>
+                <input type="text" name="name" placeholder="Church Name" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="text" name="location" placeholder="Location" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="text" name="teacher" placeholder="Church Teacher" required 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Church</button>
             </form>
+            
+            <div class="churches-list">
+                <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Churches ({{ churches.count }})</h6>
+                {% for church in churches %}
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+                    <strong style="color: #ffffff;">{{ church.name }}</strong><br>
+                    <small style="color: #9ca3af;">{{ church.location }} - Teacher: {{ church.teacher }}</small><br>
+                    <small style="color: #dc2626;">Pastorate: {{ church.pastorate.name }}</small>
+                </div>
+                {% empty %}
+                <p style="color: #9ca3af; font-style: italic;">No churches added yet.</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Structure Overview -->
+<!-- Hierarchical Structure Overview -->
 <div class="card" style="margin-top: 30px;">
     <div class="card-header">
         <h5 class="card-title">
-            <i class="fas fa-list" style="color: #dc2626; margin-right: 10px;"></i>
-            Structure Overview
+            <i class="fas fa-sitemap" style="color: #dc2626; margin-right: 10px;"></i>
+            Church Hierarchical Structure Overview
         </h5>
     </div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 20px;">
-        <!-- Dioceses -->
-        <div>
-            <h6 style="color: #dc2626; margin-bottom: 15px;">Recent Dioceses</h6>
-            {% for diocese in dioceses|slice:":5" %}
-            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; margin-bottom: 8px;">
-                <div style="color: #ffffff; font-weight: 500;">{{ diocese.name }}</div>
-                <div style="color: #9ca3af; font-size: 0.8rem;">{{ diocese.country }} • Bishop: {{ diocese.bishop_name }}</div>
+    <div style="margin-top: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="background: #dc2626; color: white; padding: 15px; border-radius: 8px; display: inline-block;">
+                <i class="fas fa-crown" style="margin-right: 10px;"></i>
+                <strong>HEADQUARTERS - RUWE</strong><br>
+                <small>Archbishop Leadership</small>
             </div>
-            {% endfor %}
         </div>
         
-        <!-- Pastorates -->
-        <div>
-            <h6 style="color: #dc2626; margin-bottom: 15px;">Recent Pastorates</h6>
-            {% for pastorate in pastorates %}
-            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; margin-bottom: 8px;">
-                <div style="color: #ffffff; font-weight: 500;">{{ pastorate.name }}</div>
-                <div style="color: #9ca3af; font-size: 0.8rem;">{{ pastorate.diocese.name }} • Pastor: {{ pastorate.pastor_name }}</div>
+        {% for diocese in dioceses %}
+        <div style="margin-bottom: 30px; border-left: 3px solid #dc2626; padding-left: 20px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px;">
+                <i class="fas fa-church" style="color: #dc2626; margin-right: 10px;"></i>
+                {{ diocese.name }} Diocese - Bishop: {{ diocese.bishop }}
+            </h6>
+            
+            {% for pastorate in diocese.pastorate_set.all %}
+            <div style="margin-left: 20px; margin-bottom: 15px; border-left: 2px solid #6b7280; padding-left: 15px;">
+                <strong style="color: #e5e7eb;">
+                    <i class="fas fa-users" style="color: #dc2626; margin-right: 8px;"></i>
+                    {{ pastorate.name }} Pastorate - Pastor: {{ pastorate.pastor }}
+                </strong>
+                
+                <div style="margin-top: 10px;">
+                    {% for church in pastorate.church_set.all %}
+                    <div style="margin-left: 20px; margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                        <i class="fas fa-home" style="color: #dc2626; margin-right: 8px;"></i>
+                        <span style="color: #ffffff;">{{ church.name }} - {{ church.location }}</span>
+                        <small style="color: #9ca3af; margin-left: 10px;">Teacher: {{ church.teacher }}</small>
+                    </div>
+                    {% empty %}
+                    <div style="margin-left: 20px; color: #9ca3af; font-style: italic;">
+                        <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                        No churches in this pastorate yet
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <div style="margin-left: 20px; color: #9ca3af; font-style: italic;">
+                <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                No pastorates in this diocese yet
             </div>
             {% endfor %}
         </div>
-        
-        <!-- Churches -->
-        <div>
-            <h6 style="color: #dc2626; margin-bottom: 15px;">Recent Churches</h6>
-            {% for church in churches %}
-            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; margin-bottom: 8px;">
-                <div style="color: #ffffff; font-weight: 500;">{{ church.name }}</div>
-                <div style="color: #9ca3af; font-size: 0.8rem;">{{ church.pastorate.name }} • Teacher: {{ church.head_teacher_name }}</div>
-            </div>
-            {% endfor %}
+        {% empty %}
+        <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+            <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+            No church structure data available yet. Start by adding dioceses.
         </div>
+        {% endfor %}
     </div>
 </div>
 
 <script>
-function loadPastorates(dioceseId, targetSelectId) {
-    const pastorateSelect = document.getElementById(targetSelectId);
-    pastorateSelect.innerHTML = '<option value="">Loading...</option>';
+// Cascading dropdown functionality
+document.getElementById('diocese-select').addEventListener('change', function() {
+    const dioceseId = this.value;
+    const pastorateSelect = document.getElementById('pastorate-select');
     
-    if (!dioceseId) {
-        pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-        return;
+    // Clear pastorate dropdown
+    pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+    
+    if (dioceseId) {
+        // Fetch pastorates for selected diocese
+        fetch(`/church-structure/api/pastorates/${dioceseId}/`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(pastorate => {
+                    const option = document.createElement('option');
+                    option.value = pastorate.id;
+                    option.textContent = pastorate.name;
+                    pastorateSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
     }
-    
-    fetch(`/church-structure/api/pastorates/${dioceseId}/`)
-        .then(response => response.json())
-        .then(data => {
-            pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-            data.forEach(pastorate => {
-                const option = document.createElement('option');
-                option.value = pastorate.id;
-                option.textContent = pastorate.name;
-                pastorateSelect.appendChild(option);
-            });
-        })
-        .catch(error => {
-            console.error('Error loading pastorates:', error);
-            pastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
-        });
-}
+});
 </script>
 {% endblock %}
