@@ -5,4 +5,20 @@ run = "pip install django"
 channel = "stable-25_05"
 
 [deployment]
-run = ["sh", "-c", "pip install django"]
+run = ["sh", "-c", "python manage.py runserver 0.0.0.0:5000"]
+
+[workflows]
+runButton = "Django Development Server"
+
+[[workflows.workflow]]
+name = "Django Development Server"
+author = 45763594
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py migrate"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py runserver 0.0.0.0:5000"

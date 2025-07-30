@@ -1,3 +1,9 @@
+
 from django.shortcuts import render
 
-# Create your views here.
+def index(request):
+    """Finance main view"""
+    context = {
+        'page_title': 'Financial Management'
+    }
+    return render(request, 'finance/index.html', context)

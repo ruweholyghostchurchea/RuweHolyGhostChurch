@@ -1,3 +1,9 @@
+
 from django.shortcuts import render
 
-# Create your views here.
+def index(request):
+    """Bulk SMS main view"""
+    context = {
+        'page_title': 'Bulk SMS Management'
+    }
+    return render(request, 'bulk_sms/index.html', context)

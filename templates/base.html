@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RuweHolyGhostChurch - Church Management System{% endblock %}</title>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-church church-icon"></i>
+                <h3>RuweHolyGhost<br>Church</h3>
+            </div>
+            
+            <div class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="{% url 'dashboard:index' %}" class="{% if request.resolver_match.app_name == 'dashboard' %}active{% endif %}">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'members:index' %}" class="{% if request.resolver_match.app_name == 'members' %}active{% endif %}">
+                            <i class="fas fa-users"></i>
+                            <span>Members</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'visitors:index' %}" class="{% if request.resolver_match.app_name == 'visitors' %}active{% endif %}">
+                            <i class="fas fa-user-friends"></i>
+                            <span>Visitors</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'attendance:index' %}" class="{% if request.resolver_match.app_name == 'attendance' %}active{% endif %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Attendance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'finance:index' %}" class="{% if request.resolver_match.app_name == 'finance' %}active{% endif %}">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>Finance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'bulk_sms:index' %}" class="{% if request.resolver_match.app_name == 'bulk_sms' %}active{% endif %}">
+                            <i class="fas fa-sms"></i>
+                            <span>Bulk SMS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'equipment:index' %}" class="{% if request.resolver_match.app_name == 'equipment' %}active{% endif %}">
+                            <i class="fas fa-tools"></i>
+                            <span>Equipment</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'reports:index' %}" class="{% if request.resolver_match.app_name == 'reports' %}active{% endif %}">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'church_settings:index' %}" class="{% if request.resolver_match.app_name == 'church_settings' %}active{% endif %}">
+                            <i class="fas fa-cogs"></i>
+                            <span>Church Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div>
+                    <button class="btn btn-secondary d-md-none" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h4>{% block page_title %}Dashboard{% endblock %}</h4>
+                </div>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Church Administrator</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area fade-in">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar toggle for mobile
+        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('sidebarToggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !toggle?.contains(event.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Smooth transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('.sidebar-nav a');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.href !== window.location.href) {
+                        document.body.classList.add('fade-out');
+                    }
+                });
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,3 +1,9 @@
+
 from django.shortcuts import render
 
-# Create your views here.
+def index(request):
+    """Equipment main view"""
+    context = {
+        'page_title': 'Equipment Management'
+    }
+    return render(request, 'equipment/index.html', context)
