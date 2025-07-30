@@ -33,6 +33,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{% url 'church_structure:index' %}" class="{% if request.resolver_match.app_name == 'church_structure' %}active{% endif %}">
+                            <i class="fas fa-sitemap"></i>
+                            <span>Church Structure</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{% url 'members:index' %}" class="{% if request.resolver_match.app_name == 'members' %}active{% endif %}">
                             <i class="fas fa-users"></i>
                             <span>Members</span>

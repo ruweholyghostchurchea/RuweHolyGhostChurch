@@ -37,6 +37,23 @@ The Ruwe Holy Ghost Church traces its origin back to 1906/07 and was founded by 
 - **UI Framework**: Custom responsive design with FontAwesome icons
 - **Styling**: Professional dark theme with red accent colors
 
+## Church Structure Management
+
+The system includes a comprehensive hierarchical church structure management module:
+
+### Hierarchy Levels
+1. **Headquarters** - Located at Ruwe Sublocation, Siaya County (led by Archbishop)
+2. **Diocese** - Regional divisions headed by Bishops (12+ across Kenya, Uganda, Tanzania)
+3. **Pastorate** - Groups of 2+ churches headed by Pastors (75+ total)
+4. **Church** - Individual church units headed by Church Teachers (200+ total)
+
+### Features
+- **Cascading Dropdowns**: Dynamic selection of Diocese → Pastorate → Church
+- **Multi-Country Support**: Kenya (main), Uganda, and Tanzania
+- **Administrative Controls**: Add new dioceses, pastorates, and churches
+- **Comprehensive Records**: Contact information for all leadership levels
+- **Real-time Statistics**: Live counts and hierarchical overview
+
 ## Installation & Setup
 
 1. **Clone the repository**
