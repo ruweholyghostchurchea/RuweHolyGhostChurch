@@ -18,11 +18,20 @@
         <div style="margin-top: 20px;">
             <form method="POST" action="{% url 'church_structure:add_diocese' %}" style="margin-bottom: 20px;">
                 {% csrf_token %}
+                <select name="country" required 
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Country</option>
+                    <option value="Kenya">Kenya [MAIN]</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="Tanzania">Tanzania</option>
+                </select>
                 <input type="text" name="name" placeholder="Diocese Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="location" placeholder="Location" required 
+                <input type="text" name="bishop_name" placeholder="Bishop Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="bishop" placeholder="Bishop Name" required 
+                <input type="text" name="bishop_phone" placeholder="Bishop Phone (optional)" 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="email" name="bishop_email" placeholder="Bishop Email (optional)" 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Diocese</button>
             </form>
@@ -32,7 +41,7 @@
                 {% for diocese in dioceses %}
                 <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
                     <strong style="color: #ffffff;">{{ diocese.name }}</strong><br>
-                    <small style="color: #9ca3af;">{{ diocese.location }} - Bishop: {{ diocese.bishop }}</small>
+                    <small style="color: #9ca3af;">{{ diocese.country }} - Bishop: {{ diocese.bishop_name }}</small>
                 </div>
                 {% empty %}
                 <p style="color: #9ca3af; font-style: italic;">No dioceses added yet.</p>
@@ -52,18 +61,20 @@
         <div style="margin-top: 20px;">
             <form method="POST" action="{% url 'church_structure:add_pastorate' %}" style="margin-bottom: 20px;">
                 {% csrf_token %}
-                <select name="diocese" required 
+                <select name="diocese_id" required 
                         style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                     <option value="">Select Diocese</option>
                     {% for diocese in dioceses %}
-                    <option value="{{ diocese.id }}">{{ diocese.name }}</option>
+                    <option value="{{ diocese.id }}">{{ diocese.name }} ({{ diocese.country }})</option>
                     {% endfor %}
                 </select>
                 <input type="text" name="name" placeholder="Pastorate Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="location" placeholder="Location" required 
+                <input type="text" name="pastor_name" placeholder="Pastor Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="pastor" placeholder="Pastor Name" required 
+                <input type="text" name="pastor_phone" placeholder="Pastor Phone (optional)" 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="email" name="pastor_email" placeholder="Pastor Email (optional)" 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Pastorate</button>
             </form>
@@ -73,7 +84,7 @@
                 {% for pastorate in pastorates %}
                 <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
                     <strong style="color: #ffffff;">{{ pastorate.name }}</strong><br>
-                    <small style="color: #9ca3af;">{{ pastorate.location }} - Pastor: {{ pastorate.pastor }}</small><br>
+                    <small style="color: #9ca3af;">Pastor: {{ pastorate.pastor_name }}</small><br>
                     <small style="color: #dc2626;">Diocese: {{ pastorate.diocese.name }}</small>
                 </div>
                 {% empty %}
@@ -101,16 +112,22 @@
                     <option value="{{ diocese.id }}">{{ diocese.name }}</option>
                     {% endfor %}
                 </select>
-                <select name="pastorate" id="pastorate-select" required 
+                <select name="pastorate_id" id="pastorate-select" required 
                         style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                     <option value="">Select Pastorate</option>
                 </select>
                 <input type="text" name="name" placeholder="Church Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="location" placeholder="Location" required 
+                <input type="text" name="address" placeholder="Church Address" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="teacher" placeholder="Church Teacher" required 
+                <input type="text" name="head_teacher_name" placeholder="Head Teacher Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="text" name="head_teacher_phone" placeholder="Head Teacher Phone (optional)" 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <input type="email" name="head_teacher_email" placeholder="Head Teacher Email (optional)" 
+                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <textarea name="service_times" placeholder="Service Times (e.g., Saturday 10:00 AM)" 
+                          style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px; min-height: 60px;"></textarea>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Church</button>
             </form>
             
@@ -119,7 +136,7 @@
                 {% for church in churches %}
                 <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
                     <strong style="color: #ffffff;">{{ church.name }}</strong><br>
-                    <small style="color: #9ca3af;">{{ church.location }} - Teacher: {{ church.teacher }}</small><br>
+                    <small style="color: #9ca3af;">{{ church.address }} - Head Teacher: {{ church.head_teacher_name }}</small><br>
                     <small style="color: #dc2626;">Pastorate: {{ church.pastorate.name }}</small>
                 </div>
                 {% empty %}
@@ -151,22 +168,22 @@
         <div style="margin-bottom: 30px; border-left: 3px solid #dc2626; padding-left: 20px;">
             <h6 style="color: #ffffff; margin-bottom: 15px;">
                 <i class="fas fa-church" style="color: #dc2626; margin-right: 10px;"></i>
-                {{ diocese.name }} Diocese - Bishop: {{ diocese.bishop }}
+                {{ diocese.name }} Diocese ({{ diocese.country }}) - Bishop: {{ diocese.bishop_name }}
             </h6>
             
             {% for pastorate in diocese.pastorate_set.all %}
             <div style="margin-left: 20px; margin-bottom: 15px; border-left: 2px solid #6b7280; padding-left: 15px;">
                 <strong style="color: #e5e7eb;">
                     <i class="fas fa-users" style="color: #dc2626; margin-right: 8px;"></i>
-                    {{ pastorate.name }} Pastorate - Pastor: {{ pastorate.pastor }}
+                    {{ pastorate.name }} Pastorate - Pastor: {{ pastorate.pastor_name }}
                 </strong>
                 
                 <div style="margin-top: 10px;">
                     {% for church in pastorate.church_set.all %}
                     <div style="margin-left: 20px; margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">
                         <i class="fas fa-home" style="color: #dc2626; margin-right: 8px;"></i>
-                        <span style="color: #ffffff;">{{ church.name }} - {{ church.location }}</span>
-                        <small style="color: #9ca3af; margin-left: 10px;">Teacher: {{ church.teacher }}</small>
+                        <span style="color: #ffffff;">{{ church.name }} - {{ church.address }}</span>
+                        <small style="color: #9ca3af; margin-left: 10px;">Head Teacher: {{ church.head_teacher_name }}</small>
                     </div>
                     {% empty %}
                     <div style="margin-left: 20px; color: #9ca3af; font-style: italic;">

@@ -34,6 +34,12 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.app',
 ]
 
+# CSRF cookie settings
+CSRF_COOKIE_SECURE = False  # Set to False for development
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_USE_SESSIONS = True
+
 
 # Application definition
 
