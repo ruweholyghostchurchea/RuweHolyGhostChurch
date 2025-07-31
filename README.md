@@ -158,8 +158,18 @@ Key models include:
 
 ## Support
 
-For technical support or feature requests, please contact the church administration or create an issue in the project repository.
+For technical support or feature requests, please contact the church administration.
+- **Email**: [lawifirst@gmail.com]
+- **WhatsApp/Phone**: [https://wa.me/254708581688]
+- **Documentation**: See project wiki
+- **Issues**: Use GitHub Issues for bug reports
 
 ## License
 
-This project is licensed under the terms specified in the LICENSE file.
+This project is proprietary software developed for Ruwe Holy Ghost Church. All rights reserved.
+
+---
+
+**Built with ❤️ for Ruwe Holy Ghost Church**
+
+*Empowering church administration through modern technology*
