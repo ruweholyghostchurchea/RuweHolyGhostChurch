@@ -1,12 +1,12 @@
-modules = ["python-3.12"]
-run = "pip install django"
+modules = ["python-3.12", "web"]
+run = "pip install -r requirements.txt"
 
 [nix]
 channel = "stable-25_05"
 packages = ["openssh_gssapi"]
 
 [deployment]
-run = ["sh", "-c", "python manage.py runserver 0.0.0.0:5000"]
+run = ["sh", "-c", "pip install -r requirements.txt"]
 
 [workflows]
 runButton = "Django Development Server"
