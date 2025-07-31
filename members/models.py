@@ -1,6 +1,7 @@
 
 from django.db import models
 from church_structure.models import Diocese, Pastorate, Church
+import json
 
 class Member(models.Model):
     USER_GROUP_CHOICES = [
@@ -39,6 +40,24 @@ class Member(models.Model):
     user_town_pastorate = models.ForeignKey(Pastorate, on_delete=models.SET_NULL, null=True, blank=True, related_name='town_members')
     user_town_church = models.ForeignKey(Church, on_delete=models.SET_NULL, null=True, blank=True, related_name='town_members')
     
+    # Emergency Contacts
+    emergency_contact_1_name = models.CharField(max_length=100, blank=True)
+    emergency_contact_1_relationship = models.CharField(max_length=50, blank=True)
+    emergency_contact_1_phone = models.CharField(max_length=20, blank=True)
+    emergency_contact_1_email = models.EmailField(blank=True)
+    
+    emergency_contact_2_name = models.CharField(max_length=100, blank=True)
+    emergency_contact_2_relationship = models.CharField(max_length=50, blank=True)
+    emergency_contact_2_phone = models.CharField(max_length=20, blank=True)
+    emergency_contact_2_email = models.EmailField(blank=True)
+    
+    # Profile Photo
+    profile_photo = models.ImageField(upload_to='member_photos/', blank=True, null=True)
+    profile_photo_url = models.URLField(blank=True, help_text="Alternative to uploading a photo")
+    
+    # Custom Fields (JSON field for flexible custom data)
+    custom_fields = models.JSONField(default=dict, blank=True, help_text="Store custom member data as key-value pairs")
+    
     # System fields
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -69,3 +88,47 @@ class Member(models.Model):
         if self.user_town_church:
             return f"{self.user_town_diocese.name} > {self.user_town_pastorate.name} > {self.user_town_church.name}"
         return "Not assigned"
+    
+    @property
+    def display_photo(self):
+        """Return the profile photo URL or uploaded photo URL"""
+        if self.profile_photo:
+            return self.profile_photo.url
+        elif self.profile_photo_url:
+            return self.profile_photo_url
+        return None
+    
+    def get_custom_field(self, key, default=None):
+        """Get a custom field value by key"""
+        return self.custom_fields.get(key, default)
+    
+    def set_custom_field(self, key, value):
+        """Set a custom field value"""
+        self.custom_fields[key] = value
+
+
+class MemberDocument(models.Model):
+    DOCUMENT_TYPES = [
+        ('baptism_certificate', 'Baptism Certificate'),
+        ('annual_tithe_card', 'Annual Tithe Card'),
+        ('id_document', 'ID Document'),
+        ('medical_record', 'Medical Record'),
+        ('membership_certificate', 'Membership Certificate'),
+        ('other', 'Other'),
+    ]
+    
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='documents')
+    document_type = models.CharField(max_length=50, choices=DOCUMENT_TYPES)
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    document_file = models.FileField(upload_to='member_documents/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by = models.CharField(max_length=100, blank=True)  # Could be linked to User model later
+    
+    class Meta:
+        ordering = ['-uploaded_at']
+        verbose_name = 'Member Document'
+        verbose_name_plural = 'Member Documents'
+    
+    def __str__(self):
+        return f"{self.member.full_name} - {self.title}"

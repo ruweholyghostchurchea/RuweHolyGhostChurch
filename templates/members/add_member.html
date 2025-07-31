@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block title %}Add Member - RuweHolyGhostChurch{% endblock %}
@@ -13,17 +12,17 @@
             Member Registration Form
         </h5>
     </div>
-    
-    <form method="POST" style="margin-top: 20px;">
+
+    <form method="POST" style="margin-top: 20px;" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <!-- Personal Information Section -->
         <div style="margin-bottom: 30px;">
             <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
                 <i class="fas fa-user" style="margin-right: 8px;"></i>
                 Personal Information
             </h6>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">First Name *</label>
@@ -36,7 +35,7 @@
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
             </div>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Username *</label>
@@ -60,14 +59,14 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Contact Information Section -->
         <div style="margin-bottom: 30px;">
             <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
                 <i class="fas fa-phone" style="margin-right: 8px;"></i>
                 Contact Information
             </h6>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Phone Number *</label>
@@ -81,28 +80,63 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- Emergency Contact Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                Emergency Contact Information
+            </h6>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Emergency Contact Name</label>
+                    <input type="text" name="emergency_contact_name"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Emergency Contact Phone</label>
+                    <input type="tel" name="emergency_contact_phone"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Photo Management Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-image" style="margin-right: 8px;"></i>
+                Profile Photo
+            </h6>
+
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload Photo</label>
+                <input type="file" name="profile_photo" accept="image/*"
+                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+            </div>
+        </div>
+
         <!-- Job/Occupation Information Section -->
         <div style="margin-bottom: 30px;">
             <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
                 <i class="fas fa-briefcase" style="margin-right: 8px;"></i>
                 Job & Occupation Information
             </h6>
-            
+
             <div>
                 <label style="color: #ffffff; margin-bottom: 5px; display: block;">Job, Occupation & Income Details *</label>
                 <textarea name="job_occupation_income" rows="3" required placeholder="Enter job title, occupation details, and income information..."
                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"></textarea>
             </div>
         </div>
-        
+
         <!-- Baptismal Information Section -->
         <div style="margin-bottom: 30px;">
             <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
                 <i class="fas fa-cross" style="margin-right: 8px;"></i>
                 Baptismal Information
             </h6>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Baptismal First Name *</label>
@@ -115,7 +149,7 @@
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
             </div>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date Baptized *</label>
@@ -129,14 +163,14 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Home Church Structure Section -->
         <div style="margin-bottom: 30px;">
             <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
                 <i class="fas fa-home" style="margin-right: 8px;"></i>
                 Home Church Structure *
             </h6>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Diocese *</label>
@@ -164,14 +198,14 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Town Church Structure Section (Optional) -->
         <div style="margin-bottom: 30px;">
             <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #6b7280;">
                 <i class="fas fa-building" style="margin-right: 8px;"></i>
                 Town Church Structure (Optional - for work/education/treatment)
             </h6>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Diocese</label>
@@ -199,7 +233,39 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- Custom Fields Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #6b7280;">
+                <i class="fas fa-sliders-h" style="margin-right: 8px;"></i>
+                Custom Fields Configuration
+            </h6>
+
+            <div id="custom-fields-container">
+                <!-- Custom fields will be added here dynamically -->
+            </div>
+            <button type="button" onclick="addCustomField()" class="btn btn-info" style="margin-top: 10px;">
+                <i class="fas fa-plus" style="margin-right: 5px;"></i>
+                Add Custom Field
+            </button>
+        </div>
+
+        <!-- Document Attachments Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #6b7280;">
+                <i class="fas fa-file-alt" style="margin-right: 8px;"></i>
+                Document Attachments
+            </h6>
+
+            <div id="documents-container">
+                <!-- Document attachments will be added here dynamically -->
+            </div>
+            <button type="button" onclick="addDocument()" class="btn btn-info" style="margin-top: 10px;">
+                <i class="fas fa-plus" style="margin-right: 5px;"></i>
+                Add Document
+            </button>
+        </div>
+
         <!-- Form Actions -->
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #374151;">
             <button type="submit" class="btn btn-primary" style="padding: 12px 30px; margin-right: 15px;">
@@ -220,11 +286,11 @@ document.getElementById('home-diocese-select').addEventListener('change', functi
     const dioceseId = this.value;
     const pastorateSelect = document.getElementById('home-pastorate-select');
     const churchSelect = document.getElementById('home-church-select');
-    
+
     // Clear dependent dropdowns
     pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
     churchSelect.innerHTML = '<option value="">Select Church</option>';
-    
+
     if (dioceseId) {
         fetch(`/members/api/pastorates/${dioceseId}/`)
             .then(response => response.json())
@@ -243,10 +309,10 @@ document.getElementById('home-diocese-select').addEventListener('change', functi
 document.getElementById('home-pastorate-select').addEventListener('change', function() {
     const pastorateId = this.value;
     const churchSelect = document.getElementById('home-church-select');
-    
+
     // Clear church dropdown
     churchSelect.innerHTML = '<option value="">Select Church</option>';
-    
+
     if (pastorateId) {
         fetch(`/members/api/churches/${pastorateId}/`)
             .then(response => response.json())
@@ -267,11 +333,11 @@ document.getElementById('town-diocese-select').addEventListener('change', functi
     const dioceseId = this.value;
     const pastorateSelect = document.getElementById('town-pastorate-select');
     const churchSelect = document.getElementById('town-church-select');
-    
+
     // Clear dependent dropdowns
     pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
     churchSelect.innerHTML = '<option value="">Select Church</option>';
-    
+
     if (dioceseId) {
         fetch(`/members/api/pastorates/${dioceseId}/`)
             .then(response => response.json())
@@ -290,10 +356,10 @@ document.getElementById('town-diocese-select').addEventListener('change', functi
 document.getElementById('town-pastorate-select').addEventListener('change', function() {
     const pastorateId = this.value;
     const churchSelect = document.getElementById('town-church-select');
-    
+
     // Clear church dropdown
     churchSelect.innerHTML = '<option value="">Select Church</option>';
-    
+
     if (pastorateId) {
         fetch(`/members/api/churches/${pastorateId}/`)
             .then(response => response.json())
@@ -308,5 +374,91 @@ document.getElementById('town-pastorate-select').addEventListener('change', func
             .catch(error => console.error('Error:', error));
     }
 });
+
+// Custom Fields Management
+function addCustomField() {
+    const container = document.getElementById('custom-fields-container');
+    const newRow = document.createElement('div');
+    newRow.className = 'custom-field-row';
+    newRow.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 15px;';
+
+    newRow.innerHTML = `
+        <div>
+            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Name</label>
+            <input type="text" name="custom_field_names[]" placeholder="e.g., Marital Status, Education Level"
+                   style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+        </div>
+        <div>
+            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Value</label>
+            <input type="text" name="custom_field_values[]" placeholder="Enter value"
+                   style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+        </div>
+        <div style="display: flex; align-items: end;">
+            <button type="button" onclick="removeCustomField(this)" 
+                    style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(newRow);
+}
+
+function removeCustomField(button) {
+    button.closest('.custom-field-row').remove();
+}
+
+// Document Management
+function addDocument() {
+    const container = document.getElementById('documents-container');
+    const newRow = document.createElement('div');
+    newRow.className = 'document-row';
+    newRow.style.cssText = 'border: 1px solid #374151; padding: 15px; border-radius: 4px; margin-bottom: 15px; background: #1f2937;';
+
+    newRow.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Document Type</label>
+                <select name="document_types[]" 
+                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Document Type</option>
+                    <option value="baptism_certificate">Baptism Certificate</option>
+                    <option value="annual_tithe_card">Annual Tithe Card</option>
+                    <option value="id_document">ID Document</option>
+                    <option value="medical_record">Medical Record</option>
+                    <option value="membership_certificate">Membership Certificate</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Document Title</label>
+                <input type="text" name="document_titles[]" placeholder="e.g., Baptism Certificate 2023"
+                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+            </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Description (Optional)</label>
+            <textarea name="document_descriptions[]" rows="2" placeholder="Additional notes about this document"
+                      style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: end;">
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload Document</label>
+                <input type="file" name="document_files[]" 
+                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+            </div>
+            <button type="button" onclick="removeDocument(this)" 
+                    style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(newRow);
+}
+
+function removeDocument(button) {
+    button.closest('.document-row').remove();
+}
 </script>
 {% endblock %}
