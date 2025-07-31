@@ -3,7 +3,7 @@ run = "pip install -r requirements.txt"
 
 [nix]
 channel = "stable-25_05"
-packages = ["openssh_gssapi"]
+packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "openssh_gssapi", "pgadmin4", "tcl", "tk", "zlib"]
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt"]
