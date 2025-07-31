@@ -1,0 +1,312 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Add Member - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Add New Member{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">
+            <i class="fas fa-user-plus" style="color: #dc2626; margin-right: 10px;"></i>
+            Member Registration Form
+        </h5>
+    </div>
+    
+    <form method="POST" style="margin-top: 20px;">
+        {% csrf_token %}
+        
+        <!-- Personal Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-user" style="margin-right: 8px;"></i>
+                Personal Information
+            </h6>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">First Name *</label>
+                    <input type="text" name="first_name" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Last Name *</label>
+                    <input type="text" name="last_name" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Username *</label>
+                    <input type="text" name="username" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">User Group *</label>
+                    <select name="user_group" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Group</option>
+                        {% for value, label in user_groups %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date of Birth *</label>
+                    <input type="date" name="date_of_birth" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-phone" style="margin-right: 8px;"></i>
+                Contact Information
+            </h6>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Phone Number *</label>
+                    <input type="tel" name="phone_number" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Email Address</label>
+                    <input type="email" name="email_address" 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Job/Occupation Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-briefcase" style="margin-right: 8px;"></i>
+                Job & Occupation Information
+            </h6>
+            
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Job, Occupation & Income Details *</label>
+                <textarea name="job_occupation_income" rows="3" required placeholder="Enter job title, occupation details, and income information..."
+                          style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"></textarea>
+            </div>
+        </div>
+        
+        <!-- Baptismal Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-cross" style="margin-right: 8px;"></i>
+                Baptismal Information
+            </h6>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Baptismal First Name *</label>
+                    <input type="text" name="baptismal_first_name" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Baptismal Last Name *</label>
+                    <input type="text" name="baptismal_last_name" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date Baptized *</label>
+                    <input type="date" name="date_baptized" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date Joined Religion *</label>
+                    <input type="date" name="date_joined_religion" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Home Church Structure Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-home" style="margin-right: 8px;"></i>
+                Home Church Structure *
+            </h6>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Diocese *</label>
+                    <select name="user_home_diocese" id="home-diocese-select" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Diocese</option>
+                        {% for diocese in dioceses %}
+                        <option value="{{ diocese.id }}">{{ diocese.name }} ({{ diocese.country }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Pastorate *</label>
+                    <select name="user_home_pastorate" id="home-pastorate-select" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Pastorate</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Church *</label>
+                    <select name="user_home_church" id="home-church-select" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Church</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Town Church Structure Section (Optional) -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #6b7280;">
+                <i class="fas fa-building" style="margin-right: 8px;"></i>
+                Town Church Structure (Optional - for work/education/treatment)
+            </h6>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Diocese</label>
+                    <select name="user_town_diocese" id="town-diocese-select" 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Diocese</option>
+                        {% for diocese in dioceses %}
+                        <option value="{{ diocese.id }}">{{ diocese.name }} ({{ diocese.country }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Pastorate</label>
+                    <select name="user_town_pastorate" id="town-pastorate-select" 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Pastorate</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Church</label>
+                    <select name="user_town_church" id="town-church-select" 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Church</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Actions -->
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #374151;">
+            <button type="submit" class="btn btn-primary" style="padding: 12px 30px; margin-right: 15px;">
+                <i class="fas fa-save" style="margin-right: 8px;"></i>
+                Register Member
+            </button>
+            <a href="{% url 'members:index' %}" class="btn btn-secondary" style="padding: 12px 30px;">
+                <i class="fas fa-times" style="margin-right: 8px;"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Cascading dropdown functionality for Home Church Structure
+document.getElementById('home-diocese-select').addEventListener('change', function() {
+    const dioceseId = this.value;
+    const pastorateSelect = document.getElementById('home-pastorate-select');
+    const churchSelect = document.getElementById('home-church-select');
+    
+    // Clear dependent dropdowns
+    pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+    churchSelect.innerHTML = '<option value="">Select Church</option>';
+    
+    if (dioceseId) {
+        fetch(`/members/api/pastorates/${dioceseId}/`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(pastorate => {
+                    const option = document.createElement('option');
+                    option.value = pastorate.id;
+                    option.textContent = pastorate.name;
+                    pastorateSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+
+document.getElementById('home-pastorate-select').addEventListener('change', function() {
+    const pastorateId = this.value;
+    const churchSelect = document.getElementById('home-church-select');
+    
+    // Clear church dropdown
+    churchSelect.innerHTML = '<option value="">Select Church</option>';
+    
+    if (pastorateId) {
+        fetch(`/members/api/churches/${pastorateId}/`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(church => {
+                    const option = document.createElement('option');
+                    option.value = church.id;
+                    option.textContent = church.name;
+                    churchSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+
+// Cascading dropdown functionality for Town Church Structure
+document.getElementById('town-diocese-select').addEventListener('change', function() {
+    const dioceseId = this.value;
+    const pastorateSelect = document.getElementById('town-pastorate-select');
+    const churchSelect = document.getElementById('town-church-select');
+    
+    // Clear dependent dropdowns
+    pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+    churchSelect.innerHTML = '<option value="">Select Church</option>';
+    
+    if (dioceseId) {
+        fetch(`/members/api/pastorates/${dioceseId}/`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(pastorate => {
+                    const option = document.createElement('option');
+                    option.value = pastorate.id;
+                    option.textContent = pastorate.name;
+                    pastorateSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+
+document.getElementById('town-pastorate-select').addEventListener('change', function() {
+    const pastorateId = this.value;
+    const churchSelect = document.getElementById('town-church-select');
+    
+    // Clear church dropdown
+    churchSelect.innerHTML = '<option value="">Select Church</option>';
+    
+    if (pastorateId) {
+        fetch(`/members/api/churches/${pastorateId}/`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(church => {
+                    const option = document.createElement('option');
+                    option.value = church.id;
+                    option.textContent = church.name;
+                    churchSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+</script>
+{% endblock %}
