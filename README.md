@@ -21,21 +21,7 @@ The Ruwe Holy Ghost Church traces its origin back to 1906/07 and was founded by 
 - **Equipment Management**: Inventory and maintenance of church equipment
 - **Reports**: Generate comprehensive reports for church administration
 - **Church Settings**: Configure church information, service times, and system preferences
-
-### Key Features
-- **Saturday Sabbath Focus**: All service types and scheduling reflect Saturday Sabbath observance
-- **Professional Dark Theme**: Clean, modern interface with professional dark color scheme
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **Real-time Statistics**: Live dashboard with member counts, attendance, and financial data
-- **Activity Tracking**: Monitor recent church activities and member engagement
-
-## Technology Stack
-
-- **Backend**: Django 5.2.4 (Python web framework)
-- **Database**: SQLite (default, easily configurable to PostgreSQL/MySQL)
-- **Frontend**: HTML5, CSS3, JavaScript
-- **UI Framework**: Custom responsive design with FontAwesome icons
-- **Styling**: Professional dark theme with red accent colors
+- **Church Structure**: See below
 
 ## Church Structure Management
 
@@ -53,6 +39,21 @@ The system includes a comprehensive hierarchical church structure management mod
 - **Administrative Controls**: Add new dioceses, pastorates, and churches
 - **Comprehensive Records**: Contact information for all leadership levels
 - **Real-time Statistics**: Live counts and hierarchical overview
+
+### Key Features
+- **Saturday Sabbath Focus**: All service types and scheduling reflect Saturday Sabbath observance
+- **Professional Dark Theme**: Clean, modern interface with professional dark color scheme
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Real-time Statistics**: Live dashboard with member counts, attendance, and financial data
+- **Activity Tracking**: Monitor recent church activities and member engagement
+
+## Technology Stack
+
+- **Backend**: Django 5.2.4 (Python web framework)
+- **Database**: SQLite (default, easily configurable to PostgreSQL/MySQL)
+- **Frontend**: HTML5, CSS3, JavaScript
+- **UI Framework**: Custom responsive design with FontAwesome icons
+- **Styling**: Professional dark theme with red accent colors
 
 ## Installation & Setup
 
@@ -93,6 +94,7 @@ ruweholyghostchurch/
 ├── attendance/          # Attendance management module
 ├── bulk_sms/           # SMS communication module
 ├── church_settings/    # Church configuration module
+├── church_structure/   # Comprehensive hierarchical church structure management module
 ├── dashboard/          # Main dashboard module
 ├── equipment/          # Equipment inventory module
 ├── finance/           # Financial management module
