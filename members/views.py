@@ -81,7 +81,11 @@ def add_member(request):
             last_name = request.POST.get('last_name')
             username = request.POST.get('username')
             user_group = request.POST.get('user_group')
+            gender = request.POST.get('gender')
             date_of_birth = request.POST.get('date_of_birth')
+            marital_status = request.POST.get('marital_status')
+            location = request.POST.get('location')
+            education_level = request.POST.get('education_level')
             phone_number = request.POST.get('phone_number')
             email_address = request.POST.get('email_address', '')
 
@@ -129,10 +133,11 @@ def add_member(request):
 
             # Validation
             required_fields = [
-                first_name, last_name, username, user_group, date_of_birth,
-                phone_number, job_occupation_income, baptismal_first_name,
-                baptismal_last_name, date_baptized, date_joined_religion,
-                user_home_diocese_id, user_home_pastorate_id, user_home_church_id
+                first_name, last_name, username, user_group, gender, date_of_birth,
+                marital_status, location, education_level, phone_number, 
+                job_occupation_income, baptismal_first_name, baptismal_last_name, 
+                date_baptized, date_joined_religion, user_home_diocese_id, 
+                user_home_pastorate_id, user_home_church_id
             ]
 
             if not all(required_fields):
@@ -159,7 +164,11 @@ def add_member(request):
                 last_name=last_name,
                 username=username,
                 user_group=user_group,
+                gender=gender,
                 date_of_birth=date_of_birth,
+                marital_status=marital_status,
+                location=location,
+                education_level=education_level,
                 phone_number=phone_number,
                 email_address=email_address,
                 job_occupation_income=job_occupation_income,

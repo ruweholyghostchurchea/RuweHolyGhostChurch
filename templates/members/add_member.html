@@ -53,9 +53,65 @@
                     </select>
                 </div>
                 <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Gender *</label>
+                    <select name="gender" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Gender</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date of Birth *</label>
                     <input type="date" name="date_of_birth" required 
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Marital Status *</label>
+                    <select name="marital_status" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Marital Status</option>
+                        <option value="single">Single</option>
+                        <option value="married">Married</option>
+                        <option value="divorced">Divorced</option>
+                        <option value="widowed">Widowed</option>
+                        <option value="separated">Separated</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Location *</label>
+                    <select name="location" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Location</option>
+                        <option value="siaya">Siaya</option>
+                        <option value="nairobi">Nairobi</option>
+                        <option value="kisumu">Kisumu</option>
+                        <option value="mombasa">Mombasa</option>
+                        <option value="nakuru">Nakuru</option>
+                        <option value="eldoret">Eldoret</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Education Level *</label>
+                    <select name="education_level" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Education Level</option>
+                        <option value="primary">Primary Education</option>
+                        <option value="secondary">Secondary Education</option>
+                        <option value="certificate">Certificate</option>
+                        <option value="diploma">Diploma</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="phd">PhD</option>
+                        <option value="other">Other</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -88,16 +144,59 @@
                 Emergency Contact Information
             </h6>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                <div>
-                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Emergency Contact Name</label>
-                    <input type="text" name="emergency_contact_name"
-                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+            <div style="margin-bottom: 20px;">
+                <h7 style="color: #f3f4f6; margin-bottom: 10px; display: block; font-weight: bold;">Emergency Contact 1</h7>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Name</label>
+                        <input type="text" name="emergency_contact_1_name"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Relationship</label>
+                        <input type="text" name="emergency_contact_1_relationship" placeholder="e.g., Parent, Spouse, Sibling"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
                 </div>
-                <div>
-                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Emergency Contact Phone</label>
-                    <input type="tel" name="emergency_contact_phone"
-                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Phone</label>
+                        <input type="tel" name="emergency_contact_1_phone"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Email</label>
+                        <input type="email" name="emergency_contact_1_email"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h7 style="color: #f3f4f6; margin-bottom: 10px; display: block; font-weight: bold;">Emergency Contact 2 (Optional)</h7>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Name</label>
+                        <input type="text" name="emergency_contact_2_name"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Relationship</label>
+                        <input type="text" name="emergency_contact_2_relationship" placeholder="e.g., Parent, Spouse, Sibling"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Phone</label>
+                        <input type="tel" name="emergency_contact_2_phone"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Email</label>
+                        <input type="email" name="emergency_contact_2_email"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
                 </div>
             </div>
         </div>

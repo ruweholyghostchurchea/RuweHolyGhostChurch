@@ -11,12 +11,50 @@ class Member(models.Model):
         ('Clergy', 'Clergy'),
     ]
     
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+    ]
+    
+    MARITAL_STATUS_CHOICES = [
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('divorced', 'Divorced'),
+        ('widowed', 'Widowed'),
+        ('separated', 'Separated'),
+    ]
+    
+    LOCATION_CHOICES = [
+        ('siaya', 'Siaya'),
+        ('nairobi', 'Nairobi'),
+        ('kisumu', 'Kisumu'),
+        ('mombasa', 'Mombasa'),
+        ('nakuru', 'Nakuru'),
+        ('eldoret', 'Eldoret'),
+        ('other', 'Other'),
+    ]
+    
+    EDUCATION_LEVEL_CHOICES = [
+        ('primary', 'Primary Education'),
+        ('secondary', 'Secondary Education'),
+        ('certificate', 'Certificate'),
+        ('diploma', 'Diploma'),
+        ('bachelor', 'Bachelor\'s Degree'),
+        ('master', 'Master\'s Degree'),
+        ('phd', 'PhD'),
+        ('other', 'Other'),
+    ]
+    
     # Personal Information
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
     user_group = models.CharField(max_length=20, choices=USER_GROUP_CHOICES)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
+    marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES)
+    location = models.CharField(max_length=20, choices=LOCATION_CHOICES)
+    education_level = models.CharField(max_length=20, choices=EDUCATION_LEVEL_CHOICES)
     phone_number = models.CharField(max_length=20)
     email_address = models.EmailField(blank=True)
     
