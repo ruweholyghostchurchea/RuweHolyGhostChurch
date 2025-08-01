@@ -42,7 +42,7 @@ def index(request):
         },
         {
             'icon': 'fas fa-dollar-sign', 
-            'activity': f'Weekly offering: ${Offering.objects.filter(date__gte=current_week_start.date()).aggregate(total=Sum("amount"))["total"] or 0}',
+            'activity': f'Weekly Tithe/Offering: KShs. {Offering.objects.filter(date__gte=current_week_start.date()).aggregate(total=Sum("amount"))["total"] or 0}',
             'time': '5 hours ago',
             'color': 'primary'
         },
@@ -64,19 +64,19 @@ def index(request):
     upcoming_events = [
         {
             'title': 'Saturday Sabbath Service',
-            'date': 'Dec 28, 2024',
+            'date': 'Aug 2, 2025',
             'time': '9:00 AM',
-            'location': 'Main Sanctuary'
+            'location': 'Main Church, Ruwe, Siaya County'
         },
         {
             'title': 'Bible Study',
-            'date': 'Jan 1, 2025', 
+            'date': 'Jan 18, 2026', 
             'time': '7:00 PM',
             'location': 'Fellowship Hall'
         },
         {
             'title': 'Youth Meeting',
-            'date': 'Jan 3, 2025',
+            'date': 'Jan 19, 2026',
             'time': '6:00 PM', 
             'location': 'Youth Center'
         }

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('date', models.DateField()),
                 ('start_time', models.TimeField()),
                 ('end_time', models.TimeField(blank=True, null=True)),
-                ('location', models.CharField(default='Main Sanctuary', max_length=200)),
+                ('location', models.CharField(default='Main Church, Ruwe, Siaya County', max_length=200)),
                 ('notes', models.TextField(blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),

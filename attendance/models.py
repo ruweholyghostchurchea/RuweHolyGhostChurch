@@ -18,7 +18,7 @@ class Service(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField(blank=True, null=True)
-    location = models.CharField(max_length=200, default='Main Sanctuary')
+    location = models.CharField(max_length=200, default='Main Church, Ruwe, Siaya County')
     notes = models.TextField(blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
