@@ -25,21 +25,45 @@ SECRET_KEY = 'django-insecure-9w=dj@08cdd+qoss$tkfpt0kgsmi&-t#6g(aj%&^=yi^=i4dd2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['588da93c-466e-44b3-b6f3-cee0c4a90942-00-1zxwhltebrm5o.janeway.replit.dev']
+ALLOWED_HOSTS = ['588da93c-466e-44b3-b6f3-cee0c4a90942-00-1zxwhltebrm5o.janeway.replit.dev', '*.replit.dev', '*.replit.co', '*.replit.app']
 
-# CSRF settings for Replit
+# CSRF settings for Replit and Production
 CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.dev',
     'https://*.replit.co',
     'https://*.replit.app',
 ]
 
-# CSRF cookie settings
-CSRF_COOKIE_SECURE = False  # Set to False for development
-CSRF_COOKIE_HTTPONLY = False
+# Enhanced CSRF settings
+CSRF_COOKIE_SECURE = not DEBUG  # True in production
+CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
+CSRF_COOKIE_AGE = 31449600  # 1 year
+
+# Security settings for production
+SECURE_SSL_REDIRECT = not DEBUG  # Redirect HTTP to HTTPS in production
+SESSION_COOKIE_SECURE = not DEBUG  # Secure session cookies in production
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # 1 year in production
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
+
+# Session settings
+SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "https://*.replit.dev",
+    "https://*.replit.co", 
+    "https://*.replit.app",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -51,6 +75,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'authentication',
     'dashboard',
     'church_structure',
     'members',
@@ -66,12 +92,33 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Caching configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'church_cache_table',
+        'TIMEOUT': 300,  # 5 minutes default
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+            'CULL_FREQUENCY': 3,
+        }
+    }
+}
+
+# Cache middleware settings
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 600  # 10 minutes
+CACHE_MIDDLEWARE_KEY_PREFIX = 'church_'
 
 ROOT_URLCONF = 'ruweholyghostchurch.urls'
 
@@ -86,6 +133,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'authentication.context_processors.user_context',
             ],
         },
     },
@@ -129,7 +177,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -153,3 +201,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email configuration for password reset
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''  # Set in production via environment variables
+EMAIL_HOST_PASSWORD = ''  # Set in production via environment variables
+DEFAULT_FROM_EMAIL = 'Ruwe Holy Ghost Church <noreply@ruweholyghostchurch.org>'
+
+# Login/Logout URLs
+LOGIN_URL = '/auth/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/auth/login/'

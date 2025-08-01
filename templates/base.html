@@ -102,8 +102,19 @@
                     <h4>{% block page_title %}Dashboard{% endblock %}</h4>
                 </div>
                 <div class="user-info">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Church Administrator</span>
+                    {% if user.is_authenticated %}
+                        <img src="{{ user.userprofile.get_profile_picture }}" alt="Profile" class="profile-picture">
+                        <span>{{ user.first_name|default:user.username }}</span>
+                        <div class="user-dropdown">
+                            <a href="{% url 'authentication:logout' %}">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    {% else %}
+                        <i class="fas fa-user-circle"></i>
+                        <span>Guest</span>
+                    {% endif %}
                 </div>
             </div>
 
