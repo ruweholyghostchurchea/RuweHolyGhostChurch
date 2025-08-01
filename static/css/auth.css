@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -37,7 +37,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(153, 27, 27, 0.9) 100%);
     z-index: -1;
 }
 
@@ -156,8 +156,8 @@ body {
 
 .form-group input:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 .password-input {
@@ -178,7 +178,7 @@ body {
 }
 
 .password-toggle:hover {
-    color: #667eea;
+    color: #dc2626;
 }
 
 .form-options {
@@ -204,21 +204,21 @@ body {
 }
 
 .forgot-link {
-    color: #667eea;
+    color: #dc2626;
     text-decoration: none;
     font-size: 14px;
     transition: color 0.3s ease;
 }
 
 .forgot-link:hover {
-    color: #764ba2;
+    color: #991b1b;
     text-decoration: underline;
 }
 
 .auth-btn {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -234,7 +234,7 @@ body {
 
 .auth-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
 }
 
 .auth-btn:active {
@@ -247,7 +247,7 @@ body {
 }
 
 .back-link {
-    color: #667eea;
+    color: #dc2626;
     text-decoration: none;
     font-size: 14px;
     display: inline-flex;
@@ -257,7 +257,7 @@ body {
 }
 
 .back-link:hover {
-    color: #764ba2;
+    color: #991b1b;
 }
 
 .auth-footer {
