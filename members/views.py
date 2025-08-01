@@ -3,10 +3,12 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from .models import Member, MemberDocument
 from church_structure.models import Diocese, Pastorate, Church
 import json
 
+@login_required
 def index(request):
     """Members main view with search and pagination"""
     search_query = request.GET.get('search', '')
@@ -63,6 +65,7 @@ def index(request):
     }
     return render(request, 'members/index.html', context)
 
+@login_required
 def add_member(request):
     """Add new member view"""
     if request.method == 'GET':
@@ -223,6 +226,7 @@ def add_member(request):
             return redirect('members:add_member')
 
 # API endpoints for cascading dropdowns
+@login_required
 def get_pastorates_by_diocese(request, diocese_id):
     """Get pastorates for a specific diocese"""
     pastorates = Pastorate.objects.filter(
@@ -231,6 +235,7 @@ def get_pastorates_by_diocese(request, diocese_id):
     ).values('id', 'name').order_by('name')
     return JsonResponse(list(pastorates), safe=False)
 
+@login_required
 def get_churches_by_pastorate(request, pastorate_id):
     """Get churches for a specific pastorate"""
     churches = Church.objects.filter(
@@ -239,6 +244,7 @@ def get_churches_by_pastorate(request, pastorate_id):
     ).values('id', 'name').order_by('name')
     return JsonResponse(list(churches), safe=False)
 
+@login_required
 def member_detail(request, member_id):
     """View member details"""
     member = get_object_or_404(Member, id=member_id, is_active=True)

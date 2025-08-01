@@ -1,37 +1,38 @@
-
 from django.shortcuts import render
-from django.db.models import Sum, Count
 from django.utils import timezone
-from datetime import datetime, timedelta
+from django.db.models import Sum
+from datetime import timedelta
+from django.contrib.auth.decorators import login_required
 from members.models import Member
 from visitors.models import Visitor
 from attendance.models import Attendance, Service
 from finance.models import Offering
 
+@login_required
 def index(request):
     """Dashboard main view with statistics"""
-    
+
     # Calculate date ranges
     now = timezone.now()
     current_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     current_week_start = now - timedelta(days=now.weekday())
-    
+
     # Get statistics
     total_members = Member.objects.filter(user_group='active').count()
     total_visitors = Visitor.objects.filter(visit_date__gte=current_month_start.date()).count()
-    
+
     # This week's attendance
     this_week_services = Service.objects.filter(date__gte=current_week_start.date())
     this_week_attendance = Attendance.objects.filter(
         service__in=this_week_services, 
         present=True
     ).count()
-    
+
     # Monthly offering
     monthly_offering = Offering.objects.filter(
         date__gte=current_month_start.date()
     ).aggregate(total=Sum('amount'))['total'] or 0
-    
+
     # Recent activities (mock data for now - can be replaced with actual activity log)
     recent_activities = [
         {
@@ -59,7 +60,7 @@ def index(request):
             'color': 'warning'
         }
     ]
-    
+
     # Upcoming events (can be moved to a separate Event model later)
     upcoming_events = [
         {
@@ -81,7 +82,7 @@ def index(request):
             'location': 'Youth Center'
         }
     ]
-    
+
     context = {
         'total_members': total_members,
         'total_visitors': total_visitors,
@@ -90,5 +91,5 @@ def index(request):
         'recent_activities': recent_activities,
         'upcoming_events': upcoming_events,
     }
-    
+
     return render(request, 'dashboard/index.html', context)

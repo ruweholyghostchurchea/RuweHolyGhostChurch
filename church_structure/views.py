@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import Diocese, Pastorate, Church
 
+@login_required
 def index(request):
     """Church structure main view"""
     dioceses = Diocese.objects.filter(is_active=True).order_by('country', 'name')
