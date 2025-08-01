@@ -14,8 +14,7 @@ PyMySQL==1.1.1
 python-dotenv==1.1.0
 python-http-client==3.3.7
 setuptools==80.4.0
+sqlparse==0.5.3
 starkbank-ecdsa==2.2.0
 wheel==0.45.1
 whitenoise==6.9.0
-sqlparse==0.5.3
-Pillow
