@@ -1,5 +1,5 @@
 
-# Generated manually to fix unique constraint issues
+# Generated manually to populate unique slugs before adding constraints
 
 from django.db import migrations
 from django.utils.text import slugify
@@ -62,7 +62,7 @@ def reverse_populate_slugs(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('church_structure', '0002_church_slug_diocese_slug_pastorate_slug'),
+        ('church_structure', '0002_add_slug_fields_no_unique'),
     ]
 
     operations = [
