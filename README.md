@@ -1,7 +1,11 @@
 
-# Ruwe Holy Ghost Church Management System
+# RuweHolyGhostChurch Management System
 
-A comprehensive Django-based church management system designed for Ruwe Holy Ghost Church. This system helps manage members, visitors, attendance, finances, equipment, and various church operations.
+A comprehensive church management system for Ruwe Holy Ghost Church EA, designed to streamline church operations and member management.
+
+## About Ruwe Holy Ghost Church
+
+The Ruwe Holy Ghost Church traces its origin back to 1906/07 and was founded by Alfayo Odongo Mango and Lawi Obonyo Ongwek in Musanda LUO near the border of former Western and Nyanza Provinces in the early 1930s. The current main headquarters is at Ruwe, Siaya County but there's another divide headquartered at Kisumu.
 
 ## Features
 
@@ -202,25 +206,22 @@ The application is configured for deployment on Replit with:
 4. Add tests if applicable
 5. Submit a pull request
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## Support
 
-For support and questions, please contact the church administration or create an issue in the repository.
+For technical support or feature requests, please contact the church administration.
+- **Email**: [lawifirst@gmail.com]
+- **WhatsApp/Phone**: [https://wa.me/254708581688]
+- **Documentation**: See project wiki
+- **Issues**: Use GitHub Issues for bug reports
 
-## Changelog
+## License
 
-### Latest Updates
-- Added comprehensive member profile management
-- Implemented document attachment system
-- Enhanced emergency contact management
-- Added profile photo functionality
-- Introduced custom fields for flexible data storage
-- Improved church hierarchy management
-- Enhanced member categorization system
+This project is proprietary software developed for Ruwe Holy Ghost Church. All rights reserved.
 
 ---
 
-**Ruwe Holy Ghost Church Management System** - Empowering church administration through technology.
+**Built with ❤️ for Ruwe Holy Ghost Church**
+
+---
+
+**Ruwe Holy Ghost Church Management System** - *Empowering church administration through modern technology*
