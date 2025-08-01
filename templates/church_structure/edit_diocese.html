@@ -1,0 +1,97 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Edit {{ diocese.name }} Diocese - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Edit {{ diocese.name }} Diocese{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-edit" style="color: #dc2626; margin-right: 10px;"></i>
+                    Edit Diocese Information
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'church_structure:diocese_detail' diocese_slug=diocese.slug %}" 
+                       class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="name" style="color: #ffffff; margin-bottom: 5px;">Diocese Name *</label>
+                                <input type="text" name="name" id="name" value="{{ diocese.name }}" required
+                                       class="form-control" 
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="country" style="color: #ffffff; margin-bottom: 5px;">Country *</label>
+                                <select name="country" id="country" required
+                                        class="form-control"
+                                        style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="Kenya" {% if diocese.country == 'Kenya' %}selected{% endif %}>Kenya [MAIN]</option>
+                                    <option value="Uganda" {% if diocese.country == 'Uganda' %}selected{% endif %}>Uganda</option>
+                                    <option value="Tanzania" {% if diocese.country == 'Tanzania' %}selected{% endif %}>Tanzania</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="bishop_name" style="color: #ffffff; margin-bottom: 5px;">Bishop Name *</label>
+                                <input type="text" name="bishop_name" id="bishop_name" value="{{ diocese.bishop_name }}" required
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="bishop_phone" style="color: #ffffff; margin-bottom: 5px;">Bishop Phone</label>
+                                <input type="text" name="bishop_phone" id="bishop_phone" value="{{ diocese.bishop_phone }}"
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="bishop_email" style="color: #ffffff; margin-bottom: 5px;">Bishop Email</label>
+                        <input type="email" name="bishop_email" id="bishop_email" value="{{ diocese.bishop_email }}"
+                               class="form-control"
+                               style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label for="description" style="color: #ffffff; margin-bottom: 5px;">Description</label>
+                        <textarea name="description" id="description" rows="4"
+                                  class="form-control"
+                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ diocese.description }}</textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
+                            <i class="fas fa-save"></i> Update Diocese
+                        </button>
+                        <a href="{% url 'church_structure:diocese_detail' diocese_slug=diocese.slug %}" 
+                           class="btn btn-secondary" style="padding: 10px 30px;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,145 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Edit {{ church.name }} Church - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Edit {{ church.name }} Church{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-edit" style="color: #dc2626; margin-right: 10px;"></i>
+                    Edit Church Information
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                       class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="name" style="color: #ffffff; margin-bottom: 5px;">Church Name *</label>
+                                <input type="text" name="name" id="name" value="{{ church.name }}" required
+                                       class="form-control" 
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="pastorate_id" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
+                                <select name="pastorate_id" id="pastorate_id" required
+                                        class="form-control"
+                                        style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    {% for pastorate in pastorates %}
+                                    <option value="{{ pastorate.id }}" {% if pastorate.id == church.pastorate.id %}selected{% endif %}>
+                                        {{ pastorate.name }} ({{ pastorate.diocese.name }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="address" style="color: #ffffff; margin-bottom: 5px;">Church Address *</label>
+                        <textarea name="address" id="address" rows="2" required
+                                  class="form-control"
+                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.address }}</textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="head_teacher_name" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Name *</label>
+                                <input type="text" name="head_teacher_name" id="head_teacher_name" value="{{ church.head_teacher_name }}" required
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="head_teacher_phone" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Phone</label>
+                                <input type="text" name="head_teacher_phone" id="head_teacher_phone" value="{{ church.head_teacher_phone }}"
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="head_teacher_email" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Email</label>
+                        <input type="email" name="head_teacher_email" id="head_teacher_email" value="{{ church.head_teacher_email }}"
+                               class="form-control"
+                               style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="assistant_teachers" style="color: #ffffff; margin-bottom: 5px;">Assistant Teachers</label>
+                        <textarea name="assistant_teachers" id="assistant_teachers" rows="3"
+                                  class="form-control" placeholder="List additional church teachers, one per line"
+                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.assistant_teachers }}</textarea>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label for="service_times" style="color: #ffffff; margin-bottom: 5px;">Service Times</label>
+                        <textarea name="service_times" id="service_times" rows="3"
+                                  class="form-control" placeholder="e.g., Saturday 9:00 AM, Sunday 7:00 AM"
+                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.service_times }}</textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
+                            <i class="fas fa-save"></i> Update Church
+                        </button>
+                        <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                           class="btn btn-secondary" style="padding: 10px 30px;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+</script>
+
+<script>
+// Cascading dropdown functionality
+document.getElementById('diocese_id')?.addEventListener('change', function() {
+    const dioceseId = this.value;
+    const pastorateSelect = document.getElementById('pastorate_id');
+    
+    // Clear pastorate dropdown
+    pastorateSelect.innerHTML = '<option value="">Loading...</option>';
+    
+    if (dioceseId) {
+        // Fetch pastorates for selected diocese
+        fetch(`/church-structure/api/pastorates/${dioceseId}/`)
+            .then(response => response.json())
+            .then(data => {
+                pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                data.forEach(pastorate => {
+                    const option = document.createElement('option');
+                    option.value = pastorate.id;
+                    option.textContent = pastorate.name;
+                    pastorateSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                pastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
+            });
+    }
+});
+</script>
+{% endblock %}

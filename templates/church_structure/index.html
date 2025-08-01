@@ -147,7 +147,7 @@
     </div>
 </div>
 
-<!-- Hierarchical Structure Overview -->
+<!-- Professional Church Structure Table -->
 <div class="card" style="margin-top: 30px;">
     <div class="card-header">
         <h5 class="card-title">
@@ -164,48 +164,218 @@
             </div>
         </div>
         
-        {% for diocese in dioceses %}
-        <div style="margin-bottom: 30px; border-left: 3px solid #dc2626; padding-left: 20px;">
-            <h6 style="color: #ffffff; margin-bottom: 15px;">
-                <i class="fas fa-church" style="color: #dc2626; margin-right: 10px;"></i>
-                {{ diocese.name }} Diocese ({{ diocese.country }}) - Bishop: {{ diocese.bishop_name }}
-            </h6>
-            
-            {% for pastorate in diocese.pastorate_set.all %}
-            <div style="margin-left: 20px; margin-bottom: 15px; border-left: 2px solid #6b7280; padding-left: 15px;">
-                <strong style="color: #e5e7eb;">
-                    <i class="fas fa-users" style="color: #dc2626; margin-right: 8px;"></i>
-                    {{ pastorate.name }} Pastorate - Pastor: {{ pastorate.pastor_name }}
-                </strong>
-                
-                <div style="margin-top: 10px;">
-                    {% for church in pastorate.church_set.all %}
-                    <div style="margin-left: 20px; margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">
-                        <i class="fas fa-home" style="color: #dc2626; margin-right: 8px;"></i>
-                        <span style="color: #ffffff;">{{ church.name }} - {{ church.address }}</span>
-                        <small style="color: #9ca3af; margin-left: 10px;">Head Teacher: {{ church.head_teacher_name }}</small>
-                    </div>
-                    {% empty %}
-                    <div style="margin-left: 20px; color: #9ca3af; font-style: italic;">
-                        <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
-                        No churches in this pastorate yet
-                    </div>
+        {% if dioceses %}
+        <div class="table-responsive">
+            <table class="table table-dark table-striped" style="background: #1f2937;">
+                <thead style="background: #dc2626;">
+                    <tr>
+                        <th style="padding: 15px; color: white; border: 1px solid #374151;">
+                            <i class="fas fa-church" style="margin-right: 8px;"></i>
+                            Diocese
+                        </th>
+                        <th style="padding: 15px; color: white; border: 1px solid #374151;">
+                            <i class="fas fa-users" style="margin-right: 8px;"></i>
+                            Pastorate
+                        </th>
+                        <th style="padding: 15px; color: white; border: 1px solid #374151;">
+                            <i class="fas fa-home" style="margin-right: 8px;"></i>
+                            Church
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for diocese in dioceses %}
+                        {% for pastorate in diocese.pastorates.all %}
+                            {% for church in pastorate.churches.all %}
+                            <tr>
+                                {% if forloop.parentloop.first and forloop.first %}
+                                <td style="padding: 12px; border: 1px solid #374151; vertical-align: top; background: rgba(220, 38, 38, 0.1);" 
+                                    rowspan="{{ diocese.pastorates.all|length }}">
+                                    <div style="margin-bottom: 8px;">
+                                        <strong style="color: #ffffff; font-size: 1.1em;">{{ diocese.name }}</strong><br>
+                                        <small style="color: #9ca3af;">{{ diocese.country }}</small><br>
+                                        <small style="color: #e5e7eb;">Bishop: {{ diocese.bishop_name }}</small>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <a href="{% url 'church_structure:diocese_detail' diocese_slug=diocese.slug %}" 
+                                           class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="View Diocese Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
+                                           class="btn btn-sm" style="background: #f59e0b; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Edit Diocese">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:delete_diocese' diocese_slug=diocese.slug %}" 
+                                           class="btn btn-sm" style="background: #ef4444; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Delete Diocese"
+                                           onclick="return confirm('Are you sure you want to delete this diocese?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                {% endif %}
+                                
+                                {% if forloop.first %}
+                                <td style="padding: 12px; border: 1px solid #374151; vertical-align: top; background: rgba(59, 130, 246, 0.1);" 
+                                    rowspan="{{ pastorate.churches.all|length }}">
+                                    <div style="margin-bottom: 8px;">
+                                        <strong style="color: #ffffff; font-size: 1.05em;">{{ pastorate.name }}</strong><br>
+                                        <small style="color: #e5e7eb;">Pastor: {{ pastorate.pastor_name }}</small>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                                           class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="View Pastorate Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
+                                           class="btn btn-sm" style="background: #f59e0b; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Edit Pastorate">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:delete_pastorate' pastorate_slug=pastorate.slug %}" 
+                                           class="btn btn-sm" style="background: #ef4444; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Delete Pastorate"
+                                           onclick="return confirm('Are you sure you want to delete this pastorate?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                {% endif %}
+                                
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1);">
+                                    <div style="margin-bottom: 8px;">
+                                        <strong style="color: #ffffff;">{{ church.name }}</strong><br>
+                                        <small style="color: #9ca3af;">{{ church.address }}</small><br>
+                                        <small style="color: #e5e7eb;">Head Teacher: {{ church.head_teacher_name }}</small>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                                           class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="View Church Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:edit_church' church_slug=church.slug %}" 
+                                           class="btn btn-sm" style="background: #f59e0b; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Edit Church">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:delete_church' church_slug=church.slug %}" 
+                                           class="btn btn-sm" style="background: #ef4444; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Delete Church"
+                                           onclick="return confirm('Are you sure you want to delete this church?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                {% if forloop.parentloop.first and forloop.first %}
+                                <td style="padding: 12px; border: 1px solid #374151; vertical-align: top; background: rgba(220, 38, 38, 0.1);" 
+                                    rowspan="{{ diocese.pastorates.all|length }}">
+                                    <div style="margin-bottom: 8px;">
+                                        <strong style="color: #ffffff; font-size: 1.1em;">{{ diocese.name }}</strong><br>
+                                        <small style="color: #9ca3af;">{{ diocese.country }}</small><br>
+                                        <small style="color: #e5e7eb;">Bishop: {{ diocese.bishop_name }}</small>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <a href="{% url 'church_structure:diocese_detail' diocese_slug=diocese.slug %}" 
+                                           class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="View Diocese Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
+                                           class="btn btn-sm" style="background: #f59e0b; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Edit Diocese">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:delete_diocese' diocese_slug=diocese.slug %}" 
+                                           class="btn btn-sm" style="background: #ef4444; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Delete Diocese"
+                                           onclick="return confirm('Are you sure you want to delete this diocese?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                {% endif %}
+                                
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1);">
+                                    <div style="margin-bottom: 8px;">
+                                        <strong style="color: #ffffff; font-size: 1.05em;">{{ pastorate.name }}</strong><br>
+                                        <small style="color: #e5e7eb;">Pastor: {{ pastorate.pastor_name }}</small>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                                           class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="View Pastorate Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
+                                           class="btn btn-sm" style="background: #f59e0b; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Edit Pastorate">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'church_structure:delete_pastorate' pastorate_slug=pastorate.slug %}" 
+                                           class="btn btn-sm" style="background: #ef4444; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                           title="Delete Pastorate"
+                                           onclick="return confirm('Are you sure you want to delete this pastorate?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1); color: #9ca3af; font-style: italic;">
+                                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                                    No churches in this pastorate yet
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% empty %}
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #374151; background: rgba(220, 38, 38, 0.1);">
+                                <div style="margin-bottom: 8px;">
+                                    <strong style="color: #ffffff; font-size: 1.1em;">{{ diocese.name }}</strong><br>
+                                    <small style="color: #9ca3af;">{{ diocese.country }}</small><br>
+                                    <small style="color: #e5e7eb;">Bishop: {{ diocese.bishop_name }}</small>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <a href="{% url 'church_structure:diocese_detail' diocese_slug=diocese.slug %}" 
+                                       class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                       title="View Diocese Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
+                                       class="btn btn-sm" style="background: #f59e0b; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                       title="Edit Diocese">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'church_structure:delete_diocese' diocese_slug=diocese.slug %}" 
+                                       class="btn btn-sm" style="background: #ef4444; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;"
+                                       title="Delete Diocese"
+                                       onclick="return confirm('Are you sure you want to delete this diocese?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1); color: #9ca3af; font-style: italic;" colspan="2">
+                                <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                                No pastorates in this diocese yet
+                            </td>
+                        </tr>
+                        {% endfor %}
                     {% endfor %}
-                </div>
-            </div>
-            {% empty %}
-            <div style="margin-left: 20px; color: #9ca3af; font-style: italic;">
-                <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
-                No pastorates in this diocese yet
-            </div>
-            {% endfor %}
+                </tbody>
+            </table>
         </div>
-        {% empty %}
+        {% else %}
         <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
             <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
             No church structure data available yet. Start by adding dioceses.
         </div>
-        {% endfor %}
+        {% endif %}
     </div>
 </div>
 

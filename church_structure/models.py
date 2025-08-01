@@ -1,8 +1,10 @@
 
 from django.db import models
+from django.utils.text import slugify
 
 class Diocese(models.Model):
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=250, unique=True, blank=True)
     country = models.CharField(max_length=100, choices=[
         ('Kenya', 'Kenya'),
         ('Uganda', 'Uganda'),
@@ -22,11 +24,17 @@ class Diocese(models.Model):
         verbose_name = 'Diocese'
         verbose_name_plural = 'Dioceses'
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.name}-{self.country}")
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return f"{self.name} - {self.country}"
 
 class Pastorate(models.Model):
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=250, unique=True, blank=True)
     diocese = models.ForeignKey(Diocese, on_delete=models.CASCADE, related_name='pastorates')
     pastor_name = models.CharField(max_length=200)
     pastor_phone = models.CharField(max_length=20, blank=True)
@@ -42,11 +50,17 @@ class Pastorate(models.Model):
         verbose_name = 'Pastorate'
         verbose_name_plural = 'Pastorates'
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.name}-{self.diocese.name}")
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return f"{self.name} - {self.diocese.name}"
 
 class Church(models.Model):
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=250, unique=True, blank=True)
     pastorate = models.ForeignKey(Pastorate, on_delete=models.CASCADE, related_name='churches')
     address = models.TextField()
     phone = models.CharField(max_length=20, blank=True)
@@ -66,6 +80,11 @@ class Church(models.Model):
         ordering = ['pastorate', 'name']
         verbose_name = 'Church'
         verbose_name_plural = 'Churches'
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.name}-{self.pastorate.name}")
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"{self.name} - {self.pastorate.name}"

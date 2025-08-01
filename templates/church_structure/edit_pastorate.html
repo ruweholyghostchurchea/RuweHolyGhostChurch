@@ -1,0 +1,99 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Edit {{ pastorate.name }} Pastorate - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Edit {{ pastorate.name }} Pastorate{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-edit" style="color: #dc2626; margin-right: 10px;"></i>
+                    Edit Pastorate Information
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                       class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="name" style="color: #ffffff; margin-bottom: 5px;">Pastorate Name *</label>
+                                <input type="text" name="name" id="name" value="{{ pastorate.name }}" required
+                                       class="form-control" 
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="diocese_id" style="color: #ffffff; margin-bottom: 5px;">Diocese *</label>
+                                <select name="diocese_id" id="diocese_id" required
+                                        class="form-control"
+                                        style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    {% for diocese in dioceses %}
+                                    <option value="{{ diocese.id }}" {% if diocese.id == pastorate.diocese.id %}selected{% endif %}>
+                                        {{ diocese.name }} ({{ diocese.country }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="pastor_name" style="color: #ffffff; margin-bottom: 5px;">Pastor Name *</label>
+                                <input type="text" name="pastor_name" id="pastor_name" value="{{ pastorate.pastor_name }}" required
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="pastor_phone" style="color: #ffffff; margin-bottom: 5px;">Pastor Phone</label>
+                                <input type="text" name="pastor_phone" id="pastor_phone" value="{{ pastorate.pastor_phone }}"
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="pastor_email" style="color: #ffffff; margin-bottom: 5px;">Pastor Email</label>
+                        <input type="email" name="pastor_email" id="pastor_email" value="{{ pastorate.pastor_email }}"
+                               class="form-control"
+                               style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label for="description" style="color: #ffffff; margin-bottom: 5px;">Description</label>
+                        <textarea name="description" id="description" rows="4"
+                                  class="form-control"
+                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ pastorate.description }}</textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
+                            <i class="fas fa-save"></i> Update Pastorate
+                        </button>
+                        <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                           class="btn btn-secondary" style="padding: 10px 30px;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ diocese.name }} Diocese - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ diocese.name }} Diocese{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Diocese Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-church" style="color: #dc2626; margin-right: 10px;"></i>
+                    Diocese Information
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
+                       class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Edit Diocese
+                    </a>
+                    <a href="{% url 'church_structure:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Name:</strong> {{ diocese.name }}</p>
+                        <p><strong>Country:</strong> {{ diocese.country }}</p>
+                        <p><strong>Bishop:</strong> {{ diocese.bishop_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bishop Phone:</strong> {{ diocese.bishop_phone|default:"Not provided" }}</p>
+                        <p><strong>Bishop Email:</strong> {{ diocese.bishop_email|default:"Not provided" }}</p>
+                        <p><strong>Established:</strong> {{ diocese.established_date|default:"Not specified" }}</p>
+                    </div>
+                </div>
+                {% if diocese.description %}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <p><strong>Description:</strong></p>
+                        <p>{{ diocese.description }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Pastorates Under This Diocese -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #dc2626; margin-right: 10px;"></i>
+                    Pastorates ({{ pastorates.count }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if pastorates %}
+                <div class="row">
+                    {% for pastorate in pastorates %}
+                    <div class="col-md-6 mb-4">
+                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-left: 4px solid #dc2626;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">
+                                <i class="fas fa-users" style="color: #dc2626; margin-right: 8px;"></i>
+                                {{ pastorate.name }}
+                            </h6>
+                            <p style="color: #e5e7eb; margin-bottom: 8px;">
+                                <strong>Pastor:</strong> {{ pastorate.pastor_name }}
+                            </p>
+                            {% if pastorate.pastor_phone %}
+                            <p style="color: #9ca3af; margin-bottom: 8px;">
+                                <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                {{ pastorate.pastor_phone }}
+                            </p>
+                            {% endif %}
+                            {% if pastorate.pastor_email %}
+                            <p style="color: #9ca3af; margin-bottom: 15px;">
+                                <i class="fas fa-envelope" style="margin-right: 5px;"></i>
+                                {{ pastorate.pastor_email }}
+                            </p>
+                            {% endif %}
+                            
+                            <!-- Churches in this Pastorate -->
+                            <div style="margin-top: 15px;">
+                                <strong style="color: #ffffff; font-size: 0.9em;">Churches ({{ pastorate.churches.count }}):</strong>
+                                {% for church in pastorate.churches.all %}
+                                <div style="margin-top: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                                    <i class="fas fa-home" style="color: #dc2626; margin-right: 5px;"></i>
+                                    <span style="color: #ffffff; font-size: 0.9em;">{{ church.name }}</span>
+                                    <br>
+                                    <small style="color: #9ca3af;">{{ church.address }}</small>
+                                    <br>
+                                    <small style="color: #e5e7eb;">Head Teacher: {{ church.head_teacher_name }}</small>
+                                    <div style="margin-top: 5px;">
+                                        <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                                           class="btn btn-sm" style="background: #3b82f6; color: white; padding: 2px 6px; text-decoration: none; border-radius: 3px; font-size: 0.8em;">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div style="color: #9ca3af; font-style: italic; font-size: 0.9em; margin-top: 8px;">
+                                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                                    No churches yet
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div style="margin-top: 15px; text-align: right;">
+                                <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                                   class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
+                                   class="btn btn-sm" style="background: #f59e0b; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                    <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                    No pastorates in this diocese yet.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ church.name }} Church - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Delete {{ church.name }} Church{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background: #dc2626;">
+                <h5 class="card-title" style="color: white; margin: 0;">
+                    <i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i>
+                    Confirm Deletion
+                </h5>
+            </div>
+            <div class="card-body" style="text-align: center;">
+                <div style="margin: 30px 0;">
+                    <i class="fas fa-home" style="font-size: 4rem; color: #dc2626; margin-bottom: 20px;"></i>
+                    <h4 style="color: #ffffff; margin-bottom: 15px;">Delete Church</h4>
+                    <p style="color: #e5e7eb; font-size: 1.1em;">
+                        Are you sure you want to delete the church:
+                    </p>
+                    <p style="color: #ffffff; font-size: 1.3em; font-weight: bold; margin: 20px 0;">
+                        "{{ church.name }}"
+                    </p>
+                    <p style="color: #9ca3af;">
+                        From {{ church.pastorate.name }} Pastorate<br>
+                        {{ church.address }}
+                    </p>
+                    
+                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #dc2626; border-radius: 8px; padding: 15px; margin: 20px 0;">
+                        <p style="color: #fecaca; margin: 0;">
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                            <strong>Warning:</strong> Deleting this church will remove all associated member records and data.
+                        </p>
+                    </div>
+                    
+                    <p style="color: #9ca3af; margin-top: 20px;">
+                        This action cannot be undone.
+                    </p>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <form method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn" style="background: #dc2626; color: white; padding: 10px 25px; margin-right: 10px;">
+                            <i class="fas fa-trash"></i> Yes, Delete Church
+                        </button>
+                    </form>
+                    <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                       class="btn btn-secondary" style="padding: 10px 25px;">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
