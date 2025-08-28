@@ -36,14 +36,11 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Enhanced CSRF settings
 CSRF_COOKIE_SECURE = not DEBUG  # True in production
-CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript access if needed
+CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
 CSRF_COOKIE_AGE = 31449600  # 1 year
-CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_DOMAIN = None
-CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
 
 # Security settings for production
 SECURE_SSL_REDIRECT = not DEBUG  # Redirect HTTP to HTTPS in production
