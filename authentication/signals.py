@@ -10,15 +10,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     """Create UserProfile when a new User is created"""
     if created:
         UserProfile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, created, **kwargs):
-    """Create or save UserProfile when User is saved"""
-    if created:
-        # Create UserProfile for new users
-        UserProfile.objects.create(user=instance)
     else:
-        # Save existing UserProfile
+        # Save existing UserProfile if it exists
         if hasattr(instance, 'userprofile'):
             instance.userprofile.save()
