@@ -45,6 +45,26 @@ class Member(models.Model):
         ('other', 'Other'),
     ]
     
+    MEMBERSHIP_STATUS_CHOICES = [
+        ('Active', 'Active'),
+        ('Inactive', 'Inactive'),
+        ('Transferred', 'Transferred'),
+        ('Left/Quit', 'Left/Quit'),
+        ('Dead', 'Dead'),
+    ]
+    
+    PWD_TYPE_CHOICES = [
+        ('prefer_not_to_say', 'Prefer not to say'),
+        ('blind_low_vision', 'Blind or low vision'),
+        ('cognitive_autism', 'Cognitive or Autism'),
+        ('cripple_mobility', 'Cripple or Mobility problem'),
+        ('chronic_invisible', 'Chronic/Invisible Disability'),
+        ('deaf_hearing', 'Deaf or Hearing difficulty'),
+        ('mute_speaking', 'Mute or Speaking difficulty'),
+        ('mental_health', 'Mental Health Condition'),
+        ('other', 'Other (Please specify if you are comfortable)'),
+    ]
+    
     # Personal Information
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -55,8 +75,8 @@ class Member(models.Model):
     marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, default='single')
     location = models.CharField(max_length=20, choices=LOCATION_CHOICES, default='other')
     education_level = models.CharField(max_length=20, choices=EDUCATION_LEVEL_CHOICES, default='other')
-    phone_number = models.CharField(max_length=20)
-    email_address = models.EmailField(blank=True)
+    phone_number = models.CharField(max_length=20, unique=True)
+    email_address = models.EmailField(blank=True, unique=True)
     
     # Job/Occupation Information
     job_occupation_income = models.TextField(help_text="Job title, occupation details, and income information")
@@ -89,6 +109,30 @@ class Member(models.Model):
     emergency_contact_2_phone = models.CharField(max_length=20, blank=True)
     emergency_contact_2_email = models.EmailField(blank=True)
     
+    # Family Details (Optional - searchable relationships)
+    father = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children_as_father')
+    mother = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children_as_mother')
+    guardian = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children_as_guardian')
+    brother = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='siblings_as_brother')
+    sister = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='siblings_as_sister')
+    uncle = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='nephews_nieces_as_uncle')
+    aunt = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='nephews_nieces_as_aunt')
+    friend = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='friends')
+    
+    # Membership Status
+    membership_status = models.CharField(max_length=20, choices=MEMBERSHIP_STATUS_CHOICES, default='Active')
+    
+    # Person with Disability (PWD)
+    is_pwd = models.BooleanField(default=False, verbose_name="Person with Disability")
+    pwd_type = models.CharField(max_length=50, choices=PWD_TYPE_CHOICES, blank=True, verbose_name="Type of Disability")
+    pwd_other_description = models.TextField(blank=True, verbose_name="Other Disability Description")
+    
+    # Staff Status
+    is_staff = models.BooleanField(default=False, verbose_name="Staff Member")
+    
+    # Hand Ordination Status
+    is_ordained = models.BooleanField(default=False, verbose_name="Ordained Member")
+    
     # Profile Photo
     profile_photo = models.ImageField(upload_to='member_photos/', blank=True, null=True)
     profile_photo_url = models.URLField(blank=True, help_text="Alternative to uploading a photo")
@@ -97,7 +141,6 @@ class Member(models.Model):
     custom_fields = models.JSONField(default=dict, blank=True, help_text="Store custom member data as key-value pairs")
     
     # System fields
-    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -143,6 +186,16 @@ class Member(models.Model):
     def set_custom_field(self, key, value):
         """Set a custom field value"""
         self.custom_fields[key] = value
+    
+    @property
+    def is_active(self):
+        """Return True if member status is Active"""
+        return self.membership_status == 'Active'
+    
+    @property
+    def is_archived(self):
+        """Return True if member should be archived"""
+        return self.membership_status in ['Left/Quit', 'Dead']
 
 
 class MemberDocument(models.Model):

@@ -6,12 +6,13 @@ from .models import Member, MemberDocument
 class MemberAdmin(admin.ModelAdmin):
     list_display = [
         'full_name', 'username', 'user_group', 'gender', 'marital_status',
-        'location', 'phone_number', 'user_home_church', 'user_home_pastorate', 
-        'user_home_diocese', 'is_active', 'created_at'
+        'location', 'phone_number', 'membership_status', 'is_staff', 'is_ordained', 
+        'is_pwd', 'user_home_church', 'user_home_pastorate', 'user_home_diocese', 'created_at'
     ]
     list_filter = [
         'user_group', 'gender', 'marital_status', 'location', 'education_level',
-        'user_home_diocese', 'user_home_pastorate', 'is_active', 'created_at', 'date_of_birth'
+        'membership_status', 'is_staff', 'is_ordained', 'is_pwd',
+        'user_home_diocese', 'user_home_pastorate', 'created_at', 'date_of_birth'
     ]
     search_fields = [
         'first_name', 'last_name', 'username', 'phone_number', 
@@ -26,6 +27,17 @@ class MemberAdmin(admin.ModelAdmin):
         }),
         ('Contact Information', {
             'fields': ('phone_number', 'email_address')
+        }),
+        ('Status Information', {
+            'fields': ('membership_status', 'is_staff', 'is_ordained')
+        }),
+        ('Person with Disability (PWD)', {
+            'fields': ('is_pwd', 'pwd_type', 'pwd_other_description'),
+            'classes': ('collapse',),
+        }),
+        ('Family Details', {
+            'fields': ('father', 'mother', 'guardian', 'brother', 'sister', 'uncle', 'aunt', 'friend'),
+            'classes': ('collapse',),
         }),
         ('Job Information', {
             'fields': ('job_occupation_income',)

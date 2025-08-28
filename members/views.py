@@ -15,9 +15,10 @@ def index(request):
     user_group_filter = request.GET.get('user_group', '')
     diocese_filter = request.GET.get('diocese', '')
 
-    members = Member.objects.filter(is_active=True).select_related(
+    members = Member.objects.exclude(membership_status__in=['Left/Quit', 'Dead']).select_related(
         'user_home_diocese', 'user_home_pastorate', 'user_home_church',
-        'user_town_diocese', 'user_town_pastorate', 'user_town_church'
+        'user_town_diocese', 'user_town_pastorate', 'user_town_church',
+        'father', 'mother', 'guardian', 'brother', 'sister', 'uncle', 'aunt', 'friend'
     )
 
     # Apply filters
@@ -45,12 +46,16 @@ def index(request):
     user_groups = Member.USER_GROUP_CHOICES
 
     # Statistics
+    active_members = Member.objects.filter(membership_status='Active')
     stats = {
-        'total_members': Member.objects.filter(is_active=True).count(),
-        'youth_count': Member.objects.filter(is_active=True, user_group='Youth').count(),
-        'adult_count': Member.objects.filter(is_active=True, user_group='Adult').count(),
-        'elder_count': Member.objects.filter(is_active=True, user_group='Elder').count(),
-        'clergy_count': Member.objects.filter(is_active=True, user_group='Clergy').count(),
+        'total_members': active_members.count(),
+        'youth_count': active_members.filter(user_group='Youth').count(),
+        'adult_count': active_members.filter(user_group='Adult').count(),
+        'elder_count': active_members.filter(user_group='Elder').count(),
+        'clergy_count': active_members.filter(user_group='Clergy').count(),
+        'staff_count': active_members.filter(is_staff=True).count(),
+        'ordained_count': active_members.filter(is_ordained=True).count(),
+        'pwd_count': active_members.filter(is_pwd=True).count(),
     }
 
     context = {
@@ -74,6 +79,8 @@ def add_member(request):
             'page_title': 'Add New Member',
             'dioceses': dioceses,
             'user_groups': Member.USER_GROUP_CHOICES,
+            'membership_statuses': Member.MEMBERSHIP_STATUS_CHOICES,
+            'pwd_types': Member.PWD_TYPE_CHOICES,
         }
         return render(request, 'members/add_member.html', context)
 
@@ -128,6 +135,24 @@ def add_member(request):
             for name, value in zip(custom_field_names, custom_field_values):
                 if name and value:  # Only add non-empty fields
                     custom_fields[name] = value
+
+            # New Fields
+            membership_status = request.POST.get('membership_status', 'Active')
+            is_pwd = request.POST.get('is_pwd') == 'Yes'
+            pwd_type = request.POST.get('pwd_type', '') if is_pwd else ''
+            pwd_other_description = request.POST.get('pwd_other_description', '')
+            is_staff = request.POST.get('is_staff') == 'Yes'
+            is_ordained = request.POST.get('is_ordained') == 'Yes'
+
+            # Family Details (optional)
+            father_id = request.POST.get('father') or None
+            mother_id = request.POST.get('mother') or None
+            guardian_id = request.POST.get('guardian') or None
+            brother_id = request.POST.get('brother') or None
+            sister_id = request.POST.get('sister') or None
+            uncle_id = request.POST.get('uncle') or None
+            aunt_id = request.POST.get('aunt') or None
+            friend_id = request.POST.get('friend') or None
 
             # Town Church Structure (Optional)
             user_town_diocese_id = request.POST.get('user_town_diocese') or None
@@ -199,6 +224,22 @@ def add_member(request):
                 profile_photo_url=profile_photo_url,
                 # Custom Fields
                 custom_fields=custom_fields,
+                # New Fields
+                membership_status=membership_status,
+                is_pwd=is_pwd,
+                pwd_type=pwd_type,
+                pwd_other_description=pwd_other_description,
+                is_staff=is_staff,
+                is_ordained=is_ordained,
+                # Family Details
+                father_id=father_id,
+                mother_id=mother_id,
+                guardian_id=guardian_id,
+                brother_id=brother_id,
+                sister_id=sister_id,
+                uncle_id=uncle_id,
+                aunt_id=aunt_id,
+                friend_id=friend_id,
             )
 
             # Handle document uploads
@@ -247,9 +288,37 @@ def get_churches_by_pastorate(request, pastorate_id):
 @login_required
 def member_detail(request, member_id):
     """View member details"""
-    member = get_object_or_404(Member, id=member_id, is_active=True)
+    member = get_object_or_404(Member, id=member_id)
     context = {
         'page_title': f'Member Details - {member.full_name}',
         'member': member,
     }
     return render(request, 'members/member_detail.html', context)
+
+@login_required
+def search_members_api(request):
+    """API endpoint to search members for family relationships"""
+    search_term = request.GET.get('q', '').strip()
+    if len(search_term) < 2:
+        return JsonResponse([], safe=False)
+    
+    members = Member.objects.filter(
+        Q(username__icontains=search_term) |
+        Q(first_name__icontains=search_term) |
+        Q(last_name__icontains=search_term) |
+        Q(phone_number__icontains=search_term) |
+        Q(email_address__icontains=search_term)
+    ).exclude(membership_status__in=['Left/Quit', 'Dead'])[:10]
+    
+    results = []
+    for member in members:
+        results.append({
+            'id': member.id,
+            'username': member.username,
+            'name': member.full_name,
+            'phone': member.phone_number,
+            'email': member.email_address,
+            'display': f"{member.full_name} ({member.username}) - {member.phone_number}"
+        })
+    
+    return JsonResponse(results, safe=False)

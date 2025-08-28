@@ -31,7 +31,7 @@
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Last Name *</label>
-                    <input type="text" name="last_name" required placeholder="e.g., Obonyo" 
+                    <input type="text" name="last_name" required placeholder="e.g., Obonyo"
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
             </div>
@@ -39,12 +39,12 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Username *</label>
-                    <input type="text" name="username" required placeholder="e.g., lawi_obonyo" 
+                    <input type="text" name="username" required placeholder="e.g., lawi_obonyo"
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">User Group *</label>
-                    <select name="user_group" required 
+                    <select name="user_group" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Group</option>
                         {% for value, label in user_groups %}
@@ -54,7 +54,7 @@
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Gender *</label>
-                    <select name="gender" required 
+                    <select name="gender" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Gender</option>
                         <option value="M">Male</option>
@@ -66,12 +66,12 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date of Birth *</label>
-                    <input type="date" name="date_of_birth" required 
+                    <input type="date" name="date_of_birth" required
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Marital Status *</label>
-                    <select name="marital_status" required 
+                    <select name="marital_status" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Marital Status</option>
                         <option value="single">Single</option>
@@ -83,7 +83,7 @@
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Location *</label>
-                    <select name="location" required 
+                    <select name="location" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Location</option>
                         <option value="siaya">Siaya</option>
@@ -100,7 +100,7 @@
             <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Education Level *</label>
-                    <select name="education_level" required 
+                    <select name="education_level" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Education Level</option>
                         <option value="primary">Primary Education</option>
@@ -126,13 +126,132 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Phone Number *</label>
-                    <input type="tel" name="phone_number" required placeholder="e.g., +254708581688" 
+                    <input type="tel" name="phone_number" required placeholder="e.g., +254708581688"
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Email Address *</label>
-                    <input type="email" name="email_address" required placeholder="e.g., lawifirst@gmail.com" 
+                    <input type="email" name="email_address" required placeholder="e.g., lawifirst@gmail.com"
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+
+            <!-- Membership Status -->
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-md-4">
+                    <label for="membership_status" class="form-label">Membership Status <span class="text-danger">*</span></label>
+                    <select class="form-select" id="membership_status" name="membership_status" required>
+                        {% for value, display in membership_statuses %}
+                        <option value="{{ value }}" {% if value == 'Active' %}selected{% endif %}>{{ display }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="is_staff" class="form-label">Staff Status <span class="text-danger">*</span></label>
+                    <select class="form-select" id="is_staff" name="is_staff" required>
+                        <option value="No" selected>No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="is_ordained" class="form-label">Hand Ordination Status <span class="text-danger">*</span></label>
+                    <select class="form-select" id="is_ordained" name="is_ordained" required>
+                        <option value="No" selected>No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Person with Disability -->
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-md-4">
+                    <label for="is_pwd" class="form-label">Person with Disability (PWD) <span class="text-danger">*</span></label>
+                    <select class="form-select" id="is_pwd" name="is_pwd" onchange="togglePwdFields()" required>
+                        <option value="No" selected>No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="col-md-4" id="pwd_type_field" style="display: none;">
+                    <label for="pwd_type" class="form-label">Type of Disability</label>
+                    <select class="form-select" id="pwd_type" name="pwd_type">
+                        <option value="">Select type...</option>
+                        {% for value, display in pwd_types %}
+                        <option value="{{ value }}">{{ display }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4" id="pwd_other_field" style="display: none;">
+                    <label for="pwd_other_description" class="form-label">Other Disability Description</label>
+                    <textarea class="form-control" id="pwd_other_description" name="pwd_other_description" rows="2" placeholder="Please specify if comfortable..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Family Details -->
+        <div class="form-section" style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-users" style="margin-right: 10px; color: #dc2626;"></i>
+                Family Details (Optional)
+            </h6>
+            <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">Search and select family members by username, email, or phone number</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="father" class="form-label">Father</label>
+                    <select class="form-select member-select" id="father" name="father">
+                        <option value="">Select Father...</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="mother" class="form-label">Mother</label>
+                    <select class="form-select member-select" id="mother" name="mother">
+                        <option value="">Select Mother...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="guardian" class="form-label">Guardian</label>
+                    <select class="form-select member-select" id="guardian" name="guardian">
+                        <option value="">Select Guardian...</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="brother" class="form-label">Brother</label>
+                    <select class="form-select member-select" id="brother" name="brother">
+                        <option value="">Select Brother...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="sister" class="form-label">Sister</label>
+                    <select class="form-select member-select" id="sister" name="sister">
+                        <option value="">Select Sister...</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="uncle" class="form-label">Uncle</label>
+                    <select class="form-select member-select" id="uncle" name="uncle">
+                        <option value="">Select Uncle...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="aunt" class="form-label">Aunt</label>
+                    <select class="form-select member-select" id="aunt" name="aunt">
+                        <option value="">Select Aunt...</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="friend" class="form-label">Friend</label>
+                    <select class="form-select member-select" id="friend" name="friend">
+                        <option value="">Select Friend...</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -239,12 +358,12 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Baptismal First Name *</label>
-                    <input type="text" name="baptismal_first_name" required 
+                    <input type="text" name="baptismal_first_name" required
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Baptismal Last Name *</label>
-                    <input type="text" name="baptismal_last_name" required 
+                    <input type="text" name="baptismal_last_name" required
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
             </div>
@@ -252,12 +371,12 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date Baptized *</label>
-                    <input type="date" name="date_baptized" required 
+                    <input type="date" name="date_baptized" required
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date Joined Religion *</label>
-                    <input type="date" name="date_joined_religion" required 
+                    <input type="date" name="date_joined_religion" required
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
             </div>
@@ -273,7 +392,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Diocese *</label>
-                    <select name="user_home_diocese" id="home-diocese-select" required 
+                    <select name="user_home_diocese" id="home-diocese-select" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Diocese</option>
                         {% for diocese in dioceses %}
@@ -283,14 +402,14 @@
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Pastorate *</label>
-                    <select name="user_home_pastorate" id="home-pastorate-select" required 
+                    <select name="user_home_pastorate" id="home-pastorate-select" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Pastorate</option>
                     </select>
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Church *</label>
-                    <select name="user_home_church" id="home-church-select" required 
+                    <select name="user_home_church" id="home-church-select" required
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Church</option>
                     </select>
@@ -308,7 +427,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Diocese</label>
-                    <select name="user_town_diocese" id="town-diocese-select" 
+                    <select name="user_town_diocese" id="town-diocese-select"
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Diocese</option>
                         {% for diocese in dioceses %}
@@ -318,14 +437,14 @@
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Pastorate</label>
-                    <select name="user_town_pastorate" id="town-pastorate-select" 
+                    <select name="user_town_pastorate" id="town-pastorate-select"
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Pastorate</option>
                     </select>
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Church</label>
-                    <select name="user_town_church" id="town-church-select" 
+                    <select name="user_town_church" id="town-church-select"
                             style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select Church</option>
                     </select>
@@ -380,99 +499,221 @@
 </div>
 
 <script>
-// Cascading dropdown functionality for Home Church Structure
-document.getElementById('home-diocese-select').addEventListener('change', function() {
-    const dioceseId = this.value;
-    const pastorateSelect = document.getElementById('home-pastorate-select');
-    const churchSelect = document.getElementById('home-church-select');
+        // PWD Fields Toggle
+        function togglePwdFields() {
+            const isPwd = document.getElementById('is_pwd').value === 'Yes';
+            const pwdTypeField = document.getElementById('pwd_type_field');
+            const pwdOtherField = document.getElementById('pwd_other_field');
 
-    // Clear dependent dropdowns
-    pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-    churchSelect.innerHTML = '<option value="">Select Church</option>';
-
-    if (dioceseId) {
-        fetch(`/members/api/pastorates/${dioceseId}/`)
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(pastorate => {
-                    const option = document.createElement('option');
-                    option.value = pastorate.id;
-                    option.textContent = pastorate.name;
-                    pastorateSelect.appendChild(option);
+            if (isPwd) {
+                pwdTypeField.style.display = 'block';
+                document.getElementById('pwd_type').addEventListener('change', function() {
+                    pwdOtherField.style.display = this.value === 'other' ? 'block' : 'none';
                 });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-});
+            } else {
+                pwdTypeField.style.display = 'none';
+                pwdOtherField.style.display = 'none';
+                document.getElementById('pwd_type').value = '';
+                document.getElementById('pwd_other_description').value = '';
+            }
+        }
 
-document.getElementById('home-pastorate-select').addEventListener('change', function() {
-    const pastorateId = this.value;
-    const churchSelect = document.getElementById('home-church-select');
+        // Member Search Functionality
+        class MemberSearchSelect {
+            constructor(selectElement) {
+                this.selectElement = selectElement;
+                this.searchInput = null;
+                this.init();
+            }
 
-    // Clear church dropdown
-    churchSelect.innerHTML = '<option value="">Select Church</option>';
+            init() {
+                this.createSearchInput();
+                this.bindEvents();
+            }
 
-    if (pastorateId) {
-        fetch(`/members/api/churches/${pastorateId}/`)
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(church => {
-                    const option = document.createElement('option');
-                    option.value = church.id;
-                    option.textContent = church.name;
-                    churchSelect.appendChild(option);
+            createSearchInput() {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'member-search-wrapper';
+                wrapper.style.cssText = 'position: relative;';
+
+                this.searchInput = document.createElement('input');
+                this.searchInput.type = 'text';
+                this.searchInput.className = 'form-control';
+                this.searchInput.placeholder = 'Type to search members...';
+                this.searchInput.style.cssText = 'margin-bottom: 5px;';
+
+                this.selectElement.parentNode.insertBefore(wrapper, this.selectElement);
+                wrapper.appendChild(this.searchInput);
+                wrapper.appendChild(this.selectElement);
+
+                this.selectElement.style.display = 'none';
+            }
+
+            bindEvents() {
+                let timeout;
+                this.searchInput.addEventListener('input', (e) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        this.searchMembers(e.target.value);
+                    }, 300);
                 });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-});
 
-// Cascading dropdown functionality for Town Church Structure
-document.getElementById('town-diocese-select').addEventListener('change', function() {
-    const dioceseId = this.value;
-    const pastorateSelect = document.getElementById('town-pastorate-select');
-    const churchSelect = document.getElementById('town-church-select');
-
-    // Clear dependent dropdowns
-    pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-    churchSelect.innerHTML = '<option value="">Select Church</option>';
-
-    if (dioceseId) {
-        fetch(`/members/api/pastorates/${dioceseId}/`)
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(pastorate => {
-                    const option = document.createElement('option');
-                    option.value = pastorate.id;
-                    option.textContent = pastorate.name;
-                    pastorateSelect.appendChild(option);
+                this.searchInput.addEventListener('focus', () => {
+                    if (this.searchInput.value.length >= 2) {
+                        this.searchMembers(this.searchInput.value);
+                    }
                 });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-});
+            }
 
-document.getElementById('town-pastorate-select').addEventListener('change', function() {
-    const pastorateId = this.value;
-    const churchSelect = document.getElementById('town-church-select');
+            searchMembers(query) {
+                if (query.length < 2) {
+                    this.clearResults();
+                    return;
+                }
 
-    // Clear church dropdown
-    churchSelect.innerHTML = '<option value="">Select Church</option>';
+                fetch(`/members/api/search/?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.displayResults(data);
+                    })
+                    .catch(error => {
+                        console.error('Error searching members:', error);
+                    });
+            }
 
-    if (pastorateId) {
-        fetch(`/members/api/churches/${pastorateId}/`)
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(church => {
+            displayResults(members) {
+                this.clearResults();
+
+                if (members.length === 0) {
                     const option = document.createElement('option');
-                    option.value = church.id;
-                    option.textContent = church.name;
-                    churchSelect.appendChild(option);
+                    option.value = '';
+                    option.textContent = 'No members found';
+                    this.selectElement.appendChild(option);
+                    this.selectElement.style.display = 'block';
+                    return;
+                }
+
+                members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.id;
+                    option.textContent = member.display;
+                    this.selectElement.appendChild(option);
                 });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-});
+
+                this.selectElement.style.display = 'block';
+
+                this.selectElement.addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        const selectedOption = e.target.options[e.target.selectedIndex];
+                        this.searchInput.value = selectedOption.textContent;
+                        this.selectElement.style.display = 'none';
+                    }
+                }, { once: true });
+            }
+
+            clearResults() {
+                this.selectElement.innerHTML = '<option value="">Select...</option>';
+                this.selectElement.style.display = 'none';
+            }
+        }
+
+        // Enhanced Cascading Dropdown Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const homeDioceseSelect = document.getElementById('user_home_diocese');
+            const homePastorateSelect = document.getElementById('user_home_pastorate');
+            const homeChurchSelect = document.getElementById('user_home_church');
+
+            const townDioceseSelect = document.getElementById('user_town_diocese');
+            const townPastorateSelect = document.getElementById('user_town_pastorate');
+            const townChurchSelect = document.getElementById('user_town_church');
+
+            // Initialize member search selects
+            const memberSelects = document.querySelectorAll('.member-select');
+            memberSelects.forEach(select => {
+                new MemberSearchSelect(select);
+            });
+
+            // Cascading dropdown functionality for Home Church Structure
+            homeDioceseSelect.addEventListener('change', function() {
+                const dioceseId = this.value;
+                homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+                if (dioceseId) {
+                    fetch(`/members/api/pastorates/${dioceseId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(pastorate => {
+                                const option = document.createElement('option');
+                                option.value = pastorate.id;
+                                option.textContent = pastorate.name;
+                                homePastorateSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching pastorates:', error));
+                }
+            });
+
+            homePastorateSelect.addEventListener('change', function() {
+                const pastorateId = this.value;
+                homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+                if (pastorateId) {
+                    fetch(`/members/api/churches/${pastorateId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(church => {
+                                const option = document.createElement('option');
+                                option.value = church.id;
+                                option.textContent = church.name;
+                                homeChurchSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching churches:', error));
+                }
+            });
+
+            // Cascading dropdown functionality for Town Church Structure
+            townDioceseSelect.addEventListener('change', function() {
+                const dioceseId = this.value;
+                townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+                if (dioceseId) {
+                    fetch(`/members/api/pastorates/${dioceseId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(pastorate => {
+                                const option = document.createElement('option');
+                                option.value = pastorate.id;
+                                option.textContent = pastorate.name;
+                                townPastorateSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching pastorates:', error));
+                }
+            });
+
+            townPastorateSelect.addEventListener('change', function() {
+                const pastorateId = this.value;
+                townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+                if (pastorateId) {
+                    fetch(`/members/api/churches/${pastorateId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(church => {
+                                const option = document.createElement('option');
+                                option.value = church.id;
+                                option.textContent = church.name;
+                                townChurchSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching churches:', error));
+                }
+            });
+        });
+
 
 // Custom Fields Management
 function addCustomField() {
@@ -493,7 +734,7 @@ function addCustomField() {
                    style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
         </div>
         <div style="display: flex; align-items: end;">
-            <button type="button" onclick="removeCustomField(this)" 
+            <button type="button" onclick="removeCustomField(this)"
                     style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
                 <i class="fas fa-trash"></i>
             </button>
@@ -518,7 +759,7 @@ function addDocument() {
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
             <div>
                 <label style="color: #ffffff; margin-bottom: 5px; display: block;">Document Type</label>
-                <select name="document_types[]" 
+                <select name="document_types[]"
                         style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                     <option value="">Select Document Type</option>
                     <option value="baptism_certificate">Baptism Certificate</option>
@@ -543,10 +784,10 @@ function addDocument() {
         <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: end;">
             <div>
                 <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload Document</label>
-                <input type="file" name="document_files[]" 
+                <input type="file" name="document_files[]"
                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
             </div>
-            <button type="button" onclick="removeDocument(this)" 
+            <button type="button" onclick="removeDocument(this)"
                     style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
                 <i class="fas fa-trash"></i>
             </button>

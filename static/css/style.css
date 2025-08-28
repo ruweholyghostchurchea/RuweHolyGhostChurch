@@ -406,3 +406,42 @@ body {
     filter: blur(5px);
     pointer-events: none;
 }
+
+.badge-clergy {
+    background-color: #7c3aed;
+    color: white;
+}
+
+.badge-info {
+    background-color: #0ea5e9;
+    color: white;
+}
+
+.badge-purple {
+    background-color: #7c3aed;
+    color: white;
+}
+
+.badge-success {
+    background-color: #10b981;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.badge-secondary {
+    background-color: #6b7280;
+    color: white;
+}
+
+.member-search-wrapper {
+    position: relative;
+}
+
+.member-search-wrapper input:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25);
+}
