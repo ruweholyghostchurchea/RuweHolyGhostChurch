@@ -40,7 +40,8 @@
                 <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Dioceses ({{ dioceses.count }})</h6>
                 {% for diocese in dioceses %}
                 <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
-                    <strong style="color: #ffffff;">{{ diocese.name }}</strong><br>
+                    <strong style="color: #ffffff;">{{ diocese.name }}</strong>
+                    <span style="color: #22c55e; font-size: 0.8em; margin-left: 10px;">({{ diocese.identifier }})</span><br>
                     <small style="color: #9ca3af;">{{ diocese.country }} - Bishop: {{ diocese.bishop_name }}</small>
                 </div>
                 {% empty %}

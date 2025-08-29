@@ -134,29 +134,36 @@
         <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
-                    <tr style="background: rgba(255,255,255,0.1);">
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Name</th>
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Username</th>
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Group</th>
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Status</th>
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Phone</th>
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Roles</th>
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Home Church</th>
-                        <th style="padding: 12px; text-align: left; color: #ffffff; border-bottom: 1px solid #374151;">Actions</th>
+                    <tr style="background: #dc2626;">
+                        <th style="padding: 12px; color: white; border: 1px solid #374151;">Identifier</th>
+                        <th style="padding: 12px; color: white; border: 1px solid #374151;">Member</th>
+                        <th style="padding: 12px; color: white; border: 1px solid #374151;">Contact</th>
+                        <th style="padding: 12px; color: white; border: 1px solid #374151;">Church</th>
+                        <th style="padding: 12px; color: white; border: 1px solid #374151;">Status</th>
+                        <th style="padding: 12px; color: white; border: 1px solid #374151;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for member in members %}
                     <tr style="border-bottom: 1px solid #374151;">
-                        <td style="padding: 12px;">
-                            <div>
-                                <strong style="color: #ffffff;">{{ member.full_name }}</strong>
+                        <td style="padding: 12px; border: 1px solid #374151;">
+                            <span style="color: #22c55e; font-weight: bold; font-size: 0.9em;">{{ member.identifier }}</span>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #374151;">
+                            <div style="display: flex; align-items: center;">
                                 {% if member.display_photo %}
-                                <br><small style="color: #10b981;"><i class="fas fa-image"></i> Has photo</small>
+                                <img src="{{ member.display_photo }}" alt="{{ member.full_name }}" 
+                                     style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover;">
+                                {% else %}
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #374151; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                    <i class="fas fa-user" style="color: #9ca3af; font-size: 16px;"></i>
+                                </div>
                                 {% endif %}
-                                {% if member.is_pwd %}
-                                <br><small style="color: #dc2626;"><i class="fas fa-wheelchair"></i> PWD</small>
-                                {% endif %}
+                                <div>
+                                    <strong style="color: #ffffff;">{{ member.full_name }}</strong>
+                                    <br>
+                                    <small style="color: #9ca3af;">@{{ member.username }} • {{ member.user_group }}</small>
+                                </div>
                             </div>
                         </td>
                         <td style="padding: 12px;">{{ member.username }}</td>
@@ -169,19 +176,6 @@
                             <span class="badge badge-{% if member.membership_status == 'Active' %}success{% elif member.membership_status == 'Inactive' %}warning{% else %}secondary{% endif %}">
                                 {{ member.membership_status }}
                             </span>
-                        </td>
-                        <td style="padding: 12px;">{{ member.phone_number }}</td>
-                        <td style="padding: 12px;">
-                            {% if member.is_staff %}<span class="badge badge-info">Staff</span>{% endif %}
-                            {% if member.is_ordained %}<span class="badge badge-purple">Ordained</span>{% endif %}
-                            {% if not member.is_staff and not member.is_ordained %}<small>-</small>{% endif %}
-                        </td>
-                        <td style="padding: 12px;">
-                            <div style="color: #e5e7eb; font-size: 12px;">
-                                <div><strong>{{ member.user_home_church.name }}</strong></div>
-                                <div style="color: #9ca3af;">{{ member.user_home_pastorate.name }}</div>
-                                <div style="color: #9ca3af;">{{ member.user_home_diocese.name }}</div>
-                            </div>
                         </td>
                         <td style="padding: 12px;">
                             <a href="{% url 'members:member_detail' member.username %}" 

@@ -2,6 +2,8 @@
 from django.db import models
 from church_structure.models import Diocese, Pastorate, Church
 import json
+import random
+import string
 
 class Member(models.Model):
     USER_GROUP_CHOICES = [
@@ -69,6 +71,7 @@ class Member(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
+    identifier = models.CharField(max_length=20, unique=True, blank=True, help_text="Auto-generated unique identifier")
     user_group = models.CharField(max_length=20, choices=USER_GROUP_CHOICES)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
     date_of_birth = models.DateField()
@@ -149,6 +152,24 @@ class Member(models.Model):
         verbose_name = 'Member'
         verbose_name_plural = 'Members'
     
+    def generate_identifier(self):
+        """Generate a unique identifier for the member"""
+        while True:
+            # Generate random 4-character segments
+            segment1 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+            segment2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+            segment3 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+            identifier = f"RUWE-{segment1}-{segment2}-{segment3}"
+            
+            # Check if this identifier already exists
+            if not Member.objects.filter(identifier=identifier).exists():
+                return identifier
+
+    def save(self, *args, **kwargs):
+        if not self.identifier:
+            self.identifier = self.generate_identifier()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.username})"
     

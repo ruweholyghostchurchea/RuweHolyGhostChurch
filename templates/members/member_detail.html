@@ -60,6 +60,10 @@
                 </h6>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                     <div>
+                        <strong style="color: #9ca3af;">Identifier:</strong>
+                        <p style="color: #22c55e; margin: 0; font-weight: bold;">{{ member.identifier }}</p>
+                    </div>
+                    <div>
                         <strong style="color: #9ca3af;">Username:</strong>
                         <p style="color: #ffffff; margin: 0;">{{ member.username }}</p>
                     </div>
@@ -156,14 +160,17 @@
                     <div>
                         <strong style="color: #9ca3af;">Diocese:</strong>
                         <p style="color: #ffffff; margin: 0;">{{ member.user_home_diocese.name }} ({{ member.user_home_diocese.country }})</p>
+                        <small style="color: #9ca3af;">ID: {{ member.user_home_diocese.identifier }}</small>
                     </div>
                     <div>
                         <strong style="color: #9ca3af;">Pastorate:</strong>
                         <p style="color: #ffffff; margin: 0;">{{ member.user_home_pastorate.name }}</p>
+                        <small style="color: #9ca3af;">ID: {{ member.user_home_pastorate.identifier }}</small>
                     </div>
                     <div>
                         <strong style="color: #9ca3af;">Church:</strong>
                         <p style="color: #ffffff; margin: 0;">{{ member.user_home_church.name }}</p>
+                        <small style="color: #9ca3af;">ID: {{ member.user_home_church.identifier }}</small>
                     </div>
                 </div>
 
@@ -174,14 +181,17 @@
                     <div>
                         <strong style="color: #9ca3af;">Diocese:</strong>
                         <p style="color: #ffffff; margin: 0;">{{ member.user_town_diocese.name }} ({{ member.user_town_diocese.country }})</p>
+                        <small style="color: #9ca3af;">ID: {{ member.user_town_diocese.identifier }}</small>
                     </div>
                     <div>
                         <strong style="color: #9ca3af;">Pastorate:</strong>
                         <p style="color: #ffffff; margin: 0;">{{ member.user_town_pastorate.name }}</p>
+                        <small style="color: #9ca3af;">ID: {{ member.user_town_pastorate.identifier }}</small>
                     </div>
                     <div>
                         <strong style="color: #9ca3af;">Church:</strong>
                         <p style="color: #ffffff; margin: 0;">{{ member.user_town_church.name }}</p>
+                        <small style="color: #9ca3af;">ID: {{ member.user_town_church.identifier }}</small>
                     </div>
                     {% else %}
                     <p style="color: #9ca3af; font-style: italic;">Not assigned to a town church</p>

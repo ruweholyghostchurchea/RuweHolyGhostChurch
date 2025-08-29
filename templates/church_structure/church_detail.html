@@ -32,6 +32,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
+                        <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ church.identifier }}</span></p>
                         <p><strong>Name:</strong> {{ church.name }}</p>
                         <p><strong>Address:</strong> {{ church.address }}</p>
                         <p><strong>Pastorate:</strong> 
@@ -39,12 +40,14 @@
                                style="color: #dc2626; text-decoration: none;">
                                 {{ church.pastorate.name }}
                             </a>
+                            <br><small style="color: #9ca3af;">ID: {{ church.pastorate.identifier }}</small>
                         </p>
                         <p><strong>Diocese:</strong> 
                             <a href="{% url 'church_structure:diocese_detail' diocese_slug=church.pastorate.diocese.slug %}" 
                                style="color: #dc2626; text-decoration: none;">
                                 {{ church.pastorate.diocese.name }} ({{ church.pastorate.diocese.country }})
                             </a>
+                            <br><small style="color: #9ca3af;">ID: {{ church.pastorate.diocese.identifier }}</small>
                         </p>
                     </div>
                     <div class="col-md-6">
