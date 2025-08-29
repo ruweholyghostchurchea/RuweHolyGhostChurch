@@ -1,0 +1,390 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ member.full_name }} - Member Details{% endblock %}
+
+{% block page_title %}Member Details{% endblock %}
+
+{% block content %}
+<!-- Back Navigation -->
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'members:index' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+        Back to Members List
+    </a>
+</div>
+
+<!-- Member Profile Card -->
+<div class="card">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h5 class="card-title">
+            <i class="fas fa-user" style="color: #dc2626; margin-right: 10px;"></i>
+            {{ member.full_name }}
+        </h5>
+        <div>
+            <span class="badge badge-{% if member.membership_status == 'Active' %}success{% elif member.membership_status == 'Inactive' %}warning{% else %}secondary{% endif %}">
+                {{ member.membership_status }}
+            </span>
+            {% if member.is_staff %}
+            <span class="badge badge-info">Staff</span>
+            {% endif %}
+            {% if member.is_ordained %}
+            <span class="badge badge-purple">Ordained</span>
+            {% endif %}
+            {% if member.is_pwd %}
+            <span class="badge badge-danger">PWD</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="padding: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+            <!-- Profile Photo -->
+            <div style="text-align: center;">
+                {% if member.display_photo %}
+                <img src="{{ member.display_photo }}" alt="{{ member.full_name }}" 
+                     style="width: 200px; height: 200px; object-fit: cover; border-radius: 10px; border: 3px solid #dc2626;">
+                {% else %}
+                <div style="width: 200px; height: 200px; background: #374151; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                    <i class="fas fa-user" style="font-size: 80px; color: #9ca3af;"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Member Details -->
+            <div>
+                <!-- Personal Information -->
+                <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                    <i class="fas fa-user" style="margin-right: 8px;"></i>
+                    Personal Information
+                </h6>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <strong style="color: #9ca3af;">Username:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.username }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">User Group:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.user_group }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Gender:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.get_gender_display }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Date of Birth:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.date_of_birth }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Marital Status:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.get_marital_status_display }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Location:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.get_location_display }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Education Level:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.get_education_level_display }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Date Joined:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.date_joined_app }}</p>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                    <i class="fas fa-phone" style="margin-right: 8px;"></i>
+                    Contact Information
+                </h6>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <strong style="color: #9ca3af;">Phone Number:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.phone_number }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Email Address:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.email_address|default:"Not provided" }}</p>
+                    </div>
+                </div>
+
+                <!-- Job Information -->
+                <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                    <i class="fas fa-briefcase" style="margin-right: 8px;"></i>
+                    Employment Information
+                </h6>
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: #9ca3af;">Job/Occupation/Income:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.job_occupation_income }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Baptismal Information -->
+        <div style="margin-top: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-water" style="margin-right: 8px;"></i>
+                Baptismal Information
+            </h6>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <strong style="color: #9ca3af;">Baptismal Name:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.baptismal_full_name }}</p>
+                </div>
+                <div>
+                    <strong style="color: #9ca3af;">Date Baptized:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.date_baptized }}</p>
+                </div>
+                <div>
+                    <strong style="color: #9ca3af;">Date Joined Religion:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.date_joined_religion }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Church Structure -->
+        <div style="margin-top: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-church" style="margin-right: 8px;"></i>
+                Church Structure
+            </h6>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <!-- Home Church -->
+                <div>
+                    <h6 style="color: #22c55e; margin-bottom: 10px;">Home Church</h6>
+                    <div>
+                        <strong style="color: #9ca3af;">Diocese:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.user_home_diocese.name }} ({{ member.user_home_diocese.country }})</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Pastorate:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.user_home_pastorate.name }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Church:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.user_home_church.name }}</p>
+                    </div>
+                </div>
+
+                <!-- Town Church -->
+                <div>
+                    <h6 style="color: #3b82f6; margin-bottom: 10px;">Town Church</h6>
+                    {% if member.user_town_church %}
+                    <div>
+                        <strong style="color: #9ca3af;">Diocese:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.user_town_diocese.name }} ({{ member.user_town_diocese.country }})</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Pastorate:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.user_town_pastorate.name }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Church:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.user_town_church.name }}</p>
+                    </div>
+                    {% else %}
+                    <p style="color: #9ca3af; font-style: italic;">Not assigned to a town church</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PWD Information -->
+        {% if member.is_pwd %}
+        <div style="margin-top: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-wheelchair" style="margin-right: 8px;"></i>
+                Person with Disability (PWD) Information
+            </h6>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <strong style="color: #9ca3af;">Type of Disability:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.get_pwd_type_display }}</p>
+                </div>
+                {% if member.pwd_other_description %}
+                <div>
+                    <strong style="color: #9ca3af;">Description:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.pwd_other_description }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Family Details -->
+        <div style="margin-top: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-users" style="margin-right: 8px;"></i>
+                Family Details
+            </h6>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                {% if member.father %}
+                <div>
+                    <strong style="color: #9ca3af;">Father:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.father.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.father.phone_number }}</small>
+                </div>
+                {% endif %}
+                {% if member.mother %}
+                <div>
+                    <strong style="color: #9ca3af;">Mother:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.mother.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.mother.phone_number }}</small>
+                </div>
+                {% endif %}
+                {% if member.guardian %}
+                <div>
+                    <strong style="color: #9ca3af;">Guardian:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.guardian.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.guardian.phone_number }}</small>
+                </div>
+                {% endif %}
+                {% if member.brother %}
+                <div>
+                    <strong style="color: #9ca3af;">Brother:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.brother.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.brother.phone_number }}</small>
+                </div>
+                {% endif %}
+                {% if member.sister %}
+                <div>
+                    <strong style="color: #9ca3af;">Sister:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.sister.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.sister.phone_number }}</small>
+                </div>
+                {% endif %}
+                {% if member.uncle %}
+                <div>
+                    <strong style="color: #9ca3af;">Uncle:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.uncle.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.uncle.phone_number }}</small>
+                </div>
+                {% endif %}
+                {% if member.aunt %}
+                <div>
+                    <strong style="color: #9ca3af;">Aunt:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.aunt.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.aunt.phone_number }}</small>
+                </div>
+                {% endif %}
+                {% if member.friend %}
+                <div>
+                    <strong style="color: #9ca3af;">Friend:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ member.friend.full_name }}</p>
+                    <small style="color: #9ca3af;">{{ member.friend.phone_number }}</small>
+                </div>
+                {% endif %}
+            </div>
+            {% if not member.father and not member.mother and not member.guardian and not member.brother and not member.sister and not member.uncle and not member.aunt and not member.friend %}
+            <p style="color: #9ca3af; font-style: italic;">No family details provided</p>
+            {% endif %}
+        </div>
+
+        <!-- Emergency Contacts -->
+        {% if member.emergency_contact_1_name or member.emergency_contact_2_name %}
+        <div style="margin-top: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-phone-alt" style="margin-right: 8px;"></i>
+                Emergency Contacts
+            </h6>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                {% if member.emergency_contact_1_name %}
+                <div>
+                    <h6 style="color: #f59e0b; margin-bottom: 10px;">Contact 1</h6>
+                    <div>
+                        <strong style="color: #9ca3af;">Name:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_1_name }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Relationship:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_1_relationship }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Phone:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_1_phone }}</p>
+                    </div>
+                    {% if member.emergency_contact_1_email %}
+                    <div>
+                        <strong style="color: #9ca3af;">Email:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_1_email }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if member.emergency_contact_2_name %}
+                <div>
+                    <h6 style="color: #f59e0b; margin-bottom: 10px;">Contact 2</h6>
+                    <div>
+                        <strong style="color: #9ca3af;">Name:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_2_name }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Relationship:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_2_relationship }}</p>
+                    </div>
+                    <div>
+                        <strong style="color: #9ca3af;">Phone:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_2_phone }}</p>
+                    </div>
+                    {% if member.emergency_contact_2_email %}
+                    <div>
+                        <strong style="color: #9ca3af;">Email:</strong>
+                        <p style="color: #ffffff; margin: 0;">{{ member.emergency_contact_2_email }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Custom Fields -->
+        {% if member.custom_fields %}
+        <div style="margin-top: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-cogs" style="margin-right: 8px;"></i>
+                Custom Information
+            </h6>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                {% for key, value in member.custom_fields.items %}
+                <div>
+                    <strong style="color: #9ca3af;">{{ key }}:</strong>
+                    <p style="color: #ffffff; margin: 0;">{{ value }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Member Documents -->
+        {% if member.documents.all %}
+        <div style="margin-top: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-file-alt" style="margin-right: 8px;"></i>
+                Member Documents
+            </h6>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                {% for doc in member.documents.all %}
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #dc2626;">
+                    <h6 style="color: #ffffff; margin-bottom: 8px;">{{ doc.title }}</h6>
+                    <p style="color: #9ca3af; margin: 0; font-size: 0.9em;">{{ doc.document_type }}</p>
+                    {% if doc.description %}
+                    <p style="color: #9ca3af; margin: 8px 0 0 0; font-size: 0.85em;">{{ doc.description }}</p>
+                    {% endif %}
+                    {% if doc.document_file %}
+                    <a href="{{ doc.document_file.url }}" target="_blank" 
+                       style="color: #3b82f6; text-decoration: none; font-size: 0.9em; display: inline-block; margin-top: 8px;">
+                        <i class="fas fa-download" style="margin-right: 5px;"></i>
+                        Download Document
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
