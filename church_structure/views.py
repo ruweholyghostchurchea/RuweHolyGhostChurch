@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.contrib import messages
+from django.http import JsonResponse
+from django.db.models import Q
 from .models import Diocese, Pastorate, Church
+from .forms import DioceseForm, PastorateForm, ChurchForm, MemberSearchForm
+from members.models import Member
 
 @login_required
 def index(request):
@@ -44,98 +47,53 @@ def get_churches(request, pastorate_id):
     ).values('id', 'name')
     return JsonResponse(list(churches), safe=False)
 
+@login_required
 def add_diocese(request):
     """Add new diocese"""
     if request.method == 'POST':
-        name = request.POST.get('name')
-        country = request.POST.get('country')
-        bishop_name = request.POST.get('bishop_name')
-        bishop_phone = request.POST.get('bishop_phone', '')
-        bishop_email = request.POST.get('bishop_email', '')
-        description = request.POST.get('description', '')
-
-        if name and country and bishop_name:
-            Diocese.objects.create(
-                name=name,
-                country=country,
-                bishop_name=bishop_name,
-                bishop_phone=bishop_phone,
-                bishop_email=bishop_email,
-                description=description
-            )
-            messages.success(request, f'Diocese "{name}" added successfully!')
+        form = DioceseForm(request.POST)
+        if form.is_valid():
+            diocese = form.save()
+            messages.success(request, f'Diocese "{diocese.name}" added successfully!')
+            return redirect('church_structure:index')
         else:
-            messages.error(request, 'Please fill in all required fields.')
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = DioceseForm()
 
-        return redirect('church_structure:index')
+    return render(request, 'church_structure/add_diocese.html', {'form': form})
 
-    return redirect('church_structure:index')
-
+@login_required
 def add_pastorate(request):
     """Add new pastorate"""
     if request.method == 'POST':
-        name = request.POST.get('name')
-        diocese_id = request.POST.get('diocese_id')
-        pastor_name = request.POST.get('pastor_name')
-        pastor_phone = request.POST.get('pastor_phone', '')
-        pastor_email = request.POST.get('pastor_email', '')
-        description = request.POST.get('description', '')
-
-        if name and diocese_id and pastor_name:
-            try:
-                diocese = Diocese.objects.get(id=diocese_id)
-                Pastorate.objects.create(
-                    name=name,
-                    diocese=diocese,
-                    pastor_name=pastor_name,
-                    pastor_phone=pastor_phone,
-                    pastor_email=pastor_email,
-                    description=description
-                )
-                messages.success(request, f'Pastorate "{name}" added successfully!')
-            except Diocese.DoesNotExist:
-                messages.error(request, 'Selected diocese does not exist.')
+        form = PastorateForm(request.POST)
+        if form.is_valid():
+            pastorate = form.save()
+            messages.success(request, f'Pastorate "{pastorate.name}" added successfully!')
+            return redirect('church_structure:index')
         else:
-            messages.error(request, 'Please fill in all required fields.')
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = PastorateForm()
 
-        return redirect('church_structure:index')
+    return render(request, 'church_structure/add_pastorate.html', {'form': form})
 
-    return redirect('church_structure:index')
-
+@login_required
 def add_church(request):
     """Add new church"""
     if request.method == 'POST':
-        name = request.POST.get('name')
-        pastorate_id = request.POST.get('pastorate_id')
-        address = request.POST.get('address')
-        head_teacher_name = request.POST.get('head_teacher_name')
-        head_teacher_phone = request.POST.get('head_teacher_phone', '')
-        head_teacher_email = request.POST.get('head_teacher_email', '')
-        assistant_teachers = request.POST.get('assistant_teachers', '')
-        service_times = request.POST.get('service_times', '')
-
-        if name and pastorate_id and address and head_teacher_name:
-            try:
-                pastorate = Pastorate.objects.get(id=pastorate_id)
-                Church.objects.create(
-                    name=name,
-                    pastorate=pastorate,
-                    address=address,
-                    head_teacher_name=head_teacher_name,
-                    head_teacher_phone=head_teacher_phone,
-                    head_teacher_email=head_teacher_email,
-                    assistant_teachers=assistant_teachers,
-                    service_times=service_times
-                )
-                messages.success(request, f'Church "{name}" added successfully!')
-            except Pastorate.DoesNotExist:
-                messages.error(request, 'Selected pastorate does not exist.')
+        form = ChurchForm(request.POST)
+        if form.is_valid():
+            church = form.save()
+            messages.success(request, f'Church "{church.name}" added successfully!')
+            return redirect('church_structure:index')
         else:
-            messages.error(request, 'Please fill in all required fields.')
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ChurchForm()
 
-        return redirect('church_structure:index')
-
-    return redirect('church_structure:index')
+    return render(request, 'church_structure/add_church.html', {'form': form})
 
 @login_required
 def diocese_detail(request, diocese_slug):
@@ -187,18 +145,19 @@ def edit_diocese(request, diocese_slug):
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
 
     if request.method == 'POST':
-        diocese.name = request.POST.get('name', diocese.name)
-        diocese.country = request.POST.get('country', diocese.country)
-        diocese.bishop_name = request.POST.get('bishop_name', diocese.bishop_name)
-        diocese.bishop_phone = request.POST.get('bishop_phone', diocese.bishop_phone)
-        diocese.bishop_email = request.POST.get('bishop_email', diocese.bishop_email)
-        diocese.description = request.POST.get('description', diocese.description)
-        diocese.save()
-        messages.success(request, f'Diocese "{diocese.name}" updated successfully!')
-        return redirect('church_structure:diocese_detail', diocese_slug=diocese.slug)
+        form = DioceseForm(request.POST, instance=diocese)
+        if form.is_valid():
+            diocese = form.save()
+            messages.success(request, f'Diocese "{diocese.name}" updated successfully!')
+            return redirect('church_structure:diocese_detail', diocese_slug=diocese.slug)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = DioceseForm(instance=diocese)
 
     context = {
         'page_title': f'Edit {diocese.name} Diocese',
+        'form': form,
         'diocese': diocese,
     }
     return render(request, 'church_structure/edit_diocese.html', context)
@@ -207,25 +166,22 @@ def edit_diocese(request, diocese_slug):
 def edit_pastorate(request, pastorate_slug):
     """Edit pastorate"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-    dioceses = Diocese.objects.filter(is_active=True)
-
+    
     if request.method == 'POST':
-        pastorate.name = request.POST.get('name', pastorate.name)
-        diocese_id = request.POST.get('diocese_id')
-        if diocese_id:
-            pastorate.diocese = get_object_or_404(Diocese, id=diocese_id)
-        pastorate.pastor_name = request.POST.get('pastor_name', pastorate.pastor_name)
-        pastorate.pastor_phone = request.POST.get('pastor_phone', pastorate.pastor_phone)
-        pastorate.pastor_email = request.POST.get('pastor_email', pastorate.pastor_email)
-        pastorate.description = request.POST.get('description', pastorate.description)
-        pastorate.save()
-        messages.success(request, f'Pastorate "{pastorate.name}" updated successfully!')
-        return redirect('church_structure:pastorate_detail', pastorate_slug=pastorate.slug)
+        form = PastorateForm(request.POST, instance=pastorate)
+        if form.is_valid():
+            pastorate = form.save()
+            messages.success(request, f'Pastorate "{pastorate.name}" updated successfully!')
+            return redirect('church_structure:pastorate_detail', pastorate_slug=pastorate.slug)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = PastorateForm(instance=pastorate)
 
     context = {
         'page_title': f'Edit {pastorate.name} Pastorate',
+        'form': form,
         'pastorate': pastorate,
-        'dioceses': dioceses,
     }
     return render(request, 'church_structure/edit_pastorate.html', context)
 
@@ -233,29 +189,22 @@ def edit_pastorate(request, pastorate_slug):
 def edit_church(request, church_slug):
     """Edit church"""
     church = get_object_or_404(Church, slug=church_slug)
-    dioceses = Diocese.objects.filter(is_active=True)
-    pastorates = Pastorate.objects.filter(is_active=True)
-
+    
     if request.method == 'POST':
-        church.name = request.POST.get('name', church.name)
-        pastorate_id = request.POST.get('pastorate_id')
-        if pastorate_id:
-            church.pastorate = get_object_or_404(Pastorate, id=pastorate_id)
-        church.address = request.POST.get('address', church.address)
-        church.head_teacher_name = request.POST.get('head_teacher_name', church.head_teacher_name)
-        church.head_teacher_phone = request.POST.get('head_teacher_phone', church.head_teacher_phone)
-        church.head_teacher_email = request.POST.get('head_teacher_email', church.head_teacher_email)
-        church.assistant_teachers = request.POST.get('assistant_teachers', church.assistant_teachers)
-        church.service_times = request.POST.get('service_times', church.service_times)
-        church.save()
-        messages.success(request, f'Church "{church.name}" updated successfully!')
-        return redirect('church_structure:church_detail', church_slug=church.slug)
+        form = ChurchForm(request.POST, instance=church)
+        if form.is_valid():
+            church = form.save()
+            messages.success(request, f'Church "{church.name}" updated successfully!')
+            return redirect('church_structure:church_detail', church_slug=church.slug)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ChurchForm(instance=church)
 
     context = {
         'page_title': f'Edit {church.name} Church',
+        'form': form,
         'church': church,
-        'dioceses': dioceses,
-        'pastorates': pastorates,
     }
     return render(request, 'church_structure/edit_church.html', context)
 
@@ -311,3 +260,32 @@ def delete_church(request, church_slug):
         'church': church,
     }
     return render(request, 'church_structure/delete_church.html', context)
+
+@login_required
+def search_members(request):
+    """AJAX endpoint for member search"""
+    if request.method == 'GET':
+        search_term = request.GET.get('search', '')
+        if len(search_term) >= 2:
+            members = Member.objects.filter(
+                Q(first_name__icontains=search_term) |
+                Q(last_name__icontains=search_term) |
+                Q(username__icontains=search_term) |
+                Q(phone_number__icontains=search_term),
+                membership_status='Active'
+            ).distinct()[:20]
+
+            member_data = []
+            for member in members:
+                member_data.append({
+                    'id': member.id,
+                    'name': member.full_name,
+                    'username': member.username,
+                    'phone': member.phone_number,
+                    'email': member.email_address,
+                    'church': member.home_church_hierarchy
+                })
+
+            return JsonResponse({'members': member_data})
+
+    return JsonResponse({'members': []})

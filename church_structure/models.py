@@ -13,9 +13,7 @@ class Diocese(models.Model):
         ('Uganda', 'Uganda'),
         ('Tanzania', 'Tanzania')
     ])
-    bishop_name = models.CharField(max_length=200)
-    bishop_phone = models.CharField(max_length=20, blank=True)
-    bishop_email = models.EmailField(blank=True)
+    bishop = models.ForeignKey('members.Member', on_delete=models.SET_NULL, null=True, blank=True, related_name='dioceses_as_bishop', help_text="Search and select a member as bishop")
     description = models.TextField(blank=True)
     established_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -49,6 +47,18 @@ class Diocese(models.Model):
             self.slug = slugify(f"{self.name}-{self.country}")
         super().save(*args, **kwargs)
     
+    @property
+    def bishop_name(self):
+        return self.bishop.full_name if self.bishop else "Not assigned"
+    
+    @property
+    def bishop_phone(self):
+        return self.bishop.phone_number if self.bishop else ""
+    
+    @property
+    def bishop_email(self):
+        return self.bishop.email_address if self.bishop else ""
+
     def __str__(self):
         return f"{self.name} - {self.country}"
 
@@ -57,9 +67,7 @@ class Pastorate(models.Model):
     identifier = models.CharField(max_length=20, unique=True, blank=True, help_text="Auto-generated unique identifier")
     slug = models.SlugField(max_length=250, unique=True, blank=True)
     diocese = models.ForeignKey(Diocese, on_delete=models.CASCADE, related_name='pastorates')
-    pastor_name = models.CharField(max_length=200)
-    pastor_phone = models.CharField(max_length=20, blank=True)
-    pastor_email = models.EmailField(blank=True)
+    pastor = models.ForeignKey('members.Member', on_delete=models.SET_NULL, null=True, blank=True, related_name='pastorates_as_pastor', help_text="Search and select a member as pastor")
     description = models.TextField(blank=True)
     established_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -90,6 +98,18 @@ class Pastorate(models.Model):
             self.slug = slugify(f"{self.name}-{self.diocese.name}")
         super().save(*args, **kwargs)
     
+    @property
+    def pastor_name(self):
+        return self.pastor.full_name if self.pastor else "Not assigned"
+    
+    @property
+    def pastor_phone(self):
+        return self.pastor.phone_number if self.pastor else ""
+    
+    @property
+    def pastor_email(self):
+        return self.pastor.email_address if self.pastor else ""
+    
     def __str__(self):
         return f"{self.name} - {self.diocese.name}"
 
@@ -101,10 +121,8 @@ class Church(models.Model):
     address = models.TextField()
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
-    head_teacher_name = models.CharField(max_length=200)
-    head_teacher_phone = models.CharField(max_length=20, blank=True)
-    head_teacher_email = models.EmailField(blank=True)
-    assistant_teachers = models.TextField(blank=True, help_text="List additional church teachers, one per line")
+    head_teacher = models.ForeignKey('members.Member', on_delete=models.SET_NULL, null=True, blank=True, related_name='churches_as_head_teacher', help_text="Search and select a member as head teacher")
+    teachers = models.ManyToManyField('members.Member', blank=True, related_name='churches_as_teacher', help_text="Search and select up to 12 additional teachers")
     service_times = models.TextField(blank=True, help_text="Service schedule information")
     capacity = models.PositiveIntegerField(null=True, blank=True)
     established_date = models.DateField(null=True, blank=True)
@@ -135,6 +153,32 @@ class Church(models.Model):
         if not self.slug:
             self.slug = slugify(f"{self.name}-{self.pastorate.name}")
         super().save(*args, **kwargs)
+    
+    @property
+    def head_teacher_name(self):
+        return self.head_teacher.full_name if self.head_teacher else "Not assigned"
+    
+    @property
+    def head_teacher_phone(self):
+        return self.head_teacher.phone_number if self.head_teacher else ""
+    
+    @property
+    def head_teacher_email(self):
+        return self.head_teacher.email_address if self.head_teacher else ""
+    
+    @property
+    def assistant_teachers(self):
+        teachers_list = list(self.teachers.all())
+        if teachers_list:
+            return "\n".join([teacher.full_name for teacher in teachers_list])
+        return "No additional teachers assigned"
+    
+    @property
+    def teachers_count(self):
+        return self.teachers.count()
+    
+    def can_add_teacher(self):
+        return self.teachers.count() < 12
     
     def __str__(self):
         return f"{self.name} - {self.pastorate.name}"
