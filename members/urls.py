@@ -6,7 +6,7 @@ app_name = 'members'
 urlpatterns = [
     path('', views.index, name='index'),
     path('add/', views.add_member, name='add_member'),
-    path('detail/<int:member_id>/', views.member_detail, name='member_detail'),
+    path('detail/<str:username>/', views.member_detail, name='member_detail'),
     path('api/search/', views.search_members_api, name='search_members_api'),
 
     # API endpoints for cascading dropdowns

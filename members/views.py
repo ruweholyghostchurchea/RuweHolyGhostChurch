@@ -286,9 +286,9 @@ def get_churches_by_pastorate(request, pastorate_id):
     return JsonResponse(list(churches), safe=False)
 
 @login_required
-def member_detail(request, member_id):
+def member_detail(request, username):
     """View member details"""
-    member = get_object_or_404(Member, id=member_id)
+    member = get_object_or_404(Member, username=username)
     context = {
         'page_title': f'Member Details - {member.full_name}',
         'member': member,
