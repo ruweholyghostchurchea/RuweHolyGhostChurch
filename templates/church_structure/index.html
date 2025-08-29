@@ -167,18 +167,18 @@
         
         {% if dioceses %}
         <div class="table-responsive">
-            <table class="table table-dark table-striped" style="background: #1f2937;">
+            <table class="table table-dark table-striped" style="background: #1f2937; table-layout: fixed; width: 100%;">
                 <thead style="background: #dc2626;">
                     <tr>
-                        <th style="padding: 15px; color: white; border: 1px solid #374151;">
+                        <th style="padding: 15px; color: white; border: 1px solid #374151; width: 33.33%;">
                             <i class="fas fa-church" style="margin-right: 8px;"></i>
                             Diocese
                         </th>
-                        <th style="padding: 15px; color: white; border: 1px solid #374151;">
+                        <th style="padding: 15px; color: white; border: 1px solid #374151; width: 33.33%;">
                             <i class="fas fa-users" style="margin-right: 8px;"></i>
                             Pastorate
                         </th>
-                        <th style="padding: 15px; color: white; border: 1px solid #374151;">
+                        <th style="padding: 15px; color: white; border: 1px solid #374151; width: 33.34%;">
                             <i class="fas fa-home" style="margin-right: 8px;"></i>
                             Church
                         </th>
@@ -189,11 +189,10 @@
                         {% for pastorate in diocese.pastorates.all %}
                             {% for church in pastorate.churches.all %}
                             <tr>
-                                {% if forloop.parentloop.first and forloop.first %}
-                                <td style="padding: 12px; border: 1px solid #374151; vertical-align: top; background: rgba(220, 38, 38, 0.1);" 
-                                    rowspan="{{ diocese.pastorates.all|length }}">
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(220, 38, 38, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff; font-size: 1.1em;">{{ diocese.name }}</strong><br>
+                                        <span style="color: #22c55e; font-size: 0.8em;">{{ diocese.identifier }}</span><br>
                                         <small style="color: #9ca3af;">{{ diocese.country }}</small><br>
                                         <small style="color: #e5e7eb;">Bishop: {{ diocese.bishop_name }}</small>
                                     </div>
@@ -216,13 +215,11 @@
                                         </a>
                                     </div>
                                 </td>
-                                {% endif %}
                                 
-                                {% if forloop.first %}
-                                <td style="padding: 12px; border: 1px solid #374151; vertical-align: top; background: rgba(59, 130, 246, 0.1);" 
-                                    rowspan="{{ pastorate.churches.all|length }}">
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff; font-size: 1.05em;">{{ pastorate.name }}</strong><br>
+                                        <span style="color: #22c55e; font-size: 0.8em;">{{ pastorate.identifier }}</span><br>
                                         <small style="color: #e5e7eb;">Pastor: {{ pastorate.pastor_name }}</small>
                                     </div>
                                     <div style="margin-top: 10px;">
@@ -244,11 +241,11 @@
                                         </a>
                                     </div>
                                 </td>
-                                {% endif %}
                                 
-                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1);">
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff;">{{ church.name }}</strong><br>
+                                        <span style="color: #22c55e; font-size: 0.8em;">{{ church.identifier }}</span><br>
                                         <small style="color: #9ca3af;">{{ church.address }}</small><br>
                                         <small style="color: #e5e7eb;">Head Teacher: {{ church.head_teacher_name }}</small>
                                     </div>
@@ -274,11 +271,10 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                {% if forloop.parentloop.first and forloop.first %}
-                                <td style="padding: 12px; border: 1px solid #374151; vertical-align: top; background: rgba(220, 38, 38, 0.1);" 
-                                    rowspan="{{ diocese.pastorates.all|length }}">
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(220, 38, 38, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff; font-size: 1.1em;">{{ diocese.name }}</strong><br>
+                                        <span style="color: #22c55e; font-size: 0.8em;">{{ diocese.identifier }}</span><br>
                                         <small style="color: #9ca3af;">{{ diocese.country }}</small><br>
                                         <small style="color: #e5e7eb;">Bishop: {{ diocese.bishop_name }}</small>
                                     </div>
@@ -301,11 +297,11 @@
                                         </a>
                                     </div>
                                 </td>
-                                {% endif %}
                                 
-                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1);">
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff; font-size: 1.05em;">{{ pastorate.name }}</strong><br>
+                                        <span style="color: #22c55e; font-size: 0.8em;">{{ pastorate.identifier }}</span><br>
                                         <small style="color: #e5e7eb;">Pastor: {{ pastorate.pastor_name }}</small>
                                     </div>
                                     <div style="margin-top: 10px;">
@@ -328,7 +324,7 @@
                                     </div>
                                 </td>
                                 
-                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1); color: #9ca3af; font-style: italic;">
+                                <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1); color: #9ca3af; font-style: italic; vertical-align: top;">
                                     <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
                                     No churches in this pastorate yet
                                 </td>
@@ -336,9 +332,10 @@
                             {% endfor %}
                         {% empty %}
                         <tr>
-                            <td style="padding: 12px; border: 1px solid #374151; background: rgba(220, 38, 38, 0.1);">
+                            <td style="padding: 12px; border: 1px solid #374151; background: rgba(220, 38, 38, 0.1); vertical-align: top;">
                                 <div style="margin-bottom: 8px;">
                                     <strong style="color: #ffffff; font-size: 1.1em;">{{ diocese.name }}</strong><br>
+                                    <span style="color: #22c55e; font-size: 0.8em;">{{ diocese.identifier }}</span><br>
                                     <small style="color: #9ca3af;">{{ diocese.country }}</small><br>
                                     <small style="color: #e5e7eb;">Bishop: {{ diocese.bishop_name }}</small>
                                 </div>
@@ -361,7 +358,7 @@
                                     </a>
                                 </div>
                             </td>
-                            <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1); color: #9ca3af; font-style: italic;" colspan="2">
+                            <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1); color: #9ca3af; font-style: italic; vertical-align: top;" colspan="2">
                                 <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
                                 No pastorates in this diocese yet
                             </td>
