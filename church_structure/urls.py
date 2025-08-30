@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 
@@ -22,5 +23,5 @@ urlpatterns = [
     path('diocese/<slug:diocese_slug>/delete/', views.delete_diocese, name='delete_diocese'),
     path('pastorate/<slug:pastorate_slug>/delete/', views.delete_pastorate, name='delete_pastorate'),
     path('church/<slug:church_slug>/delete/', views.delete_church, name='delete_church'),
-    path('search-members/', views.search_members, name='search_members'),
+    path('api/search-members/', views.search_members, name='search_members'),
 ]

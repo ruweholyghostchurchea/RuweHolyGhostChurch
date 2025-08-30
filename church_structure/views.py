@@ -164,7 +164,7 @@ def diocese_detail(request, diocese_slug):
     """Diocese detail view"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
     pastorates = diocese.pastorates.filter(is_active=True)
-
+    
     context = {
         'page_title': f'{diocese.name} Diocese',
         'diocese': diocese,
@@ -200,7 +200,7 @@ def pastorate_detail(request, pastorate_slug):
     """Pastorate detail view"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
     churches = pastorate.churches.filter(is_active=True)
-
+    
     context = {
         'page_title': f'{pastorate.name} Pastorate',
         'pastorate': pastorate,
@@ -275,41 +275,41 @@ def get_churches(request, pastorate_id):
 @login_required
 def search_members(request):
     """AJAX endpoint for member search"""
-    search_term = request.GET.get('search', '')
-
-    if len(search_term) < 2:
-        return JsonResponse({'members': []})
-
+    query = request.GET.get('q', '')
+    if len(query) < 2:
+        return JsonResponse([], safe=False)
+    
     members = Member.objects.filter(
-        Q(first_name__icontains=search_term) |
-        Q(last_name__icontains=search_term) |
-        Q(username__icontains=search_term) |
-        Q(phone_number__icontains=search_term),
+        Q(first_name__icontains=query) |
+        Q(last_name__icontains=query) |
+        Q(username__icontains=query) |
+        Q(phone_number__icontains=query),
         membership_status='Active'
-    ).distinct()[:20]  # Limit to 20 results for performance
-
-    members_data = []
+    ).values('id', 'first_name', 'last_name', 'phone_number', 'email_address')[:20]
+    
+    # Format for select2 or similar
+    results = []
     for member in members:
-        members_data.append({
-            'id': member.id,
-            'name': member.full_name,
-            'phone': member.phone_number or '',
-            'email': member.email_address or ''
+        results.append({
+            'id': member['id'],
+            'text': f"{member['first_name']} {member['last_name']} ({member['phone_number']})",
+            'phone': member['phone_number'],
+            'email': member['email_address'] or ''
         })
-
-    return JsonResponse({'members': members_data})
+    
+    return JsonResponse(results, safe=False)
 
 @login_required
 def delete_diocese(request, diocese_slug):
     """Delete diocese"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
-
+    
     if request.method == 'POST':
         diocese_name = diocese.name
         diocese.delete()
         messages.success(request, f'Diocese "{diocese_name}" deleted successfully!')
         return redirect('church_structure:index')
-
+    
     context = {
         'page_title': f'Delete {diocese.name} Diocese',
         'diocese': diocese,
@@ -320,13 +320,13 @@ def delete_diocese(request, diocese_slug):
 def delete_pastorate(request, pastorate_slug):
     """Delete pastorate"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
+    
     if request.method == 'POST':
         pastorate_name = pastorate.name
         pastorate.delete()
-        messages.success(request, f'Pastorate "{pastorate.name}" deleted successfully!')
+        messages.success(request, f'Pastorate "{pastorate_name}" deleted successfully!')
         return redirect('church_structure:index')
-
+    
     context = {
         'page_title': f'Delete {pastorate.name} Pastorate',
         'pastorate': pastorate,
@@ -337,17 +337,24 @@ def delete_pastorate(request, pastorate_slug):
 def delete_church(request, church_slug):
     """Delete church"""
     church = get_object_or_404(Church, slug=church_slug)
+    
     if request.method == 'POST':
+        church_name = church.name
         church.delete()
-        messages.success(request, 'Church deleted successfully!')
+        messages.success(request, f'Church "{church_name}" deleted successfully!')
         return redirect('church_structure:index')
-    return render(request, 'church_structure/delete_church.html', {'church': church})
+    
+    context = {
+        'page_title': f'Delete {church.name} Church',
+        'church': church,
+    }
+    return render(request, 'church_structure/delete_church.html', context)
 
 @login_required
 def edit_pastorate(request, pastorate_slug):
     """Edit pastorate"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
+    
     if request.method == 'POST':
         form = PastorateForm(request.POST, instance=pastorate)
         if form.is_valid():
@@ -370,7 +377,7 @@ def edit_pastorate(request, pastorate_slug):
 def edit_church(request, church_slug):
     """Edit church"""
     church = get_object_or_404(Church, slug=church_slug)
-
+    
     if request.method == 'POST':
         form = ChurchForm(request.POST, instance=church)
         if form.is_valid():
@@ -443,344 +450,30 @@ def delete_church(request, church_slug):
     return render(request, 'church_structure/delete_church.html', context)
 
 @login_required
-def edit_pastorate(request, pastorate_slug):
-    """Edit pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
+def search_members(request):
+    """AJAX endpoint for member search"""
+    if request.method == 'GET':
+        search_term = request.GET.get('search', '')
+        if len(search_term) >= 2:
+            members = Member.objects.filter(
+                Q(first_name__icontains=search_term) |
+                Q(last_name__icontains=search_term) |
+                Q(username__icontains=search_term) |
+                Q(phone_number__icontains=search_term),
+                membership_status='Active'
+            ).distinct()[:20]
 
-    if request.method == 'POST':
-        form = PastorateForm(request.POST, instance=pastorate)
-        if form.is_valid():
-            pastorate = form.save()
-            messages.success(request, f'Pastorate "{pastorate.name}" updated successfully!')
-            return redirect('church_structure:pastorate_detail', pastorate_slug=pastorate.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = PastorateForm(instance=pastorate)
+            member_data = []
+            for member in members:
+                member_data.append({
+                    'id': member.id,
+                    'name': member.full_name,
+                    'username': member.username,
+                    'phone': member.phone_number,
+                    'email': member.email_address,
+                    'church': member.home_church_hierarchy
+                })
 
-    context = {
-        'page_title': f'Edit {pastorate.name} Pastorate',
-        'form': form,
-        'pastorate': pastorate,
-    }
-    return render(request, 'church_structure/edit_pastorate.html', context)
+            return JsonResponse({'members': member_data})
 
-@login_required
-def edit_church(request, church_slug):
-    """Edit church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        form = ChurchForm(request.POST, instance=church)
-        if form.is_valid():
-            church = form.save()
-            messages.success(request, f'Church "{church.name}" updated successfully!')
-            return redirect('church_structure:church_detail', church_slug=church.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = ChurchForm(instance=church)
-
-    context = {
-        'page_title': f'Edit {church.name} Church',
-        'form': form,
-        'church': church,
-    }
-    return render(request, 'church_structure/edit_church.html', context)
-
-@login_required
-def delete_diocese(request, diocese_slug):
-    """Delete diocese"""
-    diocese = get_object_or_404(Diocese, slug=diocese_slug)
-
-    if request.method == 'POST':
-        name = diocese.name
-        diocese.delete()
-        messages.success(request, f'Diocese "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {diocese.name} Diocese',
-        'diocese': diocese,
-        'pastorates_count': diocese.pastorates.count(),
-    }
-    return render(request, 'church_structure/delete_diocese.html', context)
-
-@login_required
-def delete_pastorate(request, pastorate_slug):
-    """Delete pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
-    if request.method == 'POST':
-        name = pastorate.name
-        pastorate.delete()
-        messages.success(request, f'Pastorate "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {pastorate.name} Pastorate',
-        'pastorate': pastorate,
-        'churches_count': pastorate.churches.count(),
-    }
-    return render(request, 'church_structure/delete_pastorate.html', context)
-
-@login_required
-def delete_church(request, church_slug):
-    """Delete church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        name = church.name
-        church.delete()
-        messages.success(request, f'Church "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {church.name} Church',
-        'church': church,
-    }
-    return render(request, 'church_structure/delete_church.html', context)
-
-@login_required
-def edit_pastorate(request, pastorate_slug):
-    """Edit pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
-    if request.method == 'POST':
-        form = PastorateForm(request.POST, instance=pastorate)
-        if form.is_valid():
-            pastorate = form.save()
-            messages.success(request, f'Pastorate "{pastorate.name}" updated successfully!')
-            return redirect('church_structure:pastorate_detail', pastorate_slug=pastorate.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = PastorateForm(instance=pastorate)
-
-    context = {
-        'page_title': f'Edit {pastorate.name} Pastorate',
-        'form': form,
-        'pastorate': pastorate,
-    }
-    return render(request, 'church_structure/edit_pastorate.html', context)
-
-@login_required
-def edit_church(request, church_slug):
-    """Edit church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        form = ChurchForm(request.POST, instance=church)
-        if form.is_valid():
-            church = form.save()
-            messages.success(request, f'Church "{church.name}" updated successfully!')
-            return redirect('church_structure:church_detail', church_slug=church.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = ChurchForm(instance=church)
-
-    context = {
-        'page_title': f'Edit {church.name} Church',
-        'form': form,
-        'church': church,
-    }
-    return render(request, 'church_structure/edit_church.html', context)
-
-@login_required
-def delete_diocese(request, diocese_slug):
-    """Delete diocese"""
-    diocese = get_object_or_404(Diocese, slug=diocese_slug)
-
-    if request.method == 'POST':
-        name = diocese.name
-        diocese.delete()
-        messages.success(request, f'Diocese "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {diocese.name} Diocese',
-        'diocese': diocese,
-        'pastorates_count': diocese.pastorates.count(),
-    }
-    return render(request, 'church_structure/delete_diocese.html', context)
-
-@login_required
-def delete_pastorate(request, pastorate_slug):
-    """Delete pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
-    if request.method == 'POST':
-        name = pastorate.name
-        pastorate.delete()
-        messages.success(request, f'Pastorate "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {pastorate.name} Pastorate',
-        'pastorate': pastorate,
-        'churches_count': pastorate.churches.count(),
-    }
-    return render(request, 'church_structure/delete_pastorate.html', context)
-
-@login_required
-def delete_church(request, church_slug):
-    """Delete church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        name = church.name
-        church.delete()
-        messages.success(request, f'Church "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {church.name} Church',
-        'church': church,
-    }
-    return render(request, 'church_structure/delete_church.html', context)
-
-@login_required
-def edit_pastorate(request, pastorate_slug):
-    """Edit pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
-    if request.method == 'POST':
-        form = PastorateForm(request.POST, instance=pastorate)
-        if form.is_valid():
-            pastorate = form.save()
-            messages.success(request, f'Pastorate "{pastorate.name}" updated successfully!')
-            return redirect('church_structure:pastorate_detail', pastorate_slug=pastorate.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = PastorateForm(instance=pastorate)
-
-    context = {
-        'page_title': f'Edit {pastorate.name} Pastorate',
-        'form': form,
-        'pastorate': pastorate,
-    }
-    return render(request, 'church_structure/edit_pastorate.html', context)
-
-@login_required
-def edit_church(request, church_slug):
-    """Edit church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        form = ChurchForm(request.POST, instance=church)
-        if form.is_valid():
-            church = form.save()
-            messages.success(request, f'Church "{church.name}" updated successfully!')
-            return redirect('church_structure:church_detail', church_slug=church.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = ChurchForm(instance=church)
-
-    context = {
-        'page_title': f'Edit {church.name} Church',
-        'form': form,
-        'church': church,
-    }
-    return render(request, 'church_structure/edit_church.html', context)
-
-@login_required
-def delete_diocese(request, diocese_slug):
-    """Delete diocese"""
-    diocese = get_object_or_404(Diocese, slug=diocese_slug)
-
-    if request.method == 'POST':
-        name = diocese.name
-        diocese.delete()
-        messages.success(request, f'Diocese "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {diocese.name} Diocese',
-        'diocese': diocese,
-        'pastorates_count': diocese.pastorates.count(),
-    }
-    return render(request, 'church_structure/delete_diocese.html', context)
-
-@login_required
-def delete_pastorate(request, pastorate_slug):
-    """Delete pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
-    if request.method == 'POST':
-        name = pastorate.name
-        pastorate.delete()
-        messages.success(request, f'Pastorate "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {pastorate.name} Pastorate',
-        'pastorate': pastorate,
-        'churches_count': pastorate.churches.count(),
-    }
-    return render(request, 'church_structure/delete_pastorate.html', context)
-
-@login_required
-def delete_church(request, church_slug):
-    """Delete church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        name = church.name
-        church.delete()
-        messages.success(request, f'Church "{name}" deleted successfully!')
-        return redirect('church_structure:index')
-
-    context = {
-        'page_title': f'Delete {church.name} Church',
-        'church': church,
-    }
-    return render(request, 'church_structure/delete_church.html', context)
-
-@login_required
-def edit_pastorate(request, pastorate_slug):
-    """Edit pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
-    if request.method == 'POST':
-        form = PastorateForm(request.POST, instance=pastorate)
-        if form.is_valid():
-            pastorate = form.save()
-            messages.success(request, f'Pastorate "{pastorate.name}" updated successfully!')
-            return redirect('church_structure:pastorate_detail', pastorate_slug=pastorate.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = PastorateForm(instance=pastorate)
-
-    context = {
-        'page_title': f'Edit {pastorate.name} Pastorate',
-        'form': form,
-        'pastorate': pastorate,
-    }
-    return render(request, 'church_structure/edit_pastorate.html', context)
-
-@login_required
-def edit_church(request, church_slug):
-    """Edit church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        form = ChurchForm(request.POST, instance=church)
-        if form.is_valid():
-            church = form.save()
-            messages.success(request, f'Church "{church.name}" updated successfully!')
-            return redirect('church_structure:church_detail', church_slug=church.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = ChurchForm(instance=church)
-
-    context = {
-        'page_title': f'Edit {church.name} Church',
-        'form': form,
-        'church': church,
-    }
-    return render(request, 'church_structure/edit_church.html', context)
+    return JsonResponse({'members': []})
