@@ -51,116 +51,49 @@ def get_churches(request, pastorate_id):
 def add_diocese(request):
     """Add new diocese"""
     if request.method == 'POST':
-        # Handle form submission from index page
-        country = request.POST.get('country')
-        name = request.POST.get('name')
-        bishop = request.POST.get('bishop')
-        
-        if country and name:
-            try:
-                diocese = Diocese.objects.create(
-                    country=country,
-                    name=name,
-                    bishop_id=bishop if bishop else None
-                )
-                messages.success(request, f'Diocese "{diocese.name}" added successfully!')
-            except Exception as e:
-                messages.error(request, f'Error adding diocese: {str(e)}')
+        form = DioceseForm(request.POST)
+        if form.is_valid():
+            diocese = form.save()
+            messages.success(request, f'Diocese "{diocese.name}" added successfully!')
+            return redirect('church_structure:index')
         else:
-            messages.error(request, 'Please fill in required fields.')
-            
-        return redirect('church_structure:index')
+            messages.error(request, 'Please correct the errors below.')
     else:
-        # Handle GET request for standalone form page
         form = DioceseForm()
-        context = {
-            'page_title': 'Add New Diocese',
-            'form': form,
-        }
-        return render(request, 'church_structure/add_diocese.html', context)
+
+    return render(request, 'church_structure/add_diocese.html', {'form': form})
 
 @login_required
 def add_pastorate(request):
     """Add new pastorate"""
     if request.method == 'POST':
-        # Handle form submission from index page
-        diocese_id = request.POST.get('diocese')
-        name = request.POST.get('name')
-        pastor = request.POST.get('pastor')
-        
-        if diocese_id and name:
-            try:
-                diocese = Diocese.objects.get(id=diocese_id)
-                pastorate = Pastorate.objects.create(
-                    diocese=diocese,
-                    name=name,
-                    pastor_id=pastor if pastor else None
-                )
-                messages.success(request, f'Pastorate "{pastorate.name}" added successfully!')
-            except Diocese.DoesNotExist:
-                messages.error(request, 'Selected diocese does not exist.')
-            except Exception as e:
-                messages.error(request, f'Error adding pastorate: {str(e)}')
+        form = PastorateForm(request.POST)
+        if form.is_valid():
+            pastorate = form.save()
+            messages.success(request, f'Pastorate "{pastorate.name}" added successfully!')
+            return redirect('church_structure:index')
         else:
-            messages.error(request, 'Please fill in required fields.')
-            
-        return redirect('church_structure:index')
+            messages.error(request, 'Please correct the errors below.')
     else:
-        # Handle GET request for standalone form page
         form = PastorateForm()
-        context = {
-            'page_title': 'Add New Pastorate',
-            'form': form,
-        }
-        return render(request, 'church_structure/add_pastorate.html', context)
+
+    return render(request, 'church_structure/add_pastorate.html', {'form': form})
 
 @login_required
 def add_church(request):
     """Add new church"""
     if request.method == 'POST':
-        # Handle form submission from index page
-        diocese_id = request.POST.get('diocese')
-        pastorate_id = request.POST.get('pastorate')
-        name = request.POST.get('name')
-        address = request.POST.get('address')
-        head_teacher = request.POST.get('head_teacher')
-        teachers = request.POST.getlist('teachers')
-        service_times = request.POST.get('service_times')
-        
-        if diocese_id and pastorate_id and name and address:
-            try:
-                pastorate = Pastorate.objects.get(id=pastorate_id)
-                church = Church.objects.create(
-                    pastorate=pastorate,
-                    name=name,
-                    address=address,
-                    head_teacher_id=head_teacher if head_teacher else None,
-                    service_times=service_times or ''
-                )
-                
-                # Add teachers
-                if teachers:
-                    from members.models import Member
-                    teacher_objects = Member.objects.filter(id__in=teachers)
-                    church.teachers.set(teacher_objects)
-                
-                messages.success(request, f'Church "{church.name}" added successfully!')
-            except Pastorate.DoesNotExist:
-                messages.error(request, 'Selected pastorate does not exist.')
-            except Exception as e:
-                messages.error(request, f'Error adding church: {str(e)}')
+        form = ChurchForm(request.POST)
+        if form.is_valid():
+            church = form.save()
+            messages.success(request, f'Church "{church.name}" added successfully!')
+            return redirect('church_structure:index')
         else:
-            messages.error(request, 'Please fill in required fields.')
-            
-        return redirect('church_structure:index')
+            messages.error(request, 'Please correct the errors below.')
     else:
-        # Handle GET request for standalone form page
         form = ChurchForm()
-        context = {
-            'page_title': 'Add New Church',
-            'form': form,
-        }
-        return render(request, 'church_structure/add_church.html', context)
+
+    return render(request, 'church_structure/add_church.html', {'form': form})
 
 @login_required
 def diocese_detail(request, diocese_slug):
@@ -519,29 +452,28 @@ def delete_church(request, church_slug):
 @login_required
 def search_members(request):
     """AJAX endpoint for member search"""
-    query = request.GET.get('q', '')
-    if len(query) < 2:
-        return JsonResponse([], safe=False)
-    
-    try:
-        members = Member.objects.filter(
-            Q(first_name__icontains=query) |
-            Q(last_name__icontains=query) |
-            Q(username__icontains=query) |
-            Q(phone_number__icontains=query),
-            membership_status='Active'
-        ).distinct()[:20]
-        
-        # Format for select dropdown
-        results = []
-        for member in members:
-            results.append({
-                'id': member.id,
-                'text': f"{member.first_name} {member.last_name} ({member.phone_number})",
-                'phone': member.phone_number or '',
-                'email': member.email_address or ''
-            })
-        
-        return JsonResponse(results, safe=False)
-    except Exception as e:
-        return JsonResponse([], safe=False)
+    if request.method == 'GET':
+        search_term = request.GET.get('search', '')
+        if len(search_term) >= 2:
+            members = Member.objects.filter(
+                Q(first_name__icontains=search_term) |
+                Q(last_name__icontains=search_term) |
+                Q(username__icontains=search_term) |
+                Q(phone_number__icontains=search_term),
+                membership_status='Active'
+            ).distinct()[:20]
+
+            member_data = []
+            for member in members:
+                member_data.append({
+                    'id': member.id,
+                    'name': member.full_name,
+                    'username': member.username,
+                    'phone': member.phone_number,
+                    'email': member.email_address,
+                    'church': member.home_church_hierarchy
+                })
+
+            return JsonResponse({'members': member_data})
+
+    return JsonResponse({'members': []})
