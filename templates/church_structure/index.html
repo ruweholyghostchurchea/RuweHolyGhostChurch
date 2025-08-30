@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block title %}Church Structure - RuweHolyGhostChurch{% endblock %}
@@ -27,15 +26,20 @@
                 </select>
                 <input type="text" name="name" placeholder="Diocese Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="bishop_name" placeholder="Bishop Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="bishop_phone" placeholder="Bishop Phone (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="email" name="bishop_email" placeholder="Bishop Email (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                
+                <select name="bishop" id="diocese-bishop-select" class="member-search" 
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Bishop (Optional)</option>
+                </select>
+                <div id="diocese-bishop-info" style="display: none;">
+                    <input type="text" id="diocese-bishop-phone" placeholder="Bishop Phone" readonly
+                           style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #2d3748; color: #ffffff; border-radius: 4px;">
+                    <input type="email" id="diocese-bishop-email" placeholder="Bishop Email" readonly
+                           style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #2d3748; color: #ffffff; border-radius: 4px;">
+                </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Diocese</button>
             </form>
-            
+
             <div class="dioceses-list">
                 <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Dioceses ({{ dioceses.count }})</h6>
                 {% for diocese in dioceses %}
@@ -71,15 +75,20 @@
                 </select>
                 <input type="text" name="name" placeholder="Pastorate Name" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="pastor_name" placeholder="Pastor Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="pastor_phone" placeholder="Pastor Phone (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="email" name="pastor_email" placeholder="Pastor Email (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                
+                <select name="pastor" id="pastorate-pastor-select" class="member-search" 
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Pastor (Optional)</option>
+                </select>
+                <div id="pastorate-pastor-info" style="display: none;">
+                    <input type="text" id="pastorate-pastor-phone" placeholder="Pastor Phone" readonly
+                           style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #2d3748; color: #ffffff; border-radius: 4px;">
+                    <input type="email" id="pastorate-pastor-email" placeholder="Pastor Email" readonly
+                           style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #2d3748; color: #ffffff; border-radius: 4px;">
+                </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Pastorate</button>
             </form>
-            
+
             <div class="pastorates-list">
                 <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Pastorates ({{ pastorates.count }})</h6>
                 {% for pastorate in pastorates %}
@@ -121,17 +130,27 @@
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 <input type="text" name="address" placeholder="Church Address" required 
                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="head_teacher_name" placeholder="Head Teacher Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="head_teacher_phone" placeholder="Head Teacher Phone (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="email" name="head_teacher_email" placeholder="Head Teacher Email (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                
+                <select name="head_teacher" id="church-head-teacher-select" class="member-search" 
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Head Teacher (Optional)</option>
+                </select>
+                <div id="church-head-teacher-info" style="display: none;">
+                    <input type="text" id="church-head-teacher-phone" placeholder="Head Teacher Phone" readonly
+                           style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #2d3748; color: #ffffff; border-radius: 4px;">
+                    <input type="email" id="church-head-teacher-email" placeholder="Head Teacher Email" readonly
+                           style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #2d3748; color: #ffffff; border-radius: 4px;">
+                </div>
+                <select name="teachers" id="church-teachers-select" class="member-search" multiple
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Additional Teachers (Optional - Max 12)</option>
+                </select>
+
                 <textarea name="service_times" placeholder="Service Times (e.g., Saturday 9:00 AM)" 
                           style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px; min-height: 60px;"></textarea>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Add Church</button>
             </form>
-            
+
             <div class="churches-list">
                 <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Churches ({{ churches.count }})</h6>
                 {% for church in churches %}
@@ -164,7 +183,7 @@
                 <small>Archbishop Leadership</small>
             </div>
         </div>
-        
+
         {% if dioceses %}
         <div class="table-responsive">
             <table class="table table-dark table-striped" style="background: #1f2937; table-layout: fixed; width: 100%;">
@@ -215,7 +234,7 @@
                                         </a>
                                     </div>
                                 </td>
-                                
+
                                 <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff; font-size: 1.05em;">{{ pastorate.name }}</strong><br>
@@ -241,7 +260,7 @@
                                         </a>
                                     </div>
                                 </td>
-                                
+
                                 <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff;">{{ church.name }}</strong><br>
@@ -297,7 +316,7 @@
                                         </a>
                                     </div>
                                 </td>
-                                
+
                                 <td style="padding: 12px; border: 1px solid #374151; background: rgba(59, 130, 246, 0.1); vertical-align: top;">
                                     <div style="margin-bottom: 8px;">
                                         <strong style="color: #ffffff; font-size: 1.05em;">{{ pastorate.name }}</strong><br>
@@ -323,7 +342,7 @@
                                         </a>
                                     </div>
                                 </td>
-                                
+
                                 <td style="padding: 12px; border: 1px solid #374151; background: rgba(16, 185, 129, 0.1); color: #9ca3af; font-style: italic; vertical-align: top;">
                                     <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
                                     No churches in this pastorate yet
@@ -374,7 +393,7 @@
             No church structure data available yet. Start by adding dioceses.
         </div>
         {% endif %}
-        
+
         <!-- Quick Add Buttons -->
         <div style="margin-top: 30px; text-align: center;">
             <a href="{% url 'church_structure:add_diocese' %}" class="btn btn-primary" style="margin: 5px;">
@@ -395,10 +414,10 @@
 document.getElementById('diocese-select').addEventListener('change', function() {
     const dioceseId = this.value;
     const pastorateSelect = document.getElementById('pastorate-select');
-    
+
     // Clear pastorate dropdown
     pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-    
+
     if (dioceseId) {
         // Fetch pastorates for selected diocese
         fetch(`/church-structure/api/pastorates/${dioceseId}/`)
@@ -413,6 +432,111 @@ document.getElementById('diocese-select').addEventListener('change', function() 
             })
             .catch(error => console.error('Error:', error));
     }
+});
+
+// Member search functionality (assuming you have a generic endpoint for this)
+document.addEventListener('DOMContentLoaded', function() {
+    const memberSearchSelects = document.querySelectorAll('.member-search');
+
+    memberSearchSelects.forEach(selectElement => {
+        const elementType = selectElement.id.split('-')[1]; // 'bishop', 'pastor', 'head-teacher', 'teachers'
+        const infoDivId = selectElement.id.replace('-select', '-info');
+        const phoneInputId = selectElement.id.replace('-select', '-phone');
+        const emailInputId = selectElement.id.replace('-select', '-email');
+
+        selectElement.addEventListener('change', function() {
+            const selectedValue = this.value;
+
+            if (selectedValue) {
+                // Fetch member details based on selectedValue and elementType
+                // This is a placeholder, you'll need a proper API endpoint for this.
+                fetch(`/church-structure/api/member-details/${elementType}/${selectedValue}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (infoDivId) {
+                            document.getElementById(infoDivId).style.display = 'block';
+                            if (phoneInputId) {
+                                document.getElementById(phoneInputId).value = data.phone || '';
+                            }
+                            if (emailInputId) {
+                                document.getElementById(emailInputId).value = data.email || '';
+                            }
+                        }
+                        // For multi-select, you might want to populate it here or handle differently
+                    })
+                    .catch(error => {
+                        console.error('Error fetching member details:', error);
+                        if (infoDivId) {
+                            document.getElementById(infoDivId).style.display = 'none';
+                        }
+                    });
+            } else {
+                // Clear info if no member is selected
+                if (infoDivId) {
+                    document.getElementById(infoDivId).style.display = 'none';
+                    if (phoneInputId) {
+                        document.getElementById(phoneInputId).value = '';
+                    }
+                    if (emailInputId) {
+                        document.getElementById(emailInputId).value = '';
+                    }
+                }
+            }
+        });
+
+        // Initial population of select options (if not already populated by Django template)
+        // This is also a placeholder. Ideally, you'd fetch these options.
+        // For example, fetching bishops for diocese bishop select:
+        if (selectElement.id === 'diocese-bishop-select') {
+            fetch('/church-structure/api/members/?role=bishop')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.id;
+                        option.textContent = member.name;
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching bishops:', error));
+        } else if (selectElement.id === 'pastorate-pastor-select') {
+            fetch('/church-structure/api/members/?role=pastor')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.id;
+                        option.textContent = member.name;
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching pastors:', error));
+        } else if (selectElement.id === 'church-head-teacher-select') {
+             fetch('/church-structure/api/members/?role=teacher') // Assuming teachers can be head teachers
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.id;
+                        option.textContent = member.name;
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching head teachers:', error));
+        } else if (selectElement.id === 'church-teachers-select') {
+             fetch('/church-structure/api/members/?role=teacher')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.id;
+                        option.textContent = member.name;
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching teachers:', error));
+        }
+    });
 });
 </script>
 {% endblock %}
