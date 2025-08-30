@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block title %}Edit {{ church.name }} Church - RuweHolyGhostChurch{% endblock %}
@@ -22,80 +21,161 @@
                 </div>
             </div>
             <div class="card-body">
-                <form method="POST">
+                <form method="POST" id="church-form">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="name" style="color: #ffffff; margin-bottom: 5px;">Church Name *</label>
-                                <input type="text" name="name" id="name" value="{{ church.name }}" required
-                                       class="form-control" 
-                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">Church Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="pastorate_id" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
-                                <select name="pastorate_id" id="pastorate_id" required
-                                        class="form-control"
-                                        style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                                    {% for pastorate in pastorates %}
-                                    <option value="{{ pastorate.id }}" {% if pastorate.id == church.pastorate.id %}selected{% endif %}>
-                                        {{ pastorate.name }} ({{ pastorate.diocese.name }})
-                                    </option>
-                                    {% endfor %}
-                                </select>
+                                <label for="{{ form.pastorate.id_for_label }}" class="form-label">Pastorate</label>
+                                {{ form.pastorate }}
+                                {% if form.pastorate.errors %}
+                                    <div class="text-danger">{{ form.pastorate.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="address" style="color: #ffffff; margin-bottom: 5px;">Church Address *</label>
-                        <textarea name="address" id="address" rows="2" required
-                                  class="form-control"
-                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.address }}</textarea>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                    <div class="text-danger">{{ form.address.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="head_teacher_name" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Name *</label>
-                                <input type="text" name="head_teacher_name" id="head_teacher_name" value="{{ church.head_teacher_name }}" required
-                                       class="form-control"
-                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">Church Phone</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger">{{ form.phone.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="head_teacher_phone" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Phone</label>
-                                <input type="text" name="head_teacher_phone" id="head_teacher_phone" value="{{ church.head_teacher_phone }}"
-                                       class="form-control"
-                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Church Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">{{ form.email.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="head_teacher_email" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Email</label>
-                        <input type="email" name="head_teacher_email" id="head_teacher_email" value="{{ church.head_teacher_email }}"
-                               class="form-control"
-                               style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.head_teacher.id_for_label }}" class="form-label">Head Teacher (Optional)</label>
+                                <select name="head_teacher" id="id_head_teacher" class="form-control member-search">
+                                    <option value="">Select a head teacher (optional)</option>
+                                    {% if church.head_teacher %}
+                                        <option value="{{ church.head_teacher.id }}" selected>{{ church.head_teacher.full_name }} ({{ church.head_teacher.phone_number }})</option>
+                                    {% endif %}
+                                </select>
+                                <small class="form-text text-muted">Search and select a member as head teacher</small>
+                                {% if form.head_teacher.errors %}
+                                    <div class="text-danger">{{ form.head_teacher.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="assistant_teachers" style="color: #ffffff; margin-bottom: 5px;">Assistant Teachers</label>
-                        <textarea name="assistant_teachers" id="assistant_teachers" rows="3"
-                                  class="form-control" placeholder="List additional church teachers, one per line"
-                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.assistant_teachers }}</textarea>
+
+                    <div class="row" id="head-teacher-info" {% if not church.head_teacher %}style="display: none;"{% endif %}>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Head Teacher Phone</label>
+                                <input type="text" id="head-teacher-phone" class="form-control" readonly style="background-color: #f8f9fa;" value="{{ church.head_teacher_phone }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Head Teacher Email</label>
+                                <input type="text" id="head-teacher-email" class="form-control" readonly style="background-color: #f8f9fa;" value="{{ church.head_teacher_email }}">
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group mb-4">
-                        <label for="service_times" style="color: #ffffff; margin-bottom: 5px;">Service Times</label>
-                        <textarea name="service_times" id="service_times" rows="3"
-                                  class="form-control" placeholder="e.g., Saturday 9:00 AM, Sunday 7:00 AM"
-                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.service_times }}</textarea>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.teachers.id_for_label }}" class="form-label">Additional Teachers (Optional)</label>
+                                <select name="teachers" id="id_teachers" class="form-control member-multi-search" multiple>
+                                    {% for teacher in church.teachers.all %}
+                                        <option value="{{ teacher.id }}" selected>{{ teacher.full_name }} ({{ teacher.phone_number }})</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="form-text text-muted">Search and select up to 12 additional teachers (Hold Ctrl/Cmd to select multiple)</small>
+                                {% if form.teachers.errors %}
+                                    <div class="text-danger">{{ form.teachers.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                    
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.capacity.id_for_label }}" class="form-label">Capacity (Optional)</label>
+                                {{ form.capacity }}
+                                {% if form.capacity.errors %}
+                                    <div class="text-danger">{{ form.capacity.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.established_date.id_for_label }}" class="form-label">Established Date (Optional)</label>
+                                {{ form.established_date }}
+                                {% if form.established_date.errors %}
+                                    <div class="text-danger">{{ form.established_date.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.service_times.id_for_label }}" class="form-label">Service Times (Optional)</label>
+                                {{ form.service_times }}
+                                {% if form.service_times.errors %}
+                                    <div class="text-danger">{{ form.service_times.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <div class="form-check">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                        Active Church
+                                    </label>
+                                </div>
+                                {% if form.is_active.errors %}
+                                    <div class="text-danger">{{ form.is_active.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
                             <i class="fas fa-save"></i> Update Church
@@ -110,279 +190,65 @@
         </div>
     </div>
 </div>
-{% endblock %}
-</script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-// Cascading dropdown functionality
-document.getElementById('diocese_id')?.addEventListener('change', function() {
-    const dioceseId = this.value;
-    const pastorateSelect = document.getElementById('pastorate_id');
-    
-    // Clear pastorate dropdown
-    pastorateSelect.innerHTML = '<option value="">Loading...</option>';
-    
-    if (dioceseId) {
-        // Fetch pastorates for selected diocese
-        fetch(`/church-structure/api/pastorates/${dioceseId}/`)
-            .then(response => response.json())
-            .then(data => {
-                pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                data.forEach(pastorate => {
-                    const option = document.createElement('option');
-                    option.value = pastorate.id;
-                    option.textContent = pastorate.name;
-                    pastorateSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                pastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
-            });
-    }
-});
-</script>
-{% endblock %}
-{% extends 'base.html' %}
-
-{% block title %}{{ page_title }}{% endblock %}
-
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10 offset-md-1">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">{{ page_title }}</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" id="church-form">
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.name.id_for_label }}">Church Name *</label>
-                                    {{ form.name }}
-                                    {% if form.name.errors %}
-                                        <div class="text-danger">{{ form.name.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.pastorate.id_for_label }}">Pastorate *</label>
-                                    {{ form.pastorate }}
-                                    {% if form.pastorate.errors %}
-                                        <div class="text-danger">{{ form.pastorate.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="{{ form.address.id_for_label }}">Address *</label>
-                            {{ form.address }}
-                            {% if form.address.errors %}
-                                <div class="text-danger">{{ form.address.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.phone.id_for_label }}">Church Phone</label>
-                                    {{ form.phone }}
-                                    {% if form.phone.errors %}
-                                        <div class="text-danger">{{ form.phone.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.email.id_for_label }}">Church Email</label>
-                                    {{ form.email }}
-                                    {% if form.email.errors %}
-                                        <div class="text-danger">{{ form.email.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="head-teacher-select">Head Teacher (Optional)</label>
-                                    <select id="head-teacher-select" name="head_teacher" class="form-control">
-                                        <option value="">Select a head teacher (optional)</option>
-                                        {% if form.head_teacher.value %}
-                                            <option value="{{ form.head_teacher.value }}" selected>{{ church.head_teacher.full_name }}</option>
-                                        {% endif %}
-                                    </select>
-                                    {% if form.head_teacher.errors %}
-                                        <div class="text-danger">{{ form.head_teacher.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row" id="head-teacher-info" {% if not church.head_teacher %}style="display: none;"{% endif %}>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Head Teacher Phone</label>
-                                    <input type="text" id="head-teacher-phone" class="form-control" value="{{ church.head_teacher_phone }}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Head Teacher Email</label>
-                                    <input type="text" id="head-teacher-email" class="form-control" value="{{ church.head_teacher_email }}" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="teachers-select">Additional Teachers (Optional - Max 12)</label>
-                                    <select id="teachers-select" name="teachers" class="form-control" multiple size="4">
-                                        {% for teacher in church.teachers.all %}
-                                            <option value="{{ teacher.id }}" selected>{{ teacher.full_name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple teachers (maximum 12)</small>
-                                    {% if form.teachers.errors %}
-                                        <div class="text-danger">{{ form.teachers.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="{{ form.service_times.id_for_label }}">Service Times</label>
-                            {{ form.service_times }}
-                            {% if form.service_times.errors %}
-                                <div class="text-danger">{{ form.service_times.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.capacity.id_for_label }}">Capacity</label>
-                                    {{ form.capacity }}
-                                    {% if form.capacity.errors %}
-                                        <div class="text-danger">{{ form.capacity.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.established_date.id_for_label }}">Established Date</label>
-                                    {{ form.established_date }}
-                                    {% if form.established_date.errors %}
-                                        <div class="text-danger">{{ form.established_date.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>
-                                        {{ form.is_active }} Active
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Update Church</button>
-                            <a href="{% url 'church_structure:church_detail' church.slug %}" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const headTeacherSelect = document.getElementById('head-teacher-select');
-    const headTeacherInfo = document.getElementById('head-teacher-info');
-    const headTeacherPhone = document.getElementById('head-teacher-phone');
-    const headTeacherEmail = document.getElementById('head-teacher-email');
-    const teachersSelect = document.getElementById('teachers-select');
-    
-    // Initialize member search for head teacher
-    initMemberSearch(headTeacherSelect, function(member) {
-        headTeacherPhone.value = member ? member.phone || '' : '';
-        headTeacherEmail.value = member ? member.email || '' : '';
-        headTeacherInfo.style.display = member ? 'block' : 'none';
+$(document).ready(function() {
+    // Member search functionality
+    $('.member-search, .member-multi-search').select2({
+        ajax: {
+            url: '{% url "church_structure:search_members" %}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    search: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                return {
+                    results: data.members.map(function(member) {
+                        return {
+                            id: member.id,
+                            text: member.name + ' (' + member.phone + ')',
+                            phone: member.phone,
+                            email: member.email
+                        };
+                    })
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Search members...',
+        minimumInputLength: 2,
+        allowClear: true
     });
-    
-    // Initialize member search for additional teachers
-    initMemberSearchMultiple(teachersSelect);
-});
 
-function initMemberSearch(selectElement, onSelectCallback) {
-    let searchTimeout;
-    
-    selectElement.addEventListener('focus', function() {
-        if (this.options.length <= 1 || (this.options.length === 1 && this.options[0].value === "")) {
-            loadMembers('', selectElement);
+    // Limit teachers selection to 12
+    $('#id_teachers').on('select2:select', function (e) {
+        if ($(this).val().length > 12) {
+            $(this).find('option').last().prop('selected', false);
+            $(this).trigger('change');
+            alert('You can select a maximum of 12 teachers.');
         }
     });
-    
-    selectElement.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption && selectedOption.dataset.member) {
-            const member = JSON.parse(selectedOption.dataset.member);
-            onSelectCallback(member);
-        } else {
-            onSelectCallback(null);
-        }
-    });
-}
 
-function initMemberSearchMultiple(selectElement) {
-    selectElement.addEventListener('focus', function() {
-        loadMembers('', selectElement);
+    // Auto-populate head teacher contact info
+    $('#id_head_teacher').on('select2:select', function (e) {
+        var data = e.params.data;
+        $('#head-teacher-phone').val(data.phone || '');
+        $('#head-teacher-email').val(data.email || '');
+        $('#head-teacher-info').show();
     });
-}
 
-function loadMembers(query, targetSelect) {
-    fetch(`/church-structure/api/search-members/?q=${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(data => {
-            const currentValues = Array.from(targetSelect.selectedOptions).map(option => option.value);
-            
-            if (targetSelect.multiple) {
-                targetSelect.innerHTML = '';
-            } else {
-                const currentValue = targetSelect.value;
-                targetSelect.innerHTML = '<option value="">Select a member (optional)</option>';
-            }
-            
-            data.forEach(member => {
-                const option = document.createElement('option');
-                option.value = member.id;
-                option.textContent = member.text;
-                option.dataset.member = JSON.stringify(member);
-                
-                if (targetSelect.multiple) {
-                    if (currentValues.includes(member.id.toString())) {
-                        option.selected = true;
-                    }
-                } else {
-                    if (member.id == targetSelect.dataset.currentValue) {
-                        option.selected = true;
-                    }
-                }
-                
-                targetSelect.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error loading members:', error));
-}
+    $('#id_head_teacher').on('select2:clear', function (e) {
+        $('#head-teacher-phone').val('');
+        $('#head-teacher-email').val('');
+        $('#head-teacher-info').hide();
+    });
+});
 </script>
 {% endblock %}

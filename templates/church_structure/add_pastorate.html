@@ -1,164 +1,181 @@
 
 {% extends 'base.html' %}
 
-{% block title %}{{ page_title }}{% endblock %}
+{% block title %}Add New Pastorate - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Add New Pastorate{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Add New Pastorate</h3>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-plus" style="color: #dc2626; margin-right: 10px;"></i>
+                    Add New Pastorate
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'church_structure:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
                 </div>
-                <div class="card-body">
-                    <form method="post" id="pastorate-form">
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.name.id_for_label }}">Pastorate Name *</label>
-                                    {{ form.name }}
-                                    {% if form.name.errors %}
-                                        <div class="text-danger">{{ form.name.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.diocese.id_for_label }}">Diocese *</label>
-                                    {{ form.diocese }}
-                                    {% if form.diocese.errors %}
-                                        <div class="text-danger">{{ form.diocese.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="pastorate-form">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">Pastorate Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="pastor-select">Pastor (Optional)</label>
-                                    <select id="pastor-select" name="pastor" class="form-control">
-                                        <option value="">Select a pastor (optional)</option>
-                                    </select>
-                                    {% if form.pastor.errors %}
-                                        <div class="text-danger">{{ form.pastor.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.diocese.id_for_label }}" class="form-label">Diocese</label>
+                                {{ form.diocese }}
+                                {% if form.diocese.errors %}
+                                    <div class="text-danger">{{ form.diocese.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row" id="pastor-info" style="display: none;">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Pastor Phone</label>
-                                    <input type="text" id="pastor-phone" class="form-control" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Pastor Email</label>
-                                    <input type="text" id="pastor-email" class="form-control" readonly>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.pastor.id_for_label }}" class="form-label">Pastor (Optional)</label>
+                                <select name="pastor" id="id_pastor" class="form-control member-search">
+                                    <option value="">Select a pastor (optional)</option>
+                                </select>
+                                <small class="form-text text-muted">Search and select a member as pastor</small>
+                                {% if form.pastor.errors %}
+                                    <div class="text-danger">{{ form.pastor.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="{{ form.description.id_for_label }}">Description</label>
-                            {{ form.description }}
-                            {% if form.description.errors %}
-                                <div class="text-danger">{{ form.description.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.established_date.id_for_label }}">Established Date</label>
-                                    {{ form.established_date }}
-                                    {% if form.established_date.errors %}
-                                        <div class="text-danger">{{ form.established_date.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
+                    <div class="row" id="pastor-info" style="display: none;">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Pastor Phone</label>
+                                <input type="text" id="pastor-phone" class="form-control" readonly style="background-color: #f8f9fa;">
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>
-                                        {{ form.is_active }} Active
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Pastor Email</label>
+                                <input type="text" id="pastor-email" class="form-control" readonly style="background-color: #f8f9fa;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.established_date.id_for_label }}" class="form-label">Established Date (Optional)</label>
+                                {{ form.established_date }}
+                                {% if form.established_date.errors %}
+                                    <div class="text-danger">{{ form.established_date.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <div class="form-check" style="margin-top: 2rem;">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                        Active Pastorate
                                     </label>
                                 </div>
+                                {% if form.is_active.errors %}
+                                    <div class="text-danger">{{ form.is_active.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Add Pastorate</button>
-                            <a href="{% url 'church_structure:index' %}" class="btn btn-secondary">Cancel</a>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">Description (Optional)</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
+                            <i class="fas fa-save"></i> Add Pastorate
+                        </button>
+                        <a href="{% url 'church_structure:index' %}" 
+                           class="btn btn-secondary" style="padding: 10px 30px;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const pastorSelect = document.getElementById('pastor-select');
-    const pastorInfo = document.getElementById('pastor-info');
-    const pastorPhone = document.getElementById('pastor-phone');
-    const pastorEmail = document.getElementById('pastor-email');
-    
-    // Initialize member search for pastor
-    initMemberSearch(pastorSelect, function(member) {
-        pastorPhone.value = member.phone || '';
-        pastorEmail.value = member.email || '';
-        pastorInfo.style.display = member ? 'block' : 'none';
+$(document).ready(function() {
+    // Member search functionality
+    $('.member-search').select2({
+        ajax: {
+            url: '{% url "church_structure:search_members" %}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    search: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                return {
+                    results: data.members.map(function(member) {
+                        return {
+                            id: member.id,
+                            text: member.name + ' (' + member.phone + ')',
+                            phone: member.phone,
+                            email: member.email
+                        };
+                    })
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Search members...',
+        minimumInputLength: 2,
+        allowClear: true
+    });
+
+    // Auto-populate pastor contact info
+    $('#id_pastor').on('select2:select', function (e) {
+        var data = e.params.data;
+        $('#pastor-phone').val(data.phone || '');
+        $('#pastor-email').val(data.email || '');
+        $('#pastor-info').show();
+    });
+
+    $('#id_pastor').on('select2:clear', function (e) {
+        $('#pastor-phone').val('');
+        $('#pastor-email').val('');
+        $('#pastor-info').hide();
     });
 });
-
-function initMemberSearch(selectElement, onSelectCallback) {
-    let searchTimeout;
-    
-    selectElement.addEventListener('focus', function() {
-        if (this.options.length <= 1) {
-            loadMembers('');
-        }
-    });
-    
-    selectElement.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            loadMembers(this.value);
-        }, 300);
-    });
-    
-    selectElement.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption && selectedOption.dataset.member) {
-            const member = JSON.parse(selectedOption.dataset.member);
-            onSelectCallback(member);
-        } else {
-            onSelectCallback(null);
-        }
-    });
-    
-    function loadMembers(query) {
-        fetch(`/church-structure/api/search-members/?q=${encodeURIComponent(query)}`)
-            .then(response => response.json())
-            .then(data => {
-                selectElement.innerHTML = '<option value="">Select a member (optional)</option>';
-                data.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.id;
-                    option.textContent = member.text;
-                    option.dataset.member = JSON.stringify(member);
-                    selectElement.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error loading members:', error));
-    }
-}
 </script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {% endblock %}
