@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block title %}{{ page_title }}{% endblock %}
@@ -14,7 +13,7 @@
                 <div class="card-body">
                     <form method="post" id="diocese-form">
                         {% csrf_token %}
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -138,6 +137,17 @@
                             {% endif %}
                         </div>
 
+                        <div class="form-group">
+                            <label for="rich_description" style="color: #ffffff; margin-bottom: 5px;">Detailed Description</label>
+                            <textarea name="rich_description" id="id_rich_description" rows="10"
+                                      class="form-control rich-editor"
+                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </textarea>
+                            {% if form.rich_description.errors %}
+                                <div class="text-danger">{{ form.rich_description.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -181,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const bishopInfo = document.getElementById('bishop-info');
     const bishopPhone = document.getElementById('bishop-phone');
     const bishopEmail = document.getElementById('bishop-email');
-    
+
     // Initialize member search for bishop
     initMemberSearch(bishopSelect, function(member) {
         bishopPhone.value = member.phone || '';
@@ -192,20 +202,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initMemberSearch(selectElement, onSelectCallback) {
     let searchTimeout;
-    
+
     selectElement.addEventListener('focus', function() {
         if (this.options.length <= 1) {
             loadMembers('');
         }
     });
-    
+
     selectElement.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             loadMembers(this.value);
         }, 300);
     });
-    
+
     selectElement.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         if (selectedOption && selectedOption.dataset.member) {
@@ -215,7 +225,7 @@ function initMemberSearch(selectElement, onSelectCallback) {
             onSelectCallback(null);
         }
     });
-    
+
     function loadMembers(query) {
         fetch(`/church-structure/api/search-members/?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
@@ -232,5 +242,20 @@ function initMemberSearch(selectElement, onSelectCallback) {
             .catch(error => console.error('Error loading members:', error));
     }
 }
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add help text for rich description
+    const richDescField = document.querySelector('#id_rich_description');
+    if (richDescField) {
+        const helpText = document.createElement('small');
+        helpText.className = 'form-text text-muted';
+        helpText.innerHTML = 'Use the toolbar above to format your detailed description. You can add headings, lists, quotes, and basic formatting.';
+        richDescField.parentNode.appendChild(helpText);
+    }
+});
 </script>
 {% endblock %}

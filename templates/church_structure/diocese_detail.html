@@ -20,6 +20,12 @@
                        class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Edit Diocese
                     </a>
+                    {% if diocese.has_detailed_description %}
+                    <a href="{% url 'church_structure:diocese_description' diocese_slug=diocese.slug %}" 
+                       class="btn btn-info btn-sm">
+                        <i class="fas fa-book-open"></i> About Diocese
+                    </a>
+                    {% endif %}
                     <a href="{% url 'church_structure:index' %}" class="btn btn-secondary btn-sm">
                         <i class="fas fa-arrow-left"></i> Back
                     </a>

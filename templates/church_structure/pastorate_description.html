@@ -1,0 +1,113 @@
+
+{% extends 'base.html' %}
+
+{% block title %}About {{ pastorate.name }} Pastorate - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}About {{ pastorate.name }} Pastorate{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Pastorate Header Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #dc2626; margin-right: 10px;"></i>
+                    {{ pastorate.name }} Pastorate
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
+                       class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit Pastorate
+                    </a>
+                    <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                       class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back to Pastorate
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><strong>Identifier:</strong> <span style="color: #22c55e;">{{ pastorate.identifier }}</span></p>
+                        <p><strong>Diocese:</strong> 
+                            <a href="{% url 'church_structure:diocese_detail' diocese_slug=pastorate.diocese.slug %}" 
+                               style="color: #dc2626; text-decoration: none;">
+                                {{ pastorate.diocese.name }}
+                            </a>
+                        </p>
+                        <p><strong>Pastor:</strong> {{ pastorate.pastor_name }}</p>
+                        <p><strong>Established:</strong> {{ pastorate.established_date|default:"Not specified" }}</p>
+                    </div>
+                    <div class="col-md-8">
+                        {% if pastorate.description %}
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Short Description</h6>
+                            <p style="color: #d1d5db; margin: 0;">{{ pastorate.description }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Description -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-book-open" style="color: #dc2626; margin-right: 10px;"></i>
+                    Detailed Information
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if pastorate.rich_description %}
+                <div class="blog-content" style="background: #ffffff; color: #1f2937; padding: 30px; border-radius: 8px; line-height: 1.6; font-family: 'Georgia', serif;">
+                    {{ pastorate.rich_description|safe }}
+                </div>
+                {% else %}
+                <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                    <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                    <p>No detailed description available for this pastorate yet.</p>
+                    <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
+                       class="btn btn-primary" style="margin-top: 15px;">
+                        <i class="fas fa-edit"></i> Add Detailed Description
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.blog-content {
+    font-size: 16px;
+}
+.blog-content h1, .blog-content h2, .blog-content h3 {
+    color: #1f2937;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+.blog-content p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+.blog-content ul, .blog-content ol {
+    margin-bottom: 15px;
+    padding-left: 25px;
+}
+.blog-content blockquote {
+    border-left: 4px solid #dc2626;
+    margin: 20px 0;
+    padding: 15px 20px;
+    background: #f9fafb;
+    font-style: italic;
+}
+.blog-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+</style>
+{% endblock %}

@@ -1,18 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}RuweHolyGhostChurch - Church Management System{% endblock %}</title>
-    
+
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <!-- Custom CSS -->
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -24,7 +23,7 @@
                 <img src="https://i.imgur.com/BUxE9oF.jpg" alt="Ruwe Holy Ghost Church Logo" width="60" height="60" style="border-radius: 50%;">
                 <h3>Ruwe Holy Ghost <br> Church EA</h3>
             </div>
-            
+
             <div class="sidebar-nav">
                 <ul>
                     <li>
@@ -111,7 +110,7 @@
                         </div>
                     </figure>
                 </div>
-                    
+
                 <!-- Admin User Info -->
                 <div class="user-info">
                     {% if user.is_authenticated %}
@@ -135,36 +134,8 @@
     </div>
 
     <!-- JavaScript -->
-    <script>
-        // Sidebar toggle for mobile
-        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('active');
-        });
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            
-            if (window.innerWidth <= 768 && 
-                !sidebar.contains(event.target) && 
-                !toggle?.contains(event.target)) {
-                sidebar.classList.remove('active');
-            }
-        });
-
-        // Smooth transitions
-        document.addEventListener('DOMContentLoaded', function() {
-            const links = document.querySelectorAll('.sidebar-nav a');
-            links.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (this.href !== window.location.href) {
-                        document.body.classList.add('fade-out');
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% load static %}{% static 'js/rich_editor.js' %}"></script>
 
     {% block extra_js %}{% endblock %}
 </body>

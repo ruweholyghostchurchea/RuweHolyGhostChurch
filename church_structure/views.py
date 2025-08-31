@@ -477,3 +477,33 @@ def search_members(request):
             return JsonResponse({'members': member_data})
 
     return JsonResponse({'members': []})
+
+@login_required
+def diocese_description(request, diocese_slug):
+    """Diocese detailed description view"""
+    diocese = get_object_or_404(Diocese, slug=diocese_slug)
+    context = {
+        'page_title': f'{diocese.name} Diocese - About',
+        'diocese': diocese,
+    }
+    return render(request, 'church_structure/diocese_description.html', context)
+
+@login_required
+def pastorate_description(request, pastorate_slug):
+    """Pastorate detailed description view"""
+    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
+    context = {
+        'page_title': f'{pastorate.name} Pastorate - About',
+        'pastorate': pastorate,
+    }
+    return render(request, 'church_structure/pastorate_description.html', context)
+
+@login_required
+def church_description(request, church_slug):
+    """Church detailed description view"""
+    church = get_object_or_404(Church, slug=church_slug)
+    context = {
+        'page_title': f'{church.name} Church - About',
+        'church': church,
+    }
+    return render(request, 'church_structure/church_description.html', context)

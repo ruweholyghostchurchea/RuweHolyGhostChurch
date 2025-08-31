@@ -24,4 +24,8 @@ urlpatterns = [
     path('pastorate/<slug:pastorate_slug>/delete/', views.delete_pastorate, name='delete_pastorate'),
     path('church/<slug:church_slug>/delete/', views.delete_church, name='delete_church'),
     path('api/search-members/', views.search_members, name='search_members'),
+    # Description detail views
+    path('diocese/<slug:diocese_slug>/about/', views.diocese_description, name='diocese_description'),
+    path('pastorate/<slug:pastorate_slug>/about/', views.pastorate_description, name='pastorate_description'),
+    path('church/<slug:church_slug>/about/', views.church_description, name='church_description'),
 ]

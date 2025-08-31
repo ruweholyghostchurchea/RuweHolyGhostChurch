@@ -20,6 +20,12 @@
                        class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Edit Pastorate
                     </a>
+                    {% if pastorate.has_detailed_description %}
+                    <a href="{% url 'church_structure:pastorate_description' pastorate_slug=pastorate.slug %}" 
+                       class="btn btn-info btn-sm">
+                        <i class="fas fa-book-open"></i> About Pastorate
+                    </a>
+                    {% endif %}
                     <a href="{% url 'church_structure:diocese_detail' diocese_slug=pastorate.diocese.slug %}" 
                        class="btn btn-primary btn-sm">
                         <i class="fas fa-church"></i> View Diocese
