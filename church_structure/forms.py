@@ -75,16 +75,20 @@ class ChurchForm(forms.ModelForm):
     
     class Meta:
         model = Church
-        fields = ['name', 'pastorate', 'address', 'phone', 'email', 'head_teacher', 'teachers', 'service_times', 'capacity', 'established_date', 'is_active']
+        fields = ['name', 'pastorate', 'location', 'map_link', 'phone', 'email', 'head_teacher', 'teachers', 'service_times', 'capacity', 'established_date', 'is_mission_church', 'is_diosen_church', 'is_headquarter_church', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Church name'}),
             'pastorate': forms.Select(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Church address'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location (city, country)', 'autocomplete': 'off'}),
+            'map_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Google Maps link (optional)'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Church phone number'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Church email'}),
-            'service_times': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Service schedule information'}),
+            'service_times': forms.Select(attrs={'class': 'form-control'}),
             'capacity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Church capacity'}),
             'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'is_mission_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_diosen_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_headquarter_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
     
@@ -93,6 +97,21 @@ class ChurchForm(forms.ModelForm):
         if teachers and teachers.count() > 12:
             raise forms.ValidationError("A church can have a maximum of 12 additional teachers.")
         return teachers
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        is_headquarter = cleaned_data.get('is_headquarter_church')
+        
+        if is_headquarter:
+            # Check if another church is already set as headquarter
+            existing_headquarter = Church.objects.filter(is_headquarter_church=True)
+            if self.instance.pk:
+                existing_headquarter = existing_headquarter.exclude(pk=self.instance.pk)
+            
+            if existing_headquarter.exists():
+                raise forms.ValidationError("There can only be one Headquarter Church. Please uncheck the existing headquarter church first.")
+        
+        return cleaned_data
 
 
 class MemberSearchForm(forms.Form):

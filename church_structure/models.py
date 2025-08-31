@@ -164,18 +164,29 @@ class Pastorate(models.Model):
         return f"{self.name} - {self.diocese.name}"
 
 class Church(models.Model):
+    SERVICE_TIME_CHOICES = [
+        ('6:00 AM Saturday', '6:00 AM Saturday'),
+        ('9:00 AM Saturday', '9:00 AM Saturday'),
+        ('12:00 NOON Saturday', '12:00 NOON Saturday'),
+        ('3:00 PM Saturday', '3:00 PM Saturday'),
+    ]
+    
     name = models.CharField(max_length=200)
     identifier = models.CharField(max_length=20, unique=True, blank=True, help_text="Auto-generated unique identifier")
     slug = models.SlugField(max_length=250, unique=True, blank=True)
     pastorate = models.ForeignKey(Pastorate, on_delete=models.CASCADE, related_name='churches')
-    address = models.TextField()
+    location = models.CharField(max_length=200, help_text="Location (city, country)")
+    map_link = models.URLField(blank=True, help_text="Google Maps link for exact church location")
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
     head_teacher = models.ForeignKey('members.Member', on_delete=models.SET_NULL, null=True, blank=True, related_name='churches_as_head_teacher', help_text="Search and select a member as head teacher")
     teachers = models.ManyToManyField('members.Member', blank=True, related_name='churches_as_teacher', help_text="Search and select up to 12 additional teachers")
-    service_times = models.TextField(blank=True, help_text="Service schedule information")
+    service_times = models.CharField(max_length=50, choices=SERVICE_TIME_CHOICES, default='9:00 AM Saturday', help_text="Service time on Saturday")
     capacity = models.PositiveIntegerField(null=True, blank=True)
     established_date = models.DateField(null=True, blank=True)
+    is_mission_church = models.BooleanField(default=False, verbose_name="Mission Church")
+    is_diosen_church = models.BooleanField(default=False, verbose_name="Diosen Church")
+    is_headquarter_church = models.BooleanField(default=False, verbose_name="Headquarter Church")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -202,6 +213,11 @@ class Church(models.Model):
             self.identifier = self.generate_identifier()
         if not self.slug:
             self.slug = slugify(f"{self.name}-{self.pastorate.name}")
+        
+        # Ensure only one headquarter church exists
+        if self.is_headquarter_church:
+            Church.objects.filter(is_headquarter_church=True).exclude(pk=self.pk).update(is_headquarter_church=False)
+        
         super().save(*args, **kwargs)
     
     @property

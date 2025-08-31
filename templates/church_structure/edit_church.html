@@ -1,9 +1,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %}Edit {{ church.name }} Church - RuweHolyGhostChurch{% endblock %}
-
-{% block page_title %}Edit {{ church.name }} Church{% endblock %}
+{% block title %}Edit Church{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -11,16 +9,7 @@
         <div class="col-md-10 offset-md-1">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-edit" style="color: #dc2626; margin-right: 10px;"></i>
-                        Edit Church Information
-                    </h3>
-                    <div style="float: right;">
-                        <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
-                           class="btn btn-secondary btn-sm">
-                            <i class="fas fa-arrow-left"></i> Cancel
-                        </a>
-                    </div>
+                    <h3 class="card-title">Edit Church: {{ church.name }}</h3>
                 </div>
                 <div class="card-body">
                     <form method="post" id="church-form">
@@ -37,11 +26,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="pastorate_id" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
-                                    <select name="pastorate_id" id="pastorate_id" required
+                                    <label for="pastorate" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
+                                    <select name="pastorate" id="pastorate" required
                                             class="form-control"
                                             style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                                        {% for pastorate in pastorates %}
+                                        {% for pastorate in form.pastorate.queryset %}
                                         <option value="{{ pastorate.id }}" {% if pastorate.id == church.pastorate.id %}selected{% endif %}>
                                             {{ pastorate.name }} ({{ pastorate.diocese.name }})
                                         </option>
@@ -50,14 +39,28 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
-                            <label for="address" style="color: #ffffff; margin-bottom: 5px;">Church Address *</label>
-                            <textarea name="address" id="address" rows="2" required
-                                      class="form-control"
-                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.address }}</textarea>
+                            <label for="location" style="color: #ffffff; margin-bottom: 5px;">Church Location *</label>
+                            <div style="position: relative;">
+                                <input type="text" name="location" id="location-input" value="{{ church.location }}" required
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"
+                                       placeholder="Start typing location (e.g., Nairobi, Kenya)"
+                                       autocomplete="off">
+                                <div id="location-suggestions" style="display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background: #1f2937; border: 1px solid #374151; border-top: none; border-radius: 0 0 4px 4px; z-index: 1000;">
+                                </div>
+                            </div>
                         </div>
-                        
+
+                        <div class="form-group">
+                            <label for="map_link" style="color: #ffffff; margin-bottom: 5px;">Map Link (Optional)</label>
+                            <input type="url" name="map_link" id="map_link" value="{{ church.map_link }}"
+                                   class="form-control"
+                                   style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"
+                                   placeholder="Google Maps link for exact church location">
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -92,18 +95,18 @@
                             </div>
                         </div>
 
-                        <div class="row" id="head-teacher-info" {% if not church.head_teacher %}style="display: none;"{% endif %}>
+                        <div class="row" id="head-teacher-info" style="{% if not church.head_teacher %}display: none;{% endif %}">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #ffffff; margin-bottom: 5px;">Head Teacher Phone</label>
-                                    <input type="text" id="head-teacher-phone" class="form-control" value="{{ church.head_teacher_phone }}" readonly
+                                    <input type="text" id="head-teacher-phone" value="{{ church.head_teacher_phone }}" class="form-control" readonly
                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #ffffff; margin-bottom: 5px;">Head Teacher Email</label>
-                                    <input type="text" id="head-teacher-email" class="form-control" value="{{ church.head_teacher_email }}" readonly
+                                    <input type="text" id="head-teacher-email" value="{{ church.head_teacher_email }}" class="form-control" readonly
                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
@@ -126,9 +129,16 @@
 
                         <div class="form-group">
                             <label for="service_times" style="color: #ffffff; margin-bottom: 5px;">Service Times</label>
-                            <textarea name="service_times" id="service_times" rows="3"
-                                      class="form-control" placeholder="e.g., Saturday 9:00 AM, Sunday 7:00 AM"
-                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.service_times }}</textarea>
+                            <select name="service_times" id="service_times" class="form-control"
+                                    style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="6:00 AM Saturday" {% if church.service_times == "6:00 AM Saturday" %}selected{% endif %}>6:00 AM Saturday</option>
+                                <option value="9:00 AM Saturday" {% if church.service_times == "9:00 AM Saturday" %}selected{% endif %}>9:00 AM Saturday</option>
+                                <option value="12:00 NOON Saturday" {% if church.service_times == "12:00 NOON Saturday" %}selected{% endif %}>12:00 NOON Saturday</option>
+                                <option value="3:00 PM Saturday" {% if church.service_times == "3:00 PM Saturday" %}selected{% endif %}>3:00 PM Saturday</option>
+                            </select>
+                            <small style="color: #9ca3af; display: block; margin-top: 5px;">
+                                <strong>Note:</strong> A Sabbath Day starts on Friday 6:00 PM to Saturday 6:00 PM (24 hours). All Sabbaths are held on Saturday. All Sabbaths MUST end by 6:00 PM Saturday.
+                            </small>
                         </div>
 
                         <div class="row">
@@ -153,6 +163,34 @@
                                     <label style="color: #ffffff;">
                                         <input type="checkbox" name="is_active" {% if church.is_active %}checked{% endif %}> Active
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 style="color: #ffffff; margin-bottom: 15px;">Church Type *</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_mission_church" {% if church.is_mission_church %}checked{% endif %}> Mission Church
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_diosen_church" {% if church.is_diosen_church %}checked{% endif %}> Diosen Church
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_headquarter_church" {% if church.is_headquarter_church %}checked{% endif %}> Headquarter Church
+                                    </label>
+                                    <small style="color: #9ca3af; display: block;">Only one Headquarter Church allowed</small>
                                 </div>
                             </div>
                         </div>
@@ -183,20 +221,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize member search for head teacher
     initMemberSearch(headTeacherSelect, function(member) {
-        headTeacherPhone.value = member ? member.phone || '' : '';
-        headTeacherEmail.value = member ? member.email || '' : '';
+        headTeacherPhone.value = member.phone || '';
+        headTeacherEmail.value = member.email || '';
         headTeacherInfo.style.display = member ? 'block' : 'none';
     });
     
     // Initialize member search for additional teachers
     initMemberSearchMultiple(teachersSelect);
+    
+    // Initialize location autocomplete
+    const locationInput = document.getElementById('location-input');
+    const locationSuggestions = document.getElementById('location-suggestions');
+    
+    if (locationInput && locationSuggestions) {
+        new LocationAutocomplete(locationInput, locationSuggestions);
+    }
 });
 
 function initMemberSearch(selectElement, onSelectCallback) {
     let searchTimeout;
     
     selectElement.addEventListener('focus', function() {
-        if (this.options.length <= 1 || (this.options.length === 1 && this.options[0].value === "")) {
+        if (this.options.length <= 1) {
             loadMembers('', selectElement);
         }
     });
@@ -214,7 +260,9 @@ function initMemberSearch(selectElement, onSelectCallback) {
 
 function initMemberSearchMultiple(selectElement) {
     selectElement.addEventListener('focus', function() {
-        loadMembers('', selectElement);
+        if (this.options.length === 0) {
+            loadMembers('', selectElement);
+        }
     });
 }
 
@@ -222,12 +270,9 @@ function loadMembers(query, targetSelect) {
     fetch(`/church-structure/api/search-members/?q=${encodeURIComponent(query)}`)
         .then(response => response.json())
         .then(data => {
-            const currentValues = Array.from(targetSelect.selectedOptions).map(option => option.value);
-            
             if (targetSelect.multiple) {
                 targetSelect.innerHTML = '';
             } else {
-                const currentValue = targetSelect.value;
                 targetSelect.innerHTML = '<option value="">Select a member (optional)</option>';
             }
             
@@ -236,21 +281,97 @@ function loadMembers(query, targetSelect) {
                 option.value = member.id;
                 option.textContent = member.text;
                 option.dataset.member = JSON.stringify(member);
-                
-                if (targetSelect.multiple) {
-                    if (currentValues.includes(member.id.toString())) {
-                        option.selected = true;
-                    }
-                } else {
-                    if (member.id == targetSelect.dataset.currentValue) {
-                        option.selected = true;
-                    }
-                }
-                
                 targetSelect.appendChild(option);
             });
         })
         .catch(error => console.error('Error loading members:', error));
+}
+
+// Location autocomplete functionality
+class LocationAutocomplete {
+    constructor(inputElement, suggestionsElement) {
+        this.input = inputElement;
+        this.suggestions = suggestionsElement;
+        this.debounceTimer = null;
+        
+        if (this.input && this.suggestions) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.input.addEventListener('input', (e) => {
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => {
+                this.searchLocations(e.target.value);
+            }, 300);
+        });
+        
+        this.input.addEventListener('blur', () => {
+            setTimeout(() => this.hideSuggestions(), 200);
+        });
+        
+        this.input.addEventListener('focus', () => {
+            if (this.suggestions.children.length > 0) {
+                this.showSuggestions();
+            }
+        });
+    }
+    
+    async searchLocations(query) {
+        if (query.length < 2) {
+            this.hideSuggestions();
+            return;
+        }
+        
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
+            const data = await response.json();
+            this.displaySuggestions(data);
+        } catch (error) {
+            console.error('Error fetching location suggestions:', error);
+        }
+    }
+    
+    displaySuggestions(locations) {
+        this.suggestions.innerHTML = '';
+        
+        if (locations.length === 0) {
+            this.hideSuggestions();
+            return;
+        }
+        
+        locations.forEach(location => {
+            const suggestion = document.createElement('div');
+            suggestion.style.cssText = 'padding: 10px; cursor: pointer; border-bottom: 1px solid #374151; color: #ffffff;';
+            suggestion.textContent = location.display_name;
+            
+            suggestion.addEventListener('mouseenter', () => {
+                suggestion.style.backgroundColor = '#374151';
+            });
+            
+            suggestion.addEventListener('mouseleave', () => {
+                suggestion.style.backgroundColor = 'transparent';
+            });
+            
+            suggestion.addEventListener('click', () => {
+                this.input.value = location.display_name;
+                this.hideSuggestions();
+            });
+            
+            this.suggestions.appendChild(suggestion);
+        });
+        
+        this.showSuggestions();
+    }
+    
+    showSuggestions() {
+        this.suggestions.style.display = 'block';
+    }
+    
+    hideSuggestions() {
+        this.suggestions.style.display = 'none';
+    }
 }
 </script>
 {% endblock %}

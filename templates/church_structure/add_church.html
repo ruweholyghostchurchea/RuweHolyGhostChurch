@@ -47,13 +47,29 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="address" style="color: #ffffff; margin-bottom: 5px;">Church Address *</label>
-                            <textarea name="address" id="address" rows="2" required
-                                      class="form-control"
-                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"
-                                      placeholder="Church address"></textarea>
-                            {% if form.address.errors %}
-                                <div class="text-danger">{{ form.address.errors.0 }}</div>
+                            <label for="location" style="color: #ffffff; margin-bottom: 5px;">Church Location *</label>
+                            <div style="position: relative;">
+                                <input type="text" name="location" id="location-input" required
+                                       class="form-control"
+                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"
+                                       placeholder="Start typing location (e.g., Nairobi, Kenya)"
+                                       autocomplete="off">
+                                <div id="location-suggestions" style="display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background: #1f2937; border: 1px solid #374151; border-top: none; border-radius: 0 0 4px 4px; z-index: 1000;">
+                                </div>
+                            </div>
+                            {% if form.location.errors %}
+                                <div class="text-danger">{{ form.location.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="map_link" style="color: #ffffff; margin-bottom: 5px;">Map Link (Optional)</label>
+                            <input type="url" name="map_link" id="map_link"
+                                   class="form-control"
+                                   style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"
+                                   placeholder="Google Maps link for exact church location">
+                            {% if form.map_link.errors %}
+                                <div class="text-danger">{{ form.map_link.errors.0 }}</div>
                             {% endif %}
                         </div>
 
@@ -133,9 +149,16 @@
 
                         <div class="form-group">
                             <label for="service_times" style="color: #ffffff; margin-bottom: 5px;">Service Times</label>
-                            <textarea name="service_times" id="service_times" rows="3"
-                                      class="form-control" placeholder="e.g., Saturday 9:00 AM, Sunday 7:00 AM"
-                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"></textarea>
+                            <select name="service_times" id="service_times" class="form-control"
+                                    style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="6:00 AM Saturday">6:00 AM Saturday</option>
+                                <option value="9:00 AM Saturday" selected>9:00 AM Saturday</option>
+                                <option value="12:00 NOON Saturday">12:00 NOON Saturday</option>
+                                <option value="3:00 PM Saturday">3:00 PM Saturday</option>
+                            </select>
+                            <small style="color: #9ca3af; display: block; margin-top: 5px;">
+                                <strong>Note:</strong> A Sabbath Day starts on Friday 6:00 PM to Saturday 6:00 PM (24 hours). All Sabbaths are held on Saturday. All Sabbaths MUST end by 6:00 PM Saturday.
+                            </small>
                             {% if form.service_times.errors %}
                                 <div class="text-danger">{{ form.service_times.errors.0 }}</div>
                             {% endif %}
@@ -170,6 +193,34 @@
                                     <label style="color: #ffffff;">
                                         <input type="checkbox" name="is_active" checked> Active
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 style="color: #ffffff; margin-bottom: 15px;">Church Type *</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_mission_church"> Mission Church
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_diosen_church"> Diosen Church
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_headquarter_church"> Headquarter Church
+                                    </label>
+                                    <small style="color: #9ca3af; display: block;">Only one Headquarter Church allowed</small>
                                 </div>
                             </div>
                         </div>
@@ -257,5 +308,102 @@ function loadMembers(query, targetSelect) {
         })
         .catch(error => console.error('Error loading members:', error));
 }
+
+// Location autocomplete functionality
+class LocationAutocomplete {
+    constructor(inputElement, suggestionsElement) {
+        this.input = inputElement;
+        this.suggestions = suggestionsElement;
+        this.debounceTimer = null;
+        
+        if (this.input && this.suggestions) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.input.addEventListener('input', (e) => {
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => {
+                this.searchLocations(e.target.value);
+            }, 300);
+        });
+        
+        this.input.addEventListener('blur', () => {
+            setTimeout(() => this.hideSuggestions(), 200);
+        });
+        
+        this.input.addEventListener('focus', () => {
+            if (this.suggestions.children.length > 0) {
+                this.showSuggestions();
+            }
+        });
+    }
+    
+    async searchLocations(query) {
+        if (query.length < 2) {
+            this.hideSuggestions();
+            return;
+        }
+        
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
+            const data = await response.json();
+            this.displaySuggestions(data);
+        } catch (error) {
+            console.error('Error fetching location suggestions:', error);
+        }
+    }
+    
+    displaySuggestions(locations) {
+        this.suggestions.innerHTML = '';
+        
+        if (locations.length === 0) {
+            this.hideSuggestions();
+            return;
+        }
+        
+        locations.forEach(location => {
+            const suggestion = document.createElement('div');
+            suggestion.style.cssText = 'padding: 10px; cursor: pointer; border-bottom: 1px solid #374151; color: #ffffff;';
+            suggestion.textContent = location.display_name;
+            
+            suggestion.addEventListener('mouseenter', () => {
+                suggestion.style.backgroundColor = '#374151';
+            });
+            
+            suggestion.addEventListener('mouseleave', () => {
+                suggestion.style.backgroundColor = 'transparent';
+            });
+            
+            suggestion.addEventListener('click', () => {
+                this.input.value = location.display_name;
+                this.hideSuggestions();
+            });
+            
+            this.suggestions.appendChild(suggestion);
+        });
+        
+        this.showSuggestions();
+    }
+    
+    showSuggestions() {
+        this.suggestions.style.display = 'block';
+    }
+    
+    hideSuggestions() {
+        this.suggestions.style.display = 'none';
+    }
+}
+
+// Initialize location autocomplete when document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    const locationInput = document.getElementById('location-input');
+    const locationSuggestions = document.getElementById('location-suggestions');
+    
+    if (locationInput && locationSuggestions) {
+        new LocationAutocomplete(locationInput, locationSuggestions);
+    }
+});
 </script>
 {% endblock %}
