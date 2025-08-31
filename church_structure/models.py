@@ -185,6 +185,8 @@ class Church(models.Model):
     service_times = models.CharField(max_length=50, choices=SERVICE_TIME_CHOICES, default='9:00 AM Saturday', help_text="Service time on Saturday")
     capacity = models.PositiveIntegerField(null=True, blank=True)
     established_date = models.DateField(null=True, blank=True)
+    description = models.TextField(blank=True)
+    rich_description = models.TextField(blank=True, help_text="Rich HTML content for detailed description")
     is_mission_church = models.BooleanField(default=False, verbose_name="Mission Church")
     is_diosen_church = models.BooleanField(default=False, verbose_name="Diosen Church")
     is_headquarter_church = models.BooleanField(default=False, verbose_name="Headquarter Church")
