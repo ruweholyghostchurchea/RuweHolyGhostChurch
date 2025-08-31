@@ -18,8 +18,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.name.id_for_label }}">Diocese Name *</label>
-                                    {{ form.name }}
+                                    <label for="{{ form.name.id_for_label }}" style="color: #ffffff; margin-bottom: 5px;">Diocese Name *</label>
+                                    <input type="text" name="name" id="{{ form.name.id_for_label }}" required
+                                           class="form-control" 
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"
+                                           placeholder="Diocese name">
                                     {% if form.name.errors %}
                                         <div class="text-danger">{{ form.name.errors.0 }}</div>
                                     {% endif %}
@@ -27,8 +30,65 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.country.id_for_label }}">Country *</label>
-                                    {{ form.country }}
+                                    <label for="{{ form.country.id_for_label }}" style="color: #ffffff; margin-bottom: 5px;">Country *</label>
+                                    <select name="country" id="{{ form.country.id_for_label }}" required
+                                            class="form-control"
+                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                        <option value="">Select a country</option>
+                                        <option value="Kenya">Kenya [MAIN]</option>
+                                        <option value="Uganda">Uganda</option>
+                                        <option value="Tanzania">Tanzania</option>
+                                        <option value="Afghanistan">Afghanistan</option>
+                                        <option value="Albania">Albania</option>
+                                        <option value="Algeria">Algeria</option>
+                                        <option value="Argentina">Argentina</option>
+                                        <option value="Australia">Australia</option>
+                                        <option value="Austria">Austria</option>
+                                        <option value="Bangladesh">Bangladesh</option>
+                                        <option value="Belgium">Belgium</option>
+                                        <option value="Brazil">Brazil</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="China">China</option>
+                                        <option value="Democratic Republic of Congo">Democratic Republic of Congo</option>
+                                        <option value="Egypt">Egypt</option>
+                                        <option value="Ethiopia">Ethiopia</option>
+                                        <option value="France">France</option>
+                                        <option value="Germany">Germany</option>
+                                        <option value="Ghana">Ghana</option>
+                                        <option value="India">India</option>
+                                        <option value="Indonesia">Indonesia</option>
+                                        <option value="Iran">Iran</option>
+                                        <option value="Iraq">Iraq</option>
+                                        <option value="Italy">Italy</option>
+                                        <option value="Japan">Japan</option>
+                                        <option value="Jordan">Jordan</option>
+                                        <option value="Lebanon">Lebanon</option>
+                                        <option value="Malaysia">Malaysia</option>
+                                        <option value="Morocco">Morocco</option>
+                                        <option value="Netherlands">Netherlands</option>
+                                        <option value="Nigeria">Nigeria</option>
+                                        <option value="Pakistan">Pakistan</option>
+                                        <option value="Philippines">Philippines</option>
+                                        <option value="Poland">Poland</option>
+                                        <option value="Rwanda">Rwanda</option>
+                                        <option value="Saudi Arabia">Saudi Arabia</option>
+                                        <option value="South Africa">South Africa</option>
+                                        <option value="South Korea">South Korea</option>
+                                        <option value="Spain">Spain</option>
+                                        <option value="Sudan">Sudan</option>
+                                        <option value="Sweden">Sweden</option>
+                                        <option value="Switzerland">Switzerland</option>
+                                        <option value="Syria">Syria</option>
+                                        <option value="Thailand">Thailand</option>
+                                        <option value="Turkey">Turkey</option>
+                                        <option value="Ukraine">Ukraine</option>
+                                        <option value="United Arab Emirates">United Arab Emirates</option>
+                                        <option value="United Kingdom">United Kingdom</option>
+                                        <option value="United States">United States</option>
+                                        <option value="Yemen">Yemen</option>
+                                        <option value="Zambia">Zambia</option>
+                                        <option value="Zimbabwe">Zimbabwe</option>
+                                    </select>
                                     {% if form.country.errors %}
                                         <div class="text-danger">{{ form.country.errors.0 }}</div>
                                     {% endif %}
@@ -39,8 +99,9 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="{{ form.bishop.id_for_label }}">Bishop (Optional)</label>
-                                    <select id="bishop-select" name="bishop" class="form-control">
+                                    <label for="bishop-select" style="color: #ffffff; margin-bottom: 5px;">Bishop (Optional)</label>
+                                    <select id="bishop-select" name="bishop" class="form-control"
+                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                         <option value="">Select a bishop (optional)</option>
                                     </select>
                                     {% if form.bishop.errors %}
@@ -53,21 +114,25 @@
                         <div class="row" id="bishop-info" style="display: none;">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Bishop Phone</label>
-                                    <input type="text" id="bishop-phone" class="form-control" readonly>
+                                    <label style="color: #ffffff; margin-bottom: 5px;">Bishop Phone</label>
+                                    <input type="text" id="bishop-phone" class="form-control" readonly
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Bishop Email</label>
-                                    <input type="text" id="bishop-email" class="form-control" readonly>
+                                    <label style="color: #ffffff; margin-bottom: 5px;">Bishop Email</label>
+                                    <input type="text" id="bishop-email" class="form-control" readonly
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.description.id_for_label }}">Description</label>
-                            {{ form.description }}
+                            <label for="description" style="color: #ffffff; margin-bottom: 5px;">Description</label>
+                            <textarea name="description" id="description" rows="4"
+                                      class="form-control"
+                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"></textarea>
                             {% if form.description.errors %}
                                 <div class="text-danger">{{ form.description.errors.0 }}</div>
                             {% endif %}
@@ -76,25 +141,32 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.established_date.id_for_label }}">Established Date</label>
-                                    {{ form.established_date }}
+                                    <label for="established_date" style="color: #ffffff; margin-bottom: 5px;">Established Date</label>
+                                    <input type="date" name="established_date" id="established_date"
+                                           class="form-control"
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                     {% if form.established_date.errors %}
                                         <div class="text-danger">{{ form.established_date.errors.0 }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>
-                                        {{ form.is_active }} Active
+                                <div class="form-group" style="margin-top: 30px;">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_active" checked> Active
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Add Diocese</button>
-                            <a href="{% url 'church_structure:index' %}" class="btn btn-secondary">Cancel</a>
+                        <div class="text-center" style="margin-top: 30px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
+                                <i class="fas fa-save"></i> Add Diocese
+                            </button>
+                            <a href="{% url 'church_structure:index' %}" 
+                               class="btn btn-secondary" style="padding: 10px 30px;">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
                         </div>
                     </form>
                 </div>

@@ -18,8 +18,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.name.id_for_label }}">Pastorate Name *</label>
-                                    {{ form.name }}
+                                    <label for="name" style="color: #ffffff; margin-bottom: 5px;">Pastorate Name *</label>
+                                    <input type="text" name="name" id="name" required
+                                           class="form-control" 
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"
+                                           placeholder="Pastorate name">
                                     {% if form.name.errors %}
                                         <div class="text-danger">{{ form.name.errors.0 }}</div>
                                     {% endif %}
@@ -27,8 +30,15 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.diocese.id_for_label }}">Diocese *</label>
-                                    {{ form.diocese }}
+                                    <label for="diocese" style="color: #ffffff; margin-bottom: 5px;">Diocese *</label>
+                                    <select name="diocese" id="diocese" required
+                                            class="form-control"
+                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                        <option value="">Select a diocese</option>
+                                        {% for diocese in form.diocese.queryset %}
+                                        <option value="{{ diocese.id }}">{{ diocese.name }} ({{ diocese.country }})</option>
+                                        {% endfor %}
+                                    </select>
                                     {% if form.diocese.errors %}
                                         <div class="text-danger">{{ form.diocese.errors.0 }}</div>
                                     {% endif %}
@@ -39,8 +49,9 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pastor-select">Pastor (Optional)</label>
-                                    <select id="pastor-select" name="pastor" class="form-control">
+                                    <label for="pastor-select" style="color: #ffffff; margin-bottom: 5px;">Pastor (Optional)</label>
+                                    <select id="pastor-select" name="pastor" class="form-control"
+                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                         <option value="">Select a pastor (optional)</option>
                                     </select>
                                     {% if form.pastor.errors %}
@@ -53,21 +64,25 @@
                         <div class="row" id="pastor-info" style="display: none;">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Pastor Phone</label>
-                                    <input type="text" id="pastor-phone" class="form-control" readonly>
+                                    <label style="color: #ffffff; margin-bottom: 5px;">Pastor Phone</label>
+                                    <input type="text" id="pastor-phone" class="form-control" readonly
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Pastor Email</label>
-                                    <input type="text" id="pastor-email" class="form-control" readonly>
+                                    <label style="color: #ffffff; margin-bottom: 5px;">Pastor Email</label>
+                                    <input type="text" id="pastor-email" class="form-control" readonly
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.description.id_for_label }}">Description</label>
-                            {{ form.description }}
+                            <label for="description" style="color: #ffffff; margin-bottom: 5px;">Description</label>
+                            <textarea name="description" id="description" rows="4"
+                                      class="form-control"
+                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;"></textarea>
                             {% if form.description.errors %}
                                 <div class="text-danger">{{ form.description.errors.0 }}</div>
                             {% endif %}
@@ -76,25 +91,32 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.established_date.id_for_label }}">Established Date</label>
-                                    {{ form.established_date }}
+                                    <label for="established_date" style="color: #ffffff; margin-bottom: 5px;">Established Date</label>
+                                    <input type="date" name="established_date" id="established_date"
+                                           class="form-control"
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                     {% if form.established_date.errors %}
                                         <div class="text-danger">{{ form.established_date.errors.0 }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>
-                                        {{ form.is_active }} Active
+                                <div class="form-group" style="margin-top: 30px;">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_active" checked> Active
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Add Pastorate</button>
-                            <a href="{% url 'church_structure:index' %}" class="btn btn-secondary">Cancel</a>
+                        <div class="text-center" style="margin-top: 30px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
+                                <i class="fas fa-save"></i> Add Pastorate
+                            </button>
+                            <a href="{% url 'church_structure:index' %}" 
+                               class="btn btn-secondary" style="padding: 10px 30px;">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
                         </div>
                     </form>
                 </div>

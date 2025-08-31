@@ -21,7 +21,7 @@ class DioceseForm(forms.ModelForm):
         fields = ['name', 'country', 'bishop', 'description', 'established_date', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Diocese name'}),
-            'country': forms.Select(attrs={'class': 'form-control'}),
+            'country': forms.Select(attrs={'class': 'form-control', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
