@@ -6,7 +6,8 @@
 {% block page_title %}Church Structure{% endblock %}
 
 {% block content %}
-<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px;">
+<!-- Quick Add Section -->
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-bottom: 30px;">
     <!-- Diocese Management -->
     <div class="card">
         <div class="card-header">
@@ -15,38 +16,51 @@
                 Diocese Management
             </h5>
         </div>
-        <div style="margin-top: 20px;">
-            <form method="POST" action="{% url 'church_structure:add_diocese' %}" style="margin-bottom: 20px;">
-                {% csrf_token %}
-                <select name="country" required 
-                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                    <option value="">Select Country</option>
-                    <option value="Kenya">Kenya [MAIN]</option>
-                    <option value="Uganda">Uganda</option>
-                    <option value="Tanzania">Tanzania</option>
-                </select>
-                <input type="text" name="name" placeholder="Diocese Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="bishop_name" placeholder="Bishop Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="bishop_phone" placeholder="Bishop Phone (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="email" name="bishop_email" placeholder="Bishop Email (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Diocese</button>
-            </form>
+        <div style="padding: 20px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <a href="{% url 'church_structure:add_diocese' %}" class="btn btn-primary" style="width: 100%; padding: 15px;">
+                    <i class="fas fa-plus" style="margin-right: 8px;"></i>
+                    Add New Diocese
+                </a>
+            </div>
             
             <div class="dioceses-list">
-                <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Dioceses ({{ dioceses.count }})</h6>
-                {% for diocese in dioceses %}
-                <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
-                    <strong style="color: #ffffff;">{{ diocese.name }}</strong>
-                    <span style="color: #22c55e; font-size: 0.8em; margin-left: 10px;">({{ diocese.identifier }})</span><br>
-                    <small style="color: #9ca3af;">{{ diocese.country }} - Bishop: {{ diocese.bishop_name }}</small>
+                <h6 style="color: #ffffff; margin-bottom: 15px; text-align: center;">Recent Dioceses</h6>
+                {% for diocese in dioceses|slice:":5" %}
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 3px solid #dc2626;">
+                    <div style="display: flex; justify-content: between; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <strong style="color: #ffffff; display: block;">{{ diocese.name }}</strong>
+                            <span style="color: #22c55e; font-size: 0.8em;">{{ diocese.identifier }}</span><br>
+                            <small style="color: #9ca3af;">{{ diocese.country }}</small><br>
+                            <small style="color: #e5e7eb;">Bishop: {{ diocese.bishop_name }}</small>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <a href="{% url 'church_structure:diocese_detail' diocese_slug=diocese.slug %}" 
+                               style="background: #3b82f6; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px; font-size: 0.8em;"
+                               title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
+                               style="background: #f59e0b; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px; font-size: 0.8em;"
+                               title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 {% empty %}
-                <p style="color: #9ca3af; font-style: italic;">No dioceses added yet.</p>
+                <div style="text-align: center; padding: 20px; color: #9ca3af;">
+                    <i class="fas fa-church" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <p style="font-style: italic; margin: 0;">No dioceses added yet.</p>
+                </div>
                 {% endfor %}
+                
+                {% if dioceses.count > 5 %}
+                <div style="text-align: center; margin-top: 15px;">
+                    <small style="color: #9ca3af;">Showing 5 of {{ dioceses.count }} dioceses</small>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -59,38 +73,51 @@
                 Pastorate Management
             </h5>
         </div>
-        <div style="margin-top: 20px;">
-            <form method="POST" action="{% url 'church_structure:add_pastorate' %}" style="margin-bottom: 20px;">
-                {% csrf_token %}
-                <select name="diocese_id" required 
-                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                    <option value="">Select Diocese</option>
-                    {% for diocese in dioceses %}
-                    <option value="{{ diocese.id }}">{{ diocese.name }} ({{ diocese.country }})</option>
-                    {% endfor %}
-                </select>
-                <input type="text" name="name" placeholder="Pastorate Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="pastor_name" placeholder="Pastor Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="pastor_phone" placeholder="Pastor Phone (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="email" name="pastor_email" placeholder="Pastor Email (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Pastorate</button>
-            </form>
+        <div style="padding: 20px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <a href="{% url 'church_structure:add_pastorate' %}" class="btn btn-success" style="width: 100%; padding: 15px;">
+                    <i class="fas fa-plus" style="margin-right: 8px;"></i>
+                    Add New Pastorate
+                </a>
+            </div>
             
             <div class="pastorates-list">
-                <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Pastorates ({{ pastorates.count }})</h6>
-                {% for pastorate in pastorates %}
-                <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
-                    <strong style="color: #ffffff;">{{ pastorate.name }}</strong><br>
-                    <small style="color: #9ca3af;">Pastor: {{ pastorate.pastor_name }}</small><br>
-                    <small style="color: #dc2626;">Diocese: {{ pastorate.diocese.name }}</small>
+                <h6 style="color: #ffffff; margin-bottom: 15px; text-align: center;">Recent Pastorates</h6>
+                {% for pastorate in pastorates|slice:":5" %}
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 3px solid #3b82f6;">
+                    <div style="display: flex; justify-content: between; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <strong style="color: #ffffff; display: block;">{{ pastorate.name }}</strong>
+                            <span style="color: #22c55e; font-size: 0.8em;">{{ pastorate.identifier }}</span><br>
+                            <small style="color: #e5e7eb;">Pastor: {{ pastorate.pastor_name }}</small><br>
+                            <small style="color: #dc2626;">Diocese: {{ pastorate.diocese.name }}</small>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                               style="background: #3b82f6; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px; font-size: 0.8em;"
+                               title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
+                               style="background: #f59e0b; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px; font-size: 0.8em;"
+                               title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 {% empty %}
-                <p style="color: #9ca3af; font-style: italic;">No pastorates added yet.</p>
+                <div style="text-align: center; padding: 20px; color: #9ca3af;">
+                    <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <p style="font-style: italic; margin: 0;">No pastorates added yet.</p>
+                </div>
                 {% endfor %}
+                
+                {% if pastorates.count > 5 %}
+                <div style="text-align: center; margin-top: 15px;">
+                    <small style="color: #9ca3af;">Showing 5 of {{ pastorates.count }} pastorates</small>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -103,46 +130,52 @@
                 Church Management
             </h5>
         </div>
-        <div style="margin-top: 20px;">
-            <form method="POST" action="{% url 'church_structure:add_church' %}" style="margin-bottom: 20px;">
-                {% csrf_token %}
-                <select name="diocese" id="diocese-select" required 
-                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                    <option value="">Select Diocese</option>
-                    {% for diocese in dioceses %}
-                    <option value="{{ diocese.id }}">{{ diocese.name }}</option>
-                    {% endfor %}
-                </select>
-                <select name="pastorate_id" id="pastorate-select" required 
-                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                    <option value="">Select Pastorate</option>
-                </select>
-                <input type="text" name="name" placeholder="Church Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="address" placeholder="Church Address" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="head_teacher_name" placeholder="Head Teacher Name" required 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="text" name="head_teacher_phone" placeholder="Head Teacher Phone (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <input type="email" name="head_teacher_email" placeholder="Head Teacher Email (optional)" 
-                       style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                <textarea name="service_times" placeholder="Service Times (e.g., Saturday 9:00 AM)" 
-                          style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px; min-height: 60px;"></textarea>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Church</button>
-            </form>
+        <div style="padding: 20px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <a href="{% url 'church_structure:add_church' %}" class="btn btn-info" style="width: 100%; padding: 15px;">
+                    <i class="fas fa-plus" style="margin-right: 8px;"></i>
+                    Add New Church
+                </a>
+            </div>
             
             <div class="churches-list">
-                <h6 style="color: #ffffff; margin-bottom: 10px;">Existing Churches ({{ churches.count }})</h6>
-                {% for church in churches %}
-                <div style="background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 4px;">
-                    <strong style="color: #ffffff;">{{ church.name }}</strong><br>
-                    <small style="color: #9ca3af;">{{ church.address }} - Head Teacher: {{ church.head_teacher_name }}</small><br>
-                    <small style="color: #dc2626;">Pastorate: {{ church.pastorate.name }}</small>
+                <h6 style="color: #ffffff; margin-bottom: 15px; text-align: center;">Recent Churches</h6>
+                {% for church in churches|slice:":5" %}
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 3px solid #16a34a;">
+                    <div style="display: flex; justify-content: between; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <strong style="color: #ffffff; display: block;">{{ church.name }}</strong>
+                            <span style="color: #22c55e; font-size: 0.8em;">{{ church.identifier }}</span><br>
+                            <small style="color: #9ca3af;">{{ church.address|truncatechars:30 }}</small><br>
+                            <small style="color: #e5e7eb;">Head Teacher: {{ church.head_teacher_name }}</small><br>
+                            <small style="color: #dc2626;">Pastorate: {{ church.pastorate.name }}</small>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                               style="background: #3b82f6; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px; font-size: 0.8em;"
+                               title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'church_structure:edit_church' church_slug=church.slug %}" 
+                               style="background: #f59e0b; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px; font-size: 0.8em;"
+                               title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 {% empty %}
-                <p style="color: #9ca3af; font-style: italic;">No churches added yet.</p>
+                <div style="text-align: center; padding: 20px; color: #9ca3af;">
+                    <i class="fas fa-home" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <p style="font-style: italic; margin: 0;">No churches added yet.</p>
+                </div>
                 {% endfor %}
+                
+                {% if churches.count > 5 %}
+                <div style="text-align: center; margin-top: 15px;">
+                    <small style="color: #9ca3af;">Showing 5 of {{ churches.count }} churches</small>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -390,29 +423,5 @@
     </div>
 </div>
 
-<script>
-// Cascading dropdown functionality
-document.getElementById('diocese-select').addEventListener('change', function() {
-    const dioceseId = this.value;
-    const pastorateSelect = document.getElementById('pastorate-select');
-    
-    // Clear pastorate dropdown
-    pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-    
-    if (dioceseId) {
-        // Fetch pastorates for selected diocese
-        fetch(`/church-structure/api/pastorates/${dioceseId}/`)
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(pastorate => {
-                    const option = document.createElement('option');
-                    option.value = pastorate.id;
-                    option.textContent = pastorate.name;
-                    pastorateSelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-});
-</script>
+
 {% endblock %}
