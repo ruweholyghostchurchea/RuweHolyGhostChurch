@@ -115,7 +115,7 @@ def add_member(request):
             email_address = request.POST.get('email_address', '')
 
             # Job Information
-            job_occupation_income = request.POST.getlist('job_occupation_income') # Changed to getlist for multiple jobs
+            job_occupations = request.POST.getlist('job_occupations')
 
             # Baptismal Information
             baptismal_first_name = request.POST.get('baptismal_first_name')
@@ -183,12 +183,7 @@ def add_member(request):
                 user_home_pastorate_id, user_home_church_id
             ]
 
-            # Check if job_occupation_income is provided
-            if not job_occupation_income and 'clergy' in member_roles:
-                # Allow clergy to not have a job specified if they are only clergy
-                pass
-            elif not job_occupation_income:
-                 required_fields.append(None) # Add a dummy None to make the check pass if job_occupation_income is not required for clergy
+            # Job occupations are optional
 
             if not all(required_fields):
                 messages.error(request, 'Please fill in all required fields.')
@@ -224,7 +219,7 @@ def add_member(request):
                 special_clergy_roles=special_clergy_roles,
                 phone_number=phone_number,
                 email_address=email_address,
-                job_occupation_income=job_occupation_income,
+                job_occupations=job_occupations,
                 baptismal_first_name=baptismal_first_name,
                 baptismal_last_name=baptismal_last_name,
                 date_baptized=date_baptized,
