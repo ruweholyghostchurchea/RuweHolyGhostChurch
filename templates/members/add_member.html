@@ -205,7 +205,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-4">
                     <label for="membership_status" class="form-label" style="color: #ffffff; margin-bottom: 5px; display: block;">Membership Status <span class="text-danger">*</span></label>
-                    <select class="form-select" id="membership_status" name="membership_status" required 
+                    <select class="form-select" id="membership_status" name="membership_status" required
                         style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         {% for value, display in membership_statuses %}
                         <option value="{{ value }}" {% if value == 'Active' %}selected{% endif %}>{{ display }}</option>
@@ -214,7 +214,7 @@
                 </div>
                 <div class="col-md-4">
                     <label for="is_staff" class="form-label" style="color: #ffffff; margin-bottom: 5px; display: block;">Staff Status <span class="text-danger">*</span></label>
-                    <select class="form-select" id="is_staff" name="is_staff" required 
+                    <select class="form-select" id="is_staff" name="is_staff" required
                         style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="No" selected>No</option>
                         <option value="Yes">Yes</option>
@@ -222,7 +222,7 @@
                 </div>
                 <div class="col-md-4">
                     <label for="is_ordained" class="form-label" style="color: #ffffff; margin-bottom: 5px; display: block;">Hand Ordination Status <span class="text-danger">*</span></label>
-                    <select class="form-select" id="is_ordained" name="is_ordained" required 
+                    <select class="form-select" id="is_ordained" name="is_ordained" required
                         style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="No" selected>No</option>
                         <option value="Yes">Yes</option>
@@ -234,7 +234,7 @@
             <div class="row" style="margin-top: 15px;">
                 <div class="col-md-4">
                     <label for="is_pwd" class="form-label">Person with Disability (PWD) <span class="text-danger">*</span></label>
-                    <select class="form-select" id="is_pwd" name="is_pwd" onchange="togglePwdFields()" required 
+                    <select class="form-select" id="is_pwd" name="is_pwd" onchange="togglePwdFields()" required
                         style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="No" selected>No</option>
                         <option value="Yes">Yes</option>
@@ -396,10 +396,17 @@
                 Profile Photo
             </h6>
 
-            <div>
-                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload Photo</label>
-                <input type="file" name="profile_photo" accept="image/*"
-                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload Photo</label>
+                    <input type="file" name="profile_photo" accept="image/*"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Or provide Image URL</label>
+                    <input type="url" name="profile_photo_url" placeholder="e.g., https://example.com/image.jpg"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
             </div>
         </div>
 
@@ -411,7 +418,7 @@
             </h6>
 
             <div class="form-group" style="margin-bottom: 20px;">
-                <label style="color: #ffffff; margin-bottom: 8px; display: block;">Select Job/Occupation Roles (Multiple selections allowed)</label>
+                <label style="color: #ffffff; margin-bottom: 8px; display: block;">Select Job/Occupation Roles (Max 5 selections allowed)</label>
                 <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; max-height: 400px; overflow-y: auto;">
                     {% for category_code, category_label in job_categories %}
                     <div style="margin-bottom: 20px;">
@@ -420,127 +427,127 @@
                             {% for job_code, job_label in job_choices %}
                                 {% if category_code == "agriculture_agribusiness" and job_code in "smallholder_farmer,agronomist_extension_officer,farm_manager,livestock_farmer,agribusiness_entrepreneur,agro_inputs_salesperson,agricultural_technician_vet_assistant,produce_trader_market_agent,food_processing_operator,irrigation_technician" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "healthcare_medical" and job_code in "nurse_registered,clinical_officer_medical_officer,community_health_volunteer_chw,pharmacist_pharmaceutical_technologist,lab_technician_radiographer,physiotherapist_occupational_therapist,medical_records_officer_health_administrator,health_educator_public_health_officer,dental_therapist_dental_assistant,xray_imaging_technician,nutritionist_dietitian,psychologist_mental_performance_coach,orthopaedic_technologist" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "education_training" and job_code in "primary_school_teacher,secondary_school_teacher,university_lecturer_tutor,early_childhood_educator,pe_teacher_sports_coordinator,private_tutor,curriculum_developer_instructional_designer,training_coordinator_corporate_trainer,librarian_learning_resources_officer,education_administrator_headteacher" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "finance_banking_insurance" and job_code in "bank_teller_customer_service_rep,accountant_bookkeeper,credit_analyst_loan_officer,financial_analyst_investment_officer,microfinance_officer,insurance_agent_underwriter,tax_consultant_compliance_officer,treasury_cash_management_officer,auditor" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "ict" and job_code in "software_developer,data_analyst_business_intelligence,network_engineer_system_administrator,it_support_helpdesk_technician,ux_ui_designer_product_designer,devops_engineer_cloud_engineer,cybersecurity_analyst_soc_analyst,qa_tester_automation_tester,ai_ml_engineer" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "creative_media_digital" and job_code in "graphic_designer,content_writer_copywriter_blogger,social_media_manager_digital_marketer,videographer_video_editor,photographer,animator_motion_graphics_artist,radio_presenter_podcaster,journalist_news_reporter,pr_communications_officer" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "sales_retail_customer_service" and job_code in "retail_shop_attendant_cashier,sales_marketing_representative,store_manager_merchandiser,ecommerce_operator,customer_service_agent_call_centre,market_vendor_hawker,wholesale_trader_distributor,buying_clerk_procurement_assistant" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "hospitality_tourism_events" and job_code in "hotel_receptionist_front_desk,housekeeper_cleaner,chef_cook_sous_chef,restaurant_waiter_barista,tour_guide_travel_agent,event_planner_coordinator_manager,bartender_mixologist,lodge_manager_operations_manager" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "construction_infrastructure" and job_code in "civil_engineer_site_engineer,quantity_surveyor,architect_drafter,project_manager_construction,mason_bricklayer,carpenter_joiner,plumber_pipefitter,electrician_wiring_technician,heavy_equipment_operator" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "manufacturing_production" and job_code in "factory_machine_operator,production_supervisor_line_manager,quality_control_qa_inspector,textile_garment_worker_tailor,food_processing_technician,packaging_operator,maintenance_technician_millwright,plant_manager_production_planner" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "transportation_logistics" and job_code in "matatu_bus_driver,boda_boda_rider,ride_hailing_driver,truck_driver_long_haul,logistics_coordinator_freight_forwarder,warehouse_supervisor_storekeeper,courier_delivery_rider,fleet_manager,customs_clearing_agent" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "trades_skilled_labour" and job_code in "metal_fabricator_welder,motorcycle_automotive_mechanic,electrician_domestic_industrial,plumber_tiler_painter,tailor_seamstress,carpenter_furniture_maker,stone_mason_bricklayer,glass_glazing_technician" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "legal_compliance_governance" and job_code in "lawyer_advocate,paralegal_legal_assistant,compliance_officer_aml_analyst,court_clerk_magistrate_support,policy_analyst_legislative_assistant,notary_conveyancing_clerk" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "public_sector_civil_service_ngos" and job_code in "government_administrative_officer,county_government_officer,social_worker_community_development,program_officer_project_manager_ngo,monitoring_evaluation_officer,research_officer_policy_researcher,public_relations_communications_specialist,recruitment_officer_talent_scout" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "real_estate_property" and job_code in "real_estate_agent_broker,property_manager_estate_manager,valuer_surveyor,facilities_manager,construction_estimator,land_adjudication_registrar_assistant" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "energy_utilities_environment" and job_code in "renewable_energy_technician,electrical_engineer_power_systems,water_sanitation_engineer_technician,environmental_conservation_officer,waste_management_supervisor,gis_remote_sensing_specialist" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "agriculture_value_chain_agritech" and job_code in "food_processing_entrepreneur,cold_chain_logistics_operator,agro_export_coordinator,agricultural_drone_precision_farming,farm_to_market_aggregator" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "automotive_mechanical" and job_code in "auto_electrician,vehicle_mechanic_diagnostics,panel_beater_spray_painter,tyre_technician_alignment_specialist,auto_parts_salesperson" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "personal_services_beauty" and job_code in "barber_hairstylist,beautician_cosmetologist,massage_therapist,fitness_instructor_personal_trainer,house_cleaner_domestic_worker,childcare_provider_nanny" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "security_protective_services" and job_code in "security_guard_corporate_security,private_investigator,firefighter_emergency_responder,loss_prevention_officer" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "gig_economy_freelance_remote" and job_code in "freelance_developer_designer,virtual_assistant_remote_support,online_english_tutor,transcriptionist_translator,micro_task_worker" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "science_research_higher_education" and job_code in "laboratory_researcher_scientist,research_assistant,clinical_trial_coordinator,data_scientist_statistician,environmental_scientist_ecologist" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "entrepreneurship_small_business" and job_code in "kiosk_retail_owner,salon_barber_shop_owner,food_vendor_street_food_stall,courier_startup_founder,tech_startup_founder" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "creative_entrepreneurship_arts" and job_code in "fashion_designer_tailor_entrepreneur,musician_audio_producer,craft_maker_artisan,film_documentary_maker_producer" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% elif category_code == "sports_recreation_fitness" and job_code in "sports_administrator_club_manager,referee_umpire_match_official,sports_coach,sports_football,sports_athletics,sports_rugby,sports_basketball,sports_boxing_taekwondo,fitness_instructor_gym_trainer" %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()">
                                     <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
                                 </div>
                                 {% endif %}
@@ -761,21 +768,21 @@
         // Single selection enforcement for Special Clergy Roles with validation
         function enforceSingleSpecialClergy(selectedCheckbox) {
             const specialClergyCheckboxes = document.querySelectorAll('input[name="special_clergy_roles"]');
-            
+
             if (selectedCheckbox.checked) {
                 const selectedRole = selectedCheckbox.value;
-                
+
                 // Check if trying to select a special clergy role
                 if (['dean_king', 'dean_king_wife', 'dean_archdeacon', 'dean_archdeacon_wife'].includes(selectedRole)) {
                     // Show warning about uniqueness
                     const confirmMsg = `Warning: Only one ${selectedCheckbox.nextElementSibling.textContent} can exist in the entire church system. If you proceed, any existing ${selectedCheckbox.nextElementSibling.textContent} will need to be updated. Are you sure you want to assign this role?`;
-                    
+
                     if (!confirm(confirmMsg)) {
                         selectedCheckbox.checked = false;
                         return;
                     }
                 }
-                
+
                 // Uncheck other special clergy roles
                 specialClergyCheckboxes.forEach(checkbox => {
                     if (checkbox !== selectedCheckbox) {
@@ -982,7 +989,6 @@
             });
         });
 
-
 // Custom Fields Management
 function addCustomField() {
     const container = document.getElementById('custom-fields-container');
@@ -1067,6 +1073,31 @@ function addDocument() {
 
 function removeDocument(button) {
     button.closest('.document-row').remove();
+}
+
+// Job Selection Limit
+function checkJobSelectionLimit() {
+    const checkboxes = document.querySelectorAll('.job-checkbox:checked');
+    const limit = 5;
+    const messageElement = document.getElementById('job-selection-message');
+
+    if (checkboxes.length > limit) {
+        alert(`You can select a maximum of ${limit} jobs.`);
+        // Uncheck the last checked checkbox to enforce the limit
+        checkboxes[checkboxes.length - 1].checked = false;
+    }
+
+    // Optionally, display a message to the user
+    if (!messageElement) {
+        const parentDiv = document.querySelector('label[for="job_occupations"]'); // Assuming label for job occupations exists
+        const msgEl = document.createElement('span');
+        msgEl.id = 'job-selection-message';
+        msgEl.style.color = '#ffcc00'; // Yellow color for warning
+        msgEl.style.marginLeft = '10px';
+        msgEl.style.fontSize = '0.8em';
+        parentDiv.parentNode.insertBefore(msgEl, parentDiv.nextSibling);
+    }
+    document.getElementById('job-selection-message').textContent = `Selected: ${checkboxes.length}/${limit}`;
 }
 </script>
 {% endblock %}

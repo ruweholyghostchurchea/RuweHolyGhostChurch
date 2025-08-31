@@ -141,7 +141,7 @@ def add_member(request):
 
             # Profile Photo
             profile_photo = request.FILES.get('profile_photo')
-            profile_photo_url = request.POST.get('profile_photo_url', '')
+            profile_photo_url = request.POST.get('profile_photo_url', '').strip()
 
             # Custom Fields
             custom_field_names = request.POST.getlist('custom_field_names[]')
