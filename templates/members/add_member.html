@@ -83,17 +83,13 @@
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Location *</label>
-                    <select name="location" required
-                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                        <option value="">Select Location</option>
-                        <option value="siaya">Siaya</option>
-                        <option value="nairobi">Nairobi</option>
-                        <option value="kisumu">Kisumu</option>
-                        <option value="mombasa">Mombasa</option>
-                        <option value="nakuru">Nakuru</option>
-                        <option value="eldoret">Eldoret</option>
-                        <option value="other">Other</option>
-                    </select>
+                    <div style="position: relative;">
+                        <input type="text" name="location" id="location-input" required placeholder="Start typing location (e.g., Nairobi, Kenya)"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"
+                               autocomplete="off">
+                        <div id="location-suggestions" style="display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background: #1f2937; border: 1px solid #374151; border-top: none; border-radius: 0 0 4px 4px; z-index: 1000;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1099,5 +1095,183 @@ function checkJobSelectionLimit() {
     }
     document.getElementById('job-selection-message').textContent = `Selected: ${checkboxes.length}/${limit}`;
 }
+
+// Location Autocomplete Functionality
+class LocationAutocomplete {
+    constructor(inputElement, suggestionsElement) {
+        this.input = inputElement;
+        this.suggestions = suggestionsElement;
+        this.selectedIndex = -1;
+        this.searchTimeout = null;
+        this.init();
+    }
+
+    init() {
+        this.input.addEventListener('input', (e) => this.handleInput(e));
+        this.input.addEventListener('keydown', (e) => this.handleKeydown(e));
+        this.input.addEventListener('blur', (e) => this.handleBlur(e));
+        this.input.addEventListener('focus', (e) => this.handleFocus(e));
+    }
+
+    handleInput(e) {
+        const query = e.target.value.trim();
+        
+        if (query.length < 3) {
+            this.hideSuggestions();
+            return;
+        }
+
+        // Clear previous timeout
+        if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+        }
+
+        // Debounce the search to avoid too many API calls
+        this.searchTimeout = setTimeout(() => {
+            this.searchLocations(query);
+        }, 300);
+    }
+
+    async searchLocations(query) {
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1`);
+            const data = await response.json();
+            this.showSuggestions(data);
+        } catch (error) {
+            console.error('Error fetching location suggestions:', error);
+            this.hideSuggestions();
+        }
+    }
+
+    showSuggestions(locations) {
+        if (locations.length === 0) {
+            this.hideSuggestions();
+            return;
+        }
+
+        this.suggestions.innerHTML = '';
+        this.selectedIndex = -1;
+
+        locations.forEach((location, index) => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'location-suggestion-item';
+            suggestionItem.style.cssText = `
+                padding: 10px;
+                cursor: pointer;
+                border-bottom: 1px solid #374151;
+                color: #ffffff;
+                transition: background-color 0.2s;
+            `;
+            
+            // Format the display name
+            const displayName = this.formatLocationName(location);
+            suggestionItem.textContent = displayName;
+            suggestionItem.dataset.fullName = displayName;
+            suggestionItem.dataset.index = index;
+
+            suggestionItem.addEventListener('mousedown', (e) => {
+                e.preventDefault(); // Prevent blur event
+                this.selectSuggestion(displayName);
+            });
+
+            suggestionItem.addEventListener('mouseenter', () => {
+                this.selectedIndex = index;
+                this.highlightSuggestion();
+            });
+
+            this.suggestions.appendChild(suggestionItem);
+        });
+
+        this.suggestions.style.display = 'block';
+    }
+
+    formatLocationName(location) {
+        const address = location.address || {};
+        const parts = [];
+
+        // Add city/town/village
+        if (address.city) parts.push(address.city);
+        else if (address.town) parts.push(address.town);
+        else if (address.village) parts.push(address.village);
+        else if (address.county) parts.push(address.county);
+
+        // Add state/region if different from city
+        if (address.state && !parts.includes(address.state)) {
+            parts.push(address.state);
+        }
+
+        // Add country
+        if (address.country) parts.push(address.country);
+
+        return parts.length > 0 ? parts.join(', ') : location.display_name;
+    }
+
+    hideSuggestions() {
+        this.suggestions.style.display = 'none';
+        this.selectedIndex = -1;
+    }
+
+    handleKeydown(e) {
+        const suggestionItems = this.suggestions.querySelectorAll('.location-suggestion-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            this.selectedIndex = Math.min(this.selectedIndex + 1, suggestionItems.length - 1);
+            this.highlightSuggestion();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
+            this.highlightSuggestion();
+        } else if (e.key === 'Enter' && this.selectedIndex >= 0) {
+            e.preventDefault();
+            const selectedItem = suggestionItems[this.selectedIndex];
+            if (selectedItem) {
+                this.selectSuggestion(selectedItem.dataset.fullName);
+            }
+        } else if (e.key === 'Escape') {
+            this.hideSuggestions();
+        }
+    }
+
+    highlightSuggestion() {
+        const suggestionItems = this.suggestions.querySelectorAll('.location-suggestion-item');
+        suggestionItems.forEach((item, index) => {
+            if (index === this.selectedIndex) {
+                item.style.backgroundColor = '#374151';
+            } else {
+                item.style.backgroundColor = 'transparent';
+            }
+        });
+    }
+
+    selectSuggestion(locationName) {
+        this.input.value = locationName;
+        this.hideSuggestions();
+        this.input.focus();
+    }
+
+    handleBlur(e) {
+        // Delay hiding suggestions to allow for click events
+        setTimeout(() => {
+            this.hideSuggestions();
+        }, 150);
+    }
+
+    handleFocus(e) {
+        if (this.input.value.length >= 3) {
+            this.searchLocations(this.input.value);
+        }
+    }
+}
+
+// Initialize location autocomplete when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const locationInput = document.getElementById('location-input');
+    const locationSuggestions = document.getElementById('location-suggestions');
+    
+    if (locationInput && locationSuggestions) {
+        new LocationAutocomplete(locationInput, locationSuggestions);
+    }
+});
 </script>
 {% endblock %}

@@ -60,15 +60,7 @@ class Member(models.Model):
         ('separated', 'Separated'),
     ]
     
-    LOCATION_CHOICES = [
-        ('siaya', 'Siaya'),
-        ('nairobi', 'Nairobi'),
-        ('kisumu', 'Kisumu'),
-        ('mombasa', 'Mombasa'),
-        ('nakuru', 'Nakuru'),
-        ('eldoret', 'Eldoret'),
-        ('other', 'Other'),
-    ]
+    # Removed LOCATION_CHOICES - now using text field with autocomplete
     
     EDUCATION_LEVEL_CHOICES = [
         ('primary', 'Primary Education'),
@@ -374,7 +366,7 @@ class Member(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M')
     date_of_birth = models.DateField()
     marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, default='single')
-    location = models.CharField(max_length=20, choices=LOCATION_CHOICES, default='other')
+    location = models.CharField(max_length=200, help_text="Location (city, country)")
     education_level = models.CharField(max_length=20, choices=EDUCATION_LEVEL_CHOICES, default='other')
     
     # Member Roles (Multi-select via JSON field)
