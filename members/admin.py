@@ -42,8 +42,8 @@ class MemberAdmin(admin.ModelAdmin):
             'fields': ('father', 'mother', 'guardian', 'brother', 'sister', 'uncle', 'aunt', 'friend'),
             'classes': ('collapse',),
         }),
-        ('Job Information', {
-            'fields': ('job_occupation_income',)
+        ('Job & Occupation Information', {
+            'fields': ('job_occupations', 'income_details')
         }),
         ('Baptismal Information', {
             'fields': ('baptismal_first_name', 'baptismal_last_name', 'date_baptized', 'date_joined_religion')

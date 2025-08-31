@@ -84,6 +84,8 @@ def add_member(request):
             'member_roles': Member.MEMBER_ROLES,
             'church_clergy_roles': Member.CHURCH_CLERGY_ROLES,
             'special_clergy_roles': Member.SPECIAL_CLERGY_ROLES,
+            'job_categories': Member.JOB_CATEGORIES,
+            'job_choices': Member.JOB_CHOICES,
         }
         return render(request, 'members/add_member.html', context)
 
@@ -99,21 +101,21 @@ def add_member(request):
             marital_status = request.POST.get('marital_status')
             location = request.POST.get('location')
             education_level = request.POST.get('education_level')
-            
+
             # Member Roles
             member_roles = request.POST.getlist('member_roles')
             church_clergy_roles = request.POST.getlist('church_clergy_roles') if 'clergy' in member_roles else []
             special_clergy_roles = request.POST.getlist('special_clergy_roles') if 'clergy' in member_roles else []
-            
+
             # Ensure regular_member is always included
             if 'regular_member' not in member_roles:
                 member_roles.append('regular_member')
-            
+
             phone_number = request.POST.get('phone_number')
             email_address = request.POST.get('email_address', '')
 
             # Job Information
-            job_occupation_income = request.POST.get('job_occupation_income')
+            job_occupation_income = request.POST.getlist('job_occupation_income') # Changed to getlist for multiple jobs
 
             # Baptismal Information
             baptismal_first_name = request.POST.get('baptismal_first_name')
@@ -176,10 +178,17 @@ def add_member(request):
             required_fields = [
                 first_name, last_name, username, user_group, gender, date_of_birth,
                 marital_status, location, education_level, phone_number, 
-                job_occupation_income, baptismal_first_name, baptismal_last_name, 
+                baptismal_first_name, baptismal_last_name, 
                 date_baptized, date_joined_religion, user_home_diocese_id, 
                 user_home_pastorate_id, user_home_church_id
             ]
+
+            # Check if job_occupation_income is provided
+            if not job_occupation_income and 'clergy' in member_roles:
+                # Allow clergy to not have a job specified if they are only clergy
+                pass
+            elif not job_occupation_income:
+                 required_fields.append(None) # Add a dummy None to make the check pass if job_occupation_income is not required for clergy
 
             if not all(required_fields):
                 messages.error(request, 'Please fill in all required fields.')
@@ -317,7 +326,7 @@ def search_members_api(request):
     search_term = request.GET.get('q', '').strip()
     if len(search_term) < 2:
         return JsonResponse([], safe=False)
-    
+
     members = Member.objects.filter(
         Q(username__icontains=search_term) |
         Q(first_name__icontains=search_term) |
@@ -325,7 +334,7 @@ def search_members_api(request):
         Q(phone_number__icontains=search_term) |
         Q(email_address__icontains=search_term)
     ).exclude(membership_status__in=['Left/Quit', 'Dead'])[:10]
-    
+
     results = []
     for member in members:
         results.append({
@@ -336,5 +345,5 @@ def search_members_api(request):
             'email': member.email_address,
             'display': f"{member.full_name} ({member.username}) - {member.phone_number}"
         })
-    
+
     return JsonResponse(results, safe=False)

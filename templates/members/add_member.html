@@ -157,7 +157,7 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
                         {% for role_code, role_label in church_clergy_roles %}
                         <div class="form-check">
-                            <input type="checkbox" name="church_clergy_roles" value="{{ role_code }}" id="church_clergy_{{ role_code }}" class="form-check-input">
+                            <input type="checkbox" name="church_clergy_roles" value="{{ role_code }}" id="church_clergy_{{ role_code }}" class="form-check-input" onchange="enforceSingleChurchClergy(this)">
                             <label for="church_clergy_{{ role_code }}" class="form-check-label" style="color: #ffffff;">{{ role_label }}</label>
                         </div>
                         {% endfor %}
@@ -172,7 +172,7 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
                         {% for role_code, role_label in special_clergy_roles %}
                         <div class="form-check">
-                            <input type="checkbox" name="special_clergy_roles" value="{{ role_code }}" id="special_clergy_{{ role_code }}" class="form-check-input">
+                            <input type="checkbox" name="special_clergy_roles" value="{{ role_code }}" id="special_clergy_{{ role_code }}" class="form-check-input" onchange="enforceSingleSpecialClergy(this)">
                             <label for="special_clergy_{{ role_code }}" class="form-check-label" style="color: #ffffff;">{{ role_label }}</label>
                         </div>
                         {% endfor %}
@@ -410,9 +410,77 @@
                 Job & Occupation Information
             </h6>
 
-            <div>
-                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Job, Occupation & Income Details *</label>
-                <textarea name="job_occupation_income" rows="3" required placeholder="Enter job title, occupation details, and income information..."
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="color: #ffffff; margin-bottom: 8px; display: block;">Select Job/Occupation Roles (Multiple selections allowed)</label>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; max-height: 400px; overflow-y: auto;">
+                    {% regroup job_choices by 0|slice:":1"|first as grouped_jobs %}
+                    {% for category_code, category_label in job_categories %}
+                    <div style="margin-bottom: 20px;">
+                        <h6 style="color: #22c55e; margin-bottom: 10px; font-weight: bold;">{{ category_label }}</h6>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px; margin-left: 15px;">
+                            {% for job_code, job_label in job_choices %}
+                                {% if category_code == "agriculture_agribusiness" and job_code|slice:":11" == "smallholder_" or job_code|slice:":10" == "agronomist" or job_code|slice:":4" == "farm" or job_code|slice:":9" == "livestock" or job_code|slice:":12" == "agribusiness" or job_code|slice:":4" == "agro" or job_code|slice:":12" == "agricultural" or job_code|slice:":7" == "produce" or job_code|slice:":4" == "food" or job_code|slice:":10" == "irrigation" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "healthcare_medical" and job_code|slice:":5" == "nurse" or job_code|slice:":8" == "clinical" or job_code|slice:":9" == "community" or job_code|slice:":9" == "pharmacist" or job_code|slice:":3" == "lab" or job_code|slice:":13" == "physiotherapist" or job_code|slice:":7" == "medical" or job_code|slice:":6" == "health" or job_code|slice:":6" == "dental" or job_code|slice:":4" == "xray" or job_code|slice:":12" == "nutritionist" or job_code|slice:":12" == "psychologist" or job_code|slice:":12" == "orthopaedic" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "education_training" and job_code|slice:":7" == "primary" or job_code|slice:":9" == "secondary" or job_code|slice:":10" == "university" or job_code|slice:":5" == "early" or job_code|slice:":2" == "pe" or job_code|slice:":7" == "private" or job_code|slice:":10" == "curriculum" or job_code|slice:":8" == "training" or job_code|slice:":9" == "librarian" or job_code|slice:":9" == "education" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "finance_banking_insurance" and job_code|slice:":4" == "bank" or job_code|slice:":10" == "accountant" or job_code|slice:":6" == "credit" or job_code|slice:":9" == "financial" or job_code|slice:":12" == "microfinance" or job_code|slice:":9" == "insurance" or job_code|slice:":3" == "tax" or job_code|slice:":8" == "treasury" or job_code|slice:":7" == "auditor" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "ict" and job_code|slice:":8" == "software" or job_code|slice:":4" == "data" or job_code|slice:":7" == "network" or job_code|slice:":2" == "it" or job_code|slice:":5" == "ux_ui" or job_code|slice:":6" == "devops" or job_code|slice:":12" == "cybersecurity" or job_code|slice:":2" == "qa" or job_code|slice:":5" == "ai_ml" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% else %}
+                                    {% for other_category_code, other_category_label in job_categories %}
+                                        {% if category_code == other_category_code %}
+                                            {% if category_code == "creative_media_digital" and job_code|slice:":7" == "graphic" or job_code|slice:":7" == "content" or job_code|slice:":6" == "social" or job_code|slice:":12" == "videographer" or job_code|slice:":12" == "photographer" or job_code|slice:":8" == "animator" or job_code|slice:":5" == "radio" or job_code|slice:":10" == "journalist" or job_code|slice:":2" == "pr" %}
+                                            <div class="form-check">
+                                                <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                                <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                            </div>
+                                            {% elif category_code == "sales_retail_customer_service" and job_code|slice:":6" == "retail" or job_code|slice:":5" == "sales" or job_code|slice:":5" == "store" or job_code|slice:":9" == "ecommerce" or job_code|slice:":8" == "customer" or job_code|slice:":6" == "market" or job_code|slice:":9" == "wholesale" or job_code|slice:":6" == "buying" %}
+                                            <div class="form-check">
+                                                <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                                <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                            </div>
+                                            {% elif category_code == "hospitality_tourism_events" and job_code|slice:":5" == "hotel" or job_code|slice:":11" == "housekeeper" or job_code|slice:":4" == "chef" or job_code|slice:":10" == "restaurant" or job_code|slice:":4" == "tour" or job_code|slice:":5" == "event" or job_code|slice:":9" == "bartender" or job_code|slice:":5" == "lodge" %}
+                                            <div class="form-check">
+                                                <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                                <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                            </div>
+                                            {% elif category_code|length > 0 %}
+                                            <div class="form-check">
+                                                <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input">
+                                                <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                            </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Additional Income & Occupation Details (Optional)</label>
+                <textarea name="income_details" rows="3" placeholder="Enter additional income information, occupation details, or other relevant information..."
                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"></textarea>
             </div>
         </div>
@@ -602,6 +670,45 @@
                 // Uncheck all clergy roles when the main clergy checkbox is unchecked
                 const clergyCheckboxes = document.querySelectorAll('input[name="church_clergy_roles"], input[name="special_clergy_roles"]');
                 clergyCheckboxes.forEach(checkbox => checkbox.checked = false);
+            }
+        }
+
+        // Single selection enforcement for Church Clergy Roles
+        function enforceSingleChurchClergy(selectedCheckbox) {
+            const churchClergyCheckboxes = document.querySelectorAll('input[name="church_clergy_roles"]');
+            if (selectedCheckbox.checked) {
+                churchClergyCheckboxes.forEach(checkbox => {
+                    if (checkbox !== selectedCheckbox) {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+        }
+
+        // Single selection enforcement for Special Clergy Roles with validation
+        function enforceSingleSpecialClergy(selectedCheckbox) {
+            const specialClergyCheckboxes = document.querySelectorAll('input[name="special_clergy_roles"]');
+            
+            if (selectedCheckbox.checked) {
+                const selectedRole = selectedCheckbox.value;
+                
+                // Check if trying to select a special clergy role
+                if (['dean_king', 'dean_king_wife', 'dean_archdeacon', 'dean_archdeacon_wife'].includes(selectedRole)) {
+                    // Show warning about uniqueness
+                    const confirmMsg = `Warning: Only one ${selectedCheckbox.nextElementSibling.textContent} can exist in the entire church system. If you proceed, any existing ${selectedCheckbox.nextElementSibling.textContent} will need to be updated. Are you sure you want to assign this role?`;
+                    
+                    if (!confirm(confirmMsg)) {
+                        selectedCheckbox.checked = false;
+                        return;
+                    }
+                }
+                
+                // Uncheck other special clergy roles
+                specialClergyCheckboxes.forEach(checkbox => {
+                    if (checkbox !== selectedCheckbox) {
+                        checkbox.checked = false;
+                    }
+                });
             }
         }
 
