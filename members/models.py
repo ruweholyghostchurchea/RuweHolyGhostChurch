@@ -10,7 +10,39 @@ class Member(models.Model):
         ('Youth', 'Youth'),
         ('Adult', 'Adult'),
         ('Elder', 'Elder'),
-        ('Clergy', 'Clergy'),
+    ]
+    
+    MEMBER_ROLES = [
+        ('regular_member', 'Regular Member'),
+        ('singer', 'Singer'),
+        ('drum_percussionist', 'Drum Percussionist'),
+        ('shaker_percussionist', 'Shaker Percussionist'),
+        ('synod_representative', 'Synod Representative'),
+        ('clergy', 'Clergy'),
+    ]
+    
+    CHURCH_CLERGY_ROLES = [
+        ('church_teacher_wife', "Teacher's Wife"),
+        ('church_teacher_husband', "Teacher's Husband"),
+        ('church_teacher', 'Teacher'),
+        ('pastorate_woman_leader', 'Woman Leader'),
+        ('pastorate_woman_leader_husband', "Woman Leader's Husband"),
+        ('pastorate_division_wife', "Division's Wife"),
+        ('pastorate_division_husband', "Division's Husband"),
+        ('pastorate_division', 'Division'),
+        ('pastorate_lay_reader_wife', "Lay Reader's Wife"),
+        ('pastorate_lay_reader', 'Lay Reader'),
+        ('pastorate_pastor_wife', "Pastor's Wife"),
+        ('pastorate_pastor', 'Pastor'),
+        ('diocese_bishop_wife', "Bishop's Wife"),
+        ('diocese_bishop', 'Bishop'),
+        ('dean_archbishop_wife', "Archbishop's Wife"),
+        ('dean_archbishop', 'Archbishop'),
+    ]
+    
+    SPECIAL_CLERGY_ROLES = [
+        ('dean_king', 'King'),
+        ('dean_king_wife', "King's Wife"),
     ]
     
     GENDER_CHOICES = [
@@ -78,6 +110,12 @@ class Member(models.Model):
     marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES, default='single')
     location = models.CharField(max_length=20, choices=LOCATION_CHOICES, default='other')
     education_level = models.CharField(max_length=20, choices=EDUCATION_LEVEL_CHOICES, default='other')
+    
+    # Member Roles (Multi-select via JSON field)
+    member_roles = models.JSONField(default=list, help_text="List of member roles")
+    church_clergy_roles = models.JSONField(default=list, blank=True, help_text="Church/Dean clergy roles (only if clergy role is selected)")
+    special_clergy_roles = models.JSONField(default=list, blank=True, help_text="Special clergy roles (only if clergy role is selected)")
+    
     phone_number = models.CharField(max_length=20, unique=True)
     email_address = models.EmailField(blank=True, unique=True)
     
@@ -168,6 +206,11 @@ class Member(models.Model):
     def save(self, *args, **kwargs):
         if not self.identifier:
             self.identifier = self.generate_identifier()
+        
+        # Ensure regular_member role is always present
+        if 'regular_member' not in self.member_roles:
+            self.member_roles.append('regular_member')
+        
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -207,6 +250,71 @@ class Member(models.Model):
     def set_custom_field(self, key, value):
         """Set a custom field value"""
         self.custom_fields[key] = value
+    
+    def has_role(self, role):
+        """Check if member has a specific role"""
+        return role in self.member_roles
+    
+    def add_role(self, role):
+        """Add a role to the member"""
+        if role not in self.member_roles:
+            self.member_roles.append(role)
+    
+    def remove_role(self, role):
+        """Remove a role from the member"""
+        if role in self.member_roles:
+            self.member_roles.remove(role)
+    
+    def has_clergy_role(self, clergy_role):
+        """Check if member has a specific clergy role"""
+        return clergy_role in self.church_clergy_roles or clergy_role in self.special_clergy_roles
+    
+    def add_church_clergy_role(self, role):
+        """Add a church clergy role to the member"""
+        if role not in self.church_clergy_roles:
+            self.church_clergy_roles.append(role)
+    
+    def add_special_clergy_role(self, role):
+        """Add a special clergy role to the member"""
+        if role not in self.special_clergy_roles:
+            self.special_clergy_roles.append(role)
+    
+    @property
+    def is_clergy(self):
+        """Return True if member has clergy role"""
+        return 'clergy' in self.member_roles
+    
+    @property
+    def display_roles(self):
+        """Return a comma-separated list of member roles for display"""
+        role_labels = []
+        for role_code in self.member_roles:
+            for code, label in self.MEMBER_ROLES:
+                if code == role_code:
+                    role_labels.append(label)
+                    break
+        return ', '.join(role_labels) if role_labels else 'Regular Member'
+    
+    @property
+    def display_clergy_roles(self):
+        """Return a comma-separated list of clergy roles for display"""
+        clergy_labels = []
+        
+        # Church clergy roles
+        for role_code in self.church_clergy_roles:
+            for code, label in self.CHURCH_CLERGY_ROLES:
+                if code == role_code:
+                    clergy_labels.append(label)
+                    break
+        
+        # Special clergy roles
+        for role_code in self.special_clergy_roles:
+            for code, label in self.SPECIAL_CLERGY_ROLES:
+                if code == role_code:
+                    clergy_labels.append(label)
+                    break
+        
+        return ', '.join(clergy_labels) if clergy_labels else None
     
     @property
     def is_active(self):

@@ -147,7 +147,7 @@
                             <strong style="color: #ffffff; display: block;">{{ church.name }}</strong>
                             <span style="color: #22c55e; font-size: 0.8em;">{{ church.identifier }}</span><br>
                             <small style="color: #9ca3af;">{{ church.address|truncatechars:30 }}</small><br>
-                            <small style="color: #e5e7eb;">Head Teacher: {{ church.head_teacher_name }}</small><br>
+                            <small style="color: #e5e7eb;">Head Teacher: {{ church.head_teacher.full_name|default:church.head_teacher_name }}</small><br>
                             <small style="color: #dc2626;">Pastorate: {{ church.pastorate.name }}</small>
                         </div>
                         <div style="display: flex; gap: 5px;">

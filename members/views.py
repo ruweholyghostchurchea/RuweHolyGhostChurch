@@ -81,6 +81,9 @@ def add_member(request):
             'user_groups': Member.USER_GROUP_CHOICES,
             'membership_statuses': Member.MEMBERSHIP_STATUS_CHOICES,
             'pwd_types': Member.PWD_TYPE_CHOICES,
+            'member_roles': Member.MEMBER_ROLES,
+            'church_clergy_roles': Member.CHURCH_CLERGY_ROLES,
+            'special_clergy_roles': Member.SPECIAL_CLERGY_ROLES,
         }
         return render(request, 'members/add_member.html', context)
 
@@ -96,6 +99,16 @@ def add_member(request):
             marital_status = request.POST.get('marital_status')
             location = request.POST.get('location')
             education_level = request.POST.get('education_level')
+            
+            # Member Roles
+            member_roles = request.POST.getlist('member_roles')
+            church_clergy_roles = request.POST.getlist('church_clergy_roles') if 'clergy' in member_roles else []
+            special_clergy_roles = request.POST.getlist('special_clergy_roles') if 'clergy' in member_roles else []
+            
+            # Ensure regular_member is always included
+            if 'regular_member' not in member_roles:
+                member_roles.append('regular_member')
+            
             phone_number = request.POST.get('phone_number')
             email_address = request.POST.get('email_address', '')
 
@@ -197,6 +210,9 @@ def add_member(request):
                 marital_status=marital_status,
                 location=location,
                 education_level=education_level,
+                member_roles=member_roles,
+                church_clergy_roles=church_clergy_roles,
+                special_clergy_roles=special_clergy_roles,
                 phone_number=phone_number,
                 email_address=email_address,
                 job_occupation_income=job_occupation_income,

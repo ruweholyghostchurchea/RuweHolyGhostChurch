@@ -5,7 +5,7 @@ from .models import Member, MemberDocument
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
     list_display = [
-        'full_name', 'username', 'user_group', 'gender', 'marital_status',
+        'full_name', 'username', 'user_group', 'display_roles', 'gender', 'marital_status',
         'location', 'phone_number', 'membership_status', 'is_staff', 'is_ordained', 
         'is_pwd', 'user_home_church', 'user_home_pastorate', 'user_home_diocese', 'created_at'
     ]
@@ -24,6 +24,9 @@ class MemberAdmin(admin.ModelAdmin):
         ('Personal Information', {
             'fields': ('first_name', 'last_name', 'username', 'user_group', 'gender', 
                       'date_of_birth', 'marital_status', 'location', 'education_level')
+        }),
+        ('Member Roles', {
+            'fields': ('member_roles', 'church_clergy_roles', 'special_clergy_roles'),
         }),
         ('Contact Information', {
             'fields': ('phone_number', 'email_address')

@@ -114,6 +114,71 @@
                     </select>
                 </div>
             </div>
+
+            <!-- Member Roles Section -->
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="color: #ffffff; margin-bottom: 8px; display: block;">Member Roles *</label>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                        <div class="form-check">
+                            <input type="checkbox" name="member_roles" value="regular_member" id="role_regular" class="form-check-input" checked disabled>
+                            <label for="role_regular" class="form-check-label" style="color: #ffffff;">Regular Member (Default)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="member_roles" value="singer" id="role_singer" class="form-check-input">
+                            <label for="role_singer" class="form-check-label" style="color: #ffffff;">Singer</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="member_roles" value="drum_percussionist" id="role_drum" class="form-check-input">
+                            <label for="role_drum" class="form-check-label" style="color: #ffffff;">Drum Percussionist</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="member_roles" value="shaker_percussionist" id="role_shaker" class="form-check-input">
+                            <label for="role_shaker" class="form-check-label" style="color: #ffffff;">Shaker Percussionist</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="member_roles" value="synod_representative" id="role_synod" class="form-check-input">
+                            <label for="role_synod" class="form-check-label" style="color: #ffffff;">Synod Representative</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="member_roles" value="clergy" id="role_clergy" class="form-check-input" onchange="toggleClergyRoles()">
+                            <label for="role_clergy" class="form-check-label" style="color: #ffffff;">Clergy</label>
+                        </div>
+                    </div>
+                    <!-- Hidden input to ensure regular_member is always submitted -->
+                    <input type="hidden" name="member_roles" value="regular_member">
+                </div>
+            </div>
+
+            <!-- Church/Dean Clergy Roles Section -->
+            <div id="church_clergy_section" class="form-group" style="margin-bottom: 20px; display: none;">
+                <label style="color: #ffffff; margin-bottom: 8px; display: block;">Church/Dean Clergy Roles</label>
+                <div style="background: rgba(220, 38, 38, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #dc2626;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                        {% for role_code, role_label in church_clergy_roles %}
+                        <div class="form-check">
+                            <input type="checkbox" name="church_clergy_roles" value="{{ role_code }}" id="church_clergy_{{ role_code }}" class="form-check-input">
+                            <label for="church_clergy_{{ role_code }}" class="form-check-label" style="color: #ffffff;">{{ role_label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Clergy Roles Section -->
+            <div id="special_clergy_section" class="form-group" style="margin-bottom: 20px; display: none;">
+                <label style="color: #ffffff; margin-bottom: 8px; display: block;">Special Clergy Roles</label>
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #ffd700;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                        {% for role_code, role_label in special_clergy_roles %}
+                        <div class="form-check">
+                            <input type="checkbox" name="special_clergy_roles" value="{{ role_code }}" id="special_clergy_{{ role_code }}" class="form-check-input">
+                            <label for="special_clergy_{{ role_code }}" class="form-check-label" style="color: #ffffff;">{{ role_label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Contact Information Section -->
@@ -521,6 +586,25 @@
                 document.getElementById('pwd_other_description').value = '';
             }
         }
+
+        // Member Roles Toggle
+        function toggleClergyRoles() {
+            const isClergy = document.getElementById('role_clergy').checked;
+            const churchClergySection = document.getElementById('church_clergy_section');
+            const specialClergySection = document.getElementById('special_clergy_section');
+
+            if (isClergy) {
+                churchClergySection.style.display = 'block';
+                specialClergySection.style.display = 'block';
+            } else {
+                churchClergySection.style.display = 'none';
+                specialClergySection.style.display = 'none';
+                // Uncheck all clergy roles when the main clergy checkbox is unchecked
+                const clergyCheckboxes = document.querySelectorAll('input[name="church_clergy_roles"], input[name="special_clergy_roles"]');
+                clergyCheckboxes.forEach(checkbox => checkbox.checked = false);
+            }
+        }
+
 
         // Member Search Functionality
         class MemberSearchSelect {
