@@ -6,154 +6,21 @@
 {% block page_title %}Edit {{ church.name }} Church{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">
-                    <i class="fas fa-edit" style="color: #dc2626; margin-right: 10px;"></i>
-                    Edit Church Information
-                </h5>
-                <div style="float: right;">
-                    <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
-                       class="btn btn-secondary btn-sm">
-                        <i class="fas fa-arrow-left"></i> Cancel
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="name" style="color: #ffffff; margin-bottom: 5px;">Church Name *</label>
-                                <input type="text" name="name" id="name" value="{{ church.name }}" required
-                                       class="form-control" 
-                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="pastorate_id" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
-                                <select name="pastorate_id" id="pastorate_id" required
-                                        class="form-control"
-                                        style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                                    {% for pastorate in pastorates %}
-                                    <option value="{{ pastorate.id }}" {% if pastorate.id == church.pastorate.id %}selected{% endif %}>
-                                        {{ pastorate.name }} ({{ pastorate.diocese.name }})
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="address" style="color: #ffffff; margin-bottom: 5px;">Church Address *</label>
-                        <textarea name="address" id="address" rows="2" required
-                                  class="form-control"
-                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.address }}</textarea>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="head_teacher_name" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Name *</label>
-                                <input type="text" name="head_teacher_name" id="head_teacher_name" value="{{ church.head_teacher_name }}" required
-                                       class="form-control"
-                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="head_teacher_phone" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Phone</label>
-                                <input type="text" name="head_teacher_phone" id="head_teacher_phone" value="{{ church.head_teacher_phone }}"
-                                       class="form-control"
-                                       style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="head_teacher_email" style="color: #ffffff; margin-bottom: 5px;">Head Teacher Email</label>
-                        <input type="email" name="head_teacher_email" id="head_teacher_email" value="{{ church.head_teacher_email }}"
-                               class="form-control"
-                               style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="assistant_teachers" style="color: #ffffff; margin-bottom: 5px;">Assistant Teachers</label>
-                        <textarea name="assistant_teachers" id="assistant_teachers" rows="3"
-                                  class="form-control" placeholder="List additional church teachers, one per line"
-                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.assistant_teachers }}</textarea>
-                    </div>
-                    
-                    <div class="form-group mb-4">
-                        <label for="service_times" style="color: #ffffff; margin-bottom: 5px;">Service Times</label>
-                        <textarea name="service_times" id="service_times" rows="3"
-                                  class="form-control" placeholder="e.g., Saturday 9:00 AM, Sunday 7:00 AM"
-                                  style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.service_times }}</textarea>
-                    </div>
-                    
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
-                            <i class="fas fa-save"></i> Update Church
-                        </button>
-                        <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
-                           class="btn btn-secondary" style="padding: 10px 30px;">
-                            <i class="fas fa-times"></i> Cancel
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
-</script>
-
-<script>
-// Cascading dropdown functionality
-document.getElementById('diocese_id')?.addEventListener('change', function() {
-    const dioceseId = this.value;
-    const pastorateSelect = document.getElementById('pastorate_id');
-    
-    // Clear pastorate dropdown
-    pastorateSelect.innerHTML = '<option value="">Loading...</option>';
-    
-    if (dioceseId) {
-        // Fetch pastorates for selected diocese
-        fetch(`/church-structure/api/pastorates/${dioceseId}/`)
-            .then(response => response.json())
-            .then(data => {
-                pastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                data.forEach(pastorate => {
-                    const option = document.createElement('option');
-                    option.value = pastorate.id;
-                    option.textContent = pastorate.name;
-                    pastorateSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                pastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
-            });
-    }
-});
-</script>
-{% endblock %}
-{% extends 'base.html' %}
-
-{% block title %}{{ page_title }}{% endblock %}
-
-{% block content %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 offset-md-1">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ page_title }}</h3>
+                    <h3 class="card-title">
+                        <i class="fas fa-edit" style="color: #dc2626; margin-right: 10px;"></i>
+                        Edit Church Information
+                    </h3>
+                    <div style="float: right;">
+                        <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                           class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <form method="post" id="church-form">
@@ -162,49 +29,50 @@ document.getElementById('diocese_id')?.addEventListener('change', function() {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.name.id_for_label }}">Church Name *</label>
-                                    {{ form.name }}
-                                    {% if form.name.errors %}
-                                        <div class="text-danger">{{ form.name.errors.0 }}</div>
-                                    {% endif %}
+                                    <label for="name" style="color: #ffffff; margin-bottom: 5px;">Church Name *</label>
+                                    <input type="text" name="name" id="name" value="{{ church.name }}" required
+                                           class="form-control" 
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.pastorate.id_for_label }}">Pastorate *</label>
-                                    {{ form.pastorate }}
-                                    {% if form.pastorate.errors %}
-                                        <div class="text-danger">{{ form.pastorate.errors.0 }}</div>
-                                    {% endif %}
+                                    <label for="pastorate_id" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
+                                    <select name="pastorate_id" id="pastorate_id" required
+                                            class="form-control"
+                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                        {% for pastorate in pastorates %}
+                                        <option value="{{ pastorate.id }}" {% if pastorate.id == church.pastorate.id %}selected{% endif %}>
+                                            {{ pastorate.name }} ({{ pastorate.diocese.name }})
+                                        </option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="form-group">
-                            <label for="{{ form.address.id_for_label }}">Address *</label>
-                            {{ form.address }}
-                            {% if form.address.errors %}
-                                <div class="text-danger">{{ form.address.errors.0 }}</div>
-                            {% endif %}
+                            <label for="address" style="color: #ffffff; margin-bottom: 5px;">Church Address *</label>
+                            <textarea name="address" id="address" rows="2" required
+                                      class="form-control"
+                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.address }}</textarea>
                         </div>
-
+                        
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.phone.id_for_label }}">Church Phone</label>
-                                    {{ form.phone }}
-                                    {% if form.phone.errors %}
-                                        <div class="text-danger">{{ form.phone.errors.0 }}</div>
-                                    {% endif %}
+                                    <label for="phone" style="color: #ffffff; margin-bottom: 5px;">Church Phone</label>
+                                    <input type="text" name="phone" id="phone" value="{{ church.phone }}"
+                                           class="form-control"
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="{{ form.email.id_for_label }}">Church Email</label>
-                                    {{ form.email }}
-                                    {% if form.email.errors %}
-                                        <div class="text-danger">{{ form.email.errors.0 }}</div>
-                                    {% endif %}
+                                    <label for="email" style="color: #ffffff; margin-bottom: 5px;">Church Email</label>
+                                    <input type="email" name="email" id="email" value="{{ church.email }}"
+                                           class="form-control"
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                         </div>
@@ -212,16 +80,14 @@ document.getElementById('diocese_id')?.addEventListener('change', function() {
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="head-teacher-select">Head Teacher (Optional)</label>
-                                    <select id="head-teacher-select" name="head_teacher" class="form-control">
+                                    <label for="head-teacher-select" style="color: #ffffff; margin-bottom: 5px;">Head Teacher (Optional)</label>
+                                    <select id="head-teacher-select" name="head_teacher" class="form-control"
+                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                         <option value="">Select a head teacher (optional)</option>
-                                        {% if form.head_teacher.value %}
-                                            <option value="{{ form.head_teacher.value }}" selected>{{ church.head_teacher.full_name }}</option>
+                                        {% if church.head_teacher %}
+                                            <option value="{{ church.head_teacher.id }}" selected>{{ church.head_teacher.full_name }}</option>
                                         {% endif %}
                                     </select>
-                                    {% if form.head_teacher.errors %}
-                                        <div class="text-danger">{{ form.head_teacher.errors.0 }}</div>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -229,14 +95,16 @@ document.getElementById('diocese_id')?.addEventListener('change', function() {
                         <div class="row" id="head-teacher-info" {% if not church.head_teacher %}style="display: none;"{% endif %}>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Head Teacher Phone</label>
-                                    <input type="text" id="head-teacher-phone" class="form-control" value="{{ church.head_teacher_phone }}" readonly>
+                                    <label style="color: #ffffff; margin-bottom: 5px;">Head Teacher Phone</label>
+                                    <input type="text" id="head-teacher-phone" class="form-control" value="{{ church.head_teacher_phone }}" readonly
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Head Teacher Email</label>
-                                    <input type="text" id="head-teacher-email" class="form-control" value="{{ church.head_teacher_email }}" readonly>
+                                    <label style="color: #ffffff; margin-bottom: 5px;">Head Teacher Email</label>
+                                    <input type="text" id="head-teacher-email" class="form-control" value="{{ church.head_teacher_email }}" readonly
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                         </div>
@@ -244,59 +112,59 @@ document.getElementById('diocese_id')?.addEventListener('change', function() {
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="teachers-select">Additional Teachers (Optional - Max 12)</label>
-                                    <select id="teachers-select" name="teachers" class="form-control" multiple size="4">
+                                    <label for="teachers-select" style="color: #ffffff; margin-bottom: 5px;">Additional Teachers (Optional - Max 12)</label>
+                                    <select id="teachers-select" name="teachers" class="form-control" multiple size="4"
+                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                         {% for teacher in church.teachers.all %}
                                             <option value="{{ teacher.id }}" selected>{{ teacher.full_name }}</option>
                                         {% endfor %}
                                     </select>
-                                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple teachers (maximum 12)</small>
-                                    {% if form.teachers.errors %}
-                                        <div class="text-danger">{{ form.teachers.errors.0 }}</div>
-                                    {% endif %}
+                                    <small style="color: #9ca3af;">Hold Ctrl/Cmd to select multiple teachers (maximum 12)</small>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.service_times.id_for_label }}">Service Times</label>
-                            {{ form.service_times }}
-                            {% if form.service_times.errors %}
-                                <div class="text-danger">{{ form.service_times.errors.0 }}</div>
-                            {% endif %}
+                            <label for="service_times" style="color: #ffffff; margin-bottom: 5px;">Service Times</label>
+                            <textarea name="service_times" id="service_times" rows="3"
+                                      class="form-control" placeholder="e.g., Saturday 9:00 AM, Sunday 7:00 AM"
+                                      style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">{{ church.service_times }}</textarea>
                         </div>
 
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="{{ form.capacity.id_for_label }}">Capacity</label>
-                                    {{ form.capacity }}
-                                    {% if form.capacity.errors %}
-                                        <div class="text-danger">{{ form.capacity.errors.0 }}</div>
-                                    {% endif %}
+                                    <label for="capacity" style="color: #ffffff; margin-bottom: 5px;">Capacity</label>
+                                    <input type="number" name="capacity" id="capacity" value="{{ church.capacity }}"
+                                           class="form-control"
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="{{ form.established_date.id_for_label }}">Established Date</label>
-                                    {{ form.established_date }}
-                                    {% if form.established_date.errors %}
-                                        <div class="text-danger">{{ form.established_date.errors.0 }}</div>
-                                    {% endif %}
+                                    <label for="established_date" style="color: #ffffff; margin-bottom: 5px;">Established Date</label>
+                                    <input type="date" name="established_date" id="established_date" value="{{ church.established_date|date:'Y-m-d' }}"
+                                           class="form-control"
+                                           style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>
-                                        {{ form.is_active }} Active
+                                <div class="form-group" style="margin-top: 30px;">
+                                    <label style="color: #ffffff;">
+                                        <input type="checkbox" name="is_active" {% if church.is_active %}checked{% endif %}> Active
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Update Church</button>
-                            <a href="{% url 'church_structure:church_detail' church.slug %}" class="btn btn-secondary">Cancel</a>
+                        <div class="text-center" style="margin-top: 30px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 10px 30px;">
+                                <i class="fas fa-save"></i> Update Church
+                            </button>
+                            <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                               class="btn btn-secondary" style="padding: 10px 30px;">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
                         </div>
                     </form>
                 </div>
