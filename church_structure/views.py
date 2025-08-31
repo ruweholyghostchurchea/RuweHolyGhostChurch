@@ -128,7 +128,7 @@ def church_detail(request, church_slug):
     # Get members from this church if members app is available
     try:
         from members.models import Member
-        members = Member.objects.filter(user_home_church=church, is_active=True)
+        members = Member.objects.filter(user_home_church=church, membership_status='Active')
     except ImportError:
         members = []
 
