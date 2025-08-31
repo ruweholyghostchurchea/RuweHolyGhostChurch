@@ -137,25 +137,28 @@
             </div>
 
             <!-- Membership Status -->
-            <div class="row" style="margin-top: 15px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-4">
-                    <label for="membership_status" class="form-label">Membership Status <span class="text-danger">*</span></label>
-                    <select class="form-select" id="membership_status" name="membership_status" required>
+                    <label for="membership_status" class="form-label" style="color: #ffffff; margin-bottom: 5px; display: block;">Membership Status <span class="text-danger">*</span></label>
+                    <select class="form-select" id="membership_status" name="membership_status" required 
+                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         {% for value, display in membership_statuses %}
                         <option value="{{ value }}" {% if value == 'Active' %}selected{% endif %}>{{ display }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="is_staff" class="form-label">Staff Status <span class="text-danger">*</span></label>
-                    <select class="form-select" id="is_staff" name="is_staff" required>
+                    <label for="is_staff" class="form-label" style="color: #ffffff; margin-bottom: 5px; display: block;">Staff Status <span class="text-danger">*</span></label>
+                    <select class="form-select" id="is_staff" name="is_staff" required 
+                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="No" selected>No</option>
                         <option value="Yes">Yes</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="is_ordained" class="form-label">Hand Ordination Status <span class="text-danger">*</span></label>
-                    <select class="form-select" id="is_ordained" name="is_ordained" required>
+                    <label for="is_ordained" class="form-label" style="color: #ffffff; margin-bottom: 5px; display: block;">Hand Ordination Status <span class="text-danger">*</span></label>
+                    <select class="form-select" id="is_ordained" name="is_ordained" required 
+                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="No" selected>No</option>
                         <option value="Yes">Yes</option>
                     </select>
@@ -166,14 +169,15 @@
             <div class="row" style="margin-top: 15px;">
                 <div class="col-md-4">
                     <label for="is_pwd" class="form-label">Person with Disability (PWD) <span class="text-danger">*</span></label>
-                    <select class="form-select" id="is_pwd" name="is_pwd" onchange="togglePwdFields()" required>
+                    <select class="form-select" id="is_pwd" name="is_pwd" onchange="togglePwdFields()" required 
+                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="No" selected>No</option>
                         <option value="Yes">Yes</option>
                     </select>
                 </div>
                 <div class="col-md-4" id="pwd_type_field" style="display: none;">
                     <label for="pwd_type" class="form-label">Type of Disability</label>
-                    <select class="form-select" id="pwd_type" name="pwd_type">
+                    <select class="form-select" id="pwd_type" name="pwd_type" style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                         <option value="">Select type...</option>
                         {% for value, display in pwd_types %}
                         <option value="{{ value }}">{{ display }}</option>
