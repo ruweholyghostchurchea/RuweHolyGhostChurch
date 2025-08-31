@@ -17,11 +17,11 @@
                 </h5>
                 <div style="float: right;">
                     <a href="{% url 'church_structure:edit_church' church_slug=church.slug %}" 
-                       class="btn btn-warning btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i> Edit Church
                     </a>
                     <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=church.pastorate.slug %}" 
-                       class="btn btn-info btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-users"></i> View Pastorate
                     </a>
                     <a href="{% url 'church_structure:index' %}" class="btn btn-secondary btn-sm">
