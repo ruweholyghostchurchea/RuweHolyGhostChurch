@@ -100,11 +100,45 @@ def diocese_detail(request, diocese_slug):
     """Diocese detail view with all pastorates and churches"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
     pastorates = diocese.pastorates.filter(is_active=True).prefetch_related('churches')
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Diocesan Church for this diocese
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=diocese,
+            is_diosen_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
 
     context = {
         'page_title': f'{diocese.name} Diocese',
         'diocese': diocese,
         'pastorates': pastorates,
+        'archbishop': archbishop,
+        'king': king,
+        'diocesan_church': diocesan_church,
     }
     return render(request, 'church_structure/diocese_detail.html', context)
 
@@ -113,11 +147,45 @@ def pastorate_detail(request, pastorate_slug):
     """Pastorate detail view with all churches"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
     churches = pastorate.churches.filter(is_active=True)
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Diocesan Church for this diocese
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=pastorate.diocese,
+            is_diosen_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
 
     context = {
         'page_title': f'{pastorate.name} Pastorate',
         'pastorate': pastorate,
         'churches': churches,
+        'archbishop': archbishop,
+        'king': king,
+        'diocesan_church': diocesan_church,
     }
     return render(request, 'church_structure/pastorate_detail.html', context)
 
@@ -131,11 +199,57 @@ def church_detail(request, church_slug):
         members = Member.objects.filter(user_home_church=church, membership_status='Active')
     except ImportError:
         members = []
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Diocesan Church for this diocese
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=church.pastorate.diocese,
+            is_diosen_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
+    # Get Mission Church for this pastorate/diocese
+    mission_church = None
+    try:
+        mission_church = Church.objects.filter(
+            pastorate__diocese=church.pastorate.diocese,
+            is_mission_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
 
     context = {
         'page_title': f'{church.name} Church',
         'church': church,
         'members': members,
+        'archbishop': archbishop,
+        'king': king,
+        'diocesan_church': diocesan_church,
+        'mission_church': mission_church,
     }
     return render(request, 'church_structure/church_detail.html', context)
 
@@ -482,9 +596,44 @@ def search_members(request):
 def diocese_description(request, diocese_slug):
     """Diocese detailed description view"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Diocesan Church for this diocese
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=diocese,
+            is_diosen_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
     context = {
         'page_title': f'{diocese.name} Diocese - About',
         'diocese': diocese,
+        'archbishop': archbishop,
+        'king': king,
+        'diocesan_church': diocesan_church,
     }
     return render(request, 'church_structure/diocese_description.html', context)
 
@@ -492,9 +641,44 @@ def diocese_description(request, diocese_slug):
 def pastorate_description(request, pastorate_slug):
     """Pastorate detailed description view"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Diocesan Church for this diocese
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=pastorate.diocese,
+            is_diosen_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
     context = {
         'page_title': f'{pastorate.name} Pastorate - About',
         'pastorate': pastorate,
+        'archbishop': archbishop,
+        'king': king,
+        'diocesan_church': diocesan_church,
     }
     return render(request, 'church_structure/pastorate_description.html', context)
 
@@ -502,8 +686,55 @@ def pastorate_description(request, pastorate_slug):
 def church_description(request, church_slug):
     """Church detailed description view"""
     church = get_object_or_404(Church, slug=church_slug)
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Diocesan Church for this diocese
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=church.pastorate.diocese,
+            is_diosen_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
+    # Get Mission Church for this pastorate/diocese
+    mission_church = None
+    try:
+        mission_church = Church.objects.filter(
+            pastorate__diocese=church.pastorate.diocese,
+            is_mission_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
     context = {
         'page_title': f'{church.name} Church - About',
         'church': church,
+        'archbishop': archbishop,
+        'king': king,
+        'diocesan_church': diocesan_church,
+        'mission_church': mission_church,
     }
     return render(request, 'church_structure/church_description.html', context)
