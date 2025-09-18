@@ -103,34 +103,26 @@ def diocese_detail(request, diocese_slug):
     
     # Get Archbishop (member with dean_archbishop role)
     archbishop = None
-    try:
+    if hasattr(Member, 'church_clergy_roles'):
         archbishop = Member.objects.filter(
             church_clergy_roles__contains=['dean_archbishop'],
             membership_status='Active'
-        ).first()
-    except:
-        pass
+        ).order_by('-updated_at', 'first_name').first()
     
     # Get King (member with dean_king role)
     king = None
-    try:
+    if hasattr(Member, 'special_clergy_roles'):
         king = Member.objects.filter(
             special_clergy_roles__contains=['dean_king'],
             membership_status='Active'
-        ).first()
-    except:
-        pass
+        ).order_by('-updated_at', 'first_name').first()
     
     # Get Diocesan Church for this diocese
-    diocesan_church = None
-    try:
-        diocesan_church = Church.objects.filter(
-            pastorate__diocese=diocese,
-            is_diosen_church=True,
-            is_active=True
-        ).first()
-    except:
-        pass
+    diocesan_church = Church.objects.filter(
+        pastorate__diocese=diocese,
+        is_diosen_church=True,
+        is_active=True
+    ).order_by('-updated_at', 'name').first()
 
     context = {
         'page_title': f'{diocese.name} Diocese',
