@@ -434,7 +434,7 @@ class Member(models.Model):
     is_ordained = models.BooleanField(default=False, verbose_name="Ordained Member")
     
     # Profile Photo
-    profile_photo = models.ImageField(upload_to='member_photos/', blank=True, null=True)
+    profile_photo = models.URLField(blank=True, null=True, help_text='Member photo URL')
     profile_photo_url = models.URLField(blank=True, help_text="Alternative to uploading a photo")
     
     # Custom Fields (JSON field for flexible custom data)

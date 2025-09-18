@@ -31,8 +31,8 @@ class ChurchInfo(models.Model):
     auto_backup = models.BooleanField(default=True)
     
     # Logo and Images
-    logo = models.ImageField(upload_to='church/', blank=True, null=True)
-    banner_image = models.ImageField(upload_to='church/', blank=True, null=True)
+    logo = models.URLField(blank=True, null=True, help_text='Church logo URL')
+    banner_image = models.URLField(blank=True, null=True, help_text='Church banner image URL')
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,15 +1,15 @@
-modules = ["web", "python-3.12"]
+modules = ["web", "nodejs-20", "python-3.11"]
 run = "pip install -r requirements.txt"
 
 [nix]
 channel = "stable-25_05"
-packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "openssh_gssapi", "pgadmin4", "tcl", "tk", "zlib", "lsof"]
+packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libpng", "libtiff", "libwebp", "libxcrypt", "lsof", "openjpeg", "openssh_gssapi", "pgadmin4", "tcl", "tk", "zlib"]
 
 [deployment]
 run = ["sh", "-c", "pip install -r requirements.txt"]
 
 [workflows]
-runButton = "Django Development Server"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Django Development Server"
@@ -24,9 +24,34 @@ args = "python manage.py migrate"
 task = "shell.exec"
 args = "python manage.py runserver 0.0.0.0:5000"
 
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Django Server"
+
+[[workflows.workflow]]
+name = "Django Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py runserver 0.0.0.0:5000"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 43133
+externalPort = 3000
 
 [agent]
 expertMode = true

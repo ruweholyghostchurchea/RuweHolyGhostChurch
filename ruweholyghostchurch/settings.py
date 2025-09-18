@@ -25,7 +25,15 @@ SECRET_KEY = 'django-insecure-9w=dj@08cdd+qoss$tkfpt0kgsmi&-t#6g(aj%&^=yi^=i4dd2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['a58f6e69-d255-4c6c-90ce-22f0d83846a1-00-2esb5fopipamu.riker.replit.dev', '*.replit.app']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'f0c3b726-7ef8-4cf0-92a0-fb1680c094d6-00-3hu1xardo553s.janeway.replit.dev',
+    'a58f6e69-d255-4c6c-90ce-22f0d83846a1-00-2esb5fopipamu.riker.replit.dev', 
+    '*.replit.app',
+    '*.replit.dev',
+    '*.replit.co'
+]
 
 # CSRF settings for Replit and Production
 CSRF_TRUSTED_ORIGINS = [
