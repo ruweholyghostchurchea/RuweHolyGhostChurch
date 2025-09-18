@@ -6,7 +6,10 @@ from members.models import Member
 
 class DioceseForm(forms.ModelForm):
     bishop = forms.ModelChoiceField(
-        queryset=Member.objects.filter(membership_status='Active'),
+        queryset=Member.objects.filter(
+            membership_status='Active',
+            member_roles__contains=['clergy']
+        ),
         required=False,
         empty_label="Select a bishop (optional)",
         widget=forms.Select(attrs={
@@ -30,7 +33,10 @@ class DioceseForm(forms.ModelForm):
 
 class PastorateForm(forms.ModelForm):
     pastor = forms.ModelChoiceField(
-        queryset=Member.objects.filter(membership_status='Active'),
+        queryset=Member.objects.filter(
+            membership_status='Active',
+            member_roles__contains=['clergy']
+        ),
         required=False,
         empty_label="Select a pastor (optional)",
         widget=forms.Select(attrs={
@@ -54,7 +60,10 @@ class PastorateForm(forms.ModelForm):
 
 class ChurchForm(forms.ModelForm):
     head_teacher = forms.ModelChoiceField(
-        queryset=Member.objects.filter(membership_status='Active'),
+        queryset=Member.objects.filter(
+            membership_status='Active',
+            member_roles__contains=['clergy']
+        ),
         required=False,
         empty_label="Select a head teacher (optional)",
         widget=forms.Select(attrs={
@@ -64,7 +73,10 @@ class ChurchForm(forms.ModelForm):
     )
 
     teachers = forms.ModelMultipleChoiceField(
-        queryset=Member.objects.filter(membership_status='Active'),
+        queryset=Member.objects.filter(
+            membership_status='Active',
+            member_roles__contains=['clergy']
+        ),
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-control member-multi-search',
@@ -137,5 +149,6 @@ class MemberSearchForm(forms.Form):
             Q(last_name__icontains=search_term) |
             Q(username__icontains=search_term) |
             Q(phone_number__icontains=search_term),
-            membership_status='Active'
+            membership_status='Active',
+            member_roles__contains=['clergy']
         ).distinct()[:20]  # Limit to 20 results for performance
