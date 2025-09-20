@@ -100,7 +100,7 @@ def diocese_detail(request, diocese_slug):
     """Diocese detail view with all pastorates and churches"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
     pastorates = diocese.pastorates.filter(is_active=True).prefetch_related('churches')
-    
+
     # Get Archbishop (member with dean_archbishop role)
     archbishop = None
     if hasattr(Member, 'church_clergy_roles'):
@@ -108,7 +108,7 @@ def diocese_detail(request, diocese_slug):
             church_clergy_roles__contains=['dean_archbishop'],
             membership_status='Active'
         ).order_by('-updated_at', 'first_name').first()
-    
+
     # Get King (member with dean_king role)
     king = None
     if hasattr(Member, 'special_clergy_roles'):
@@ -116,13 +116,17 @@ def diocese_detail(request, diocese_slug):
             special_clergy_roles__contains=['dean_king'],
             membership_status='Active'
         ).order_by('-updated_at', 'first_name').first()
-    
+
     # Get Diocesan Church for this diocese
-    diocesan_church = Church.objects.filter(
-        pastorate__diocese=diocese,
-        is_diosen_church=True,
-        is_active=True
-    ).order_by('-updated_at', 'name').first()
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=diocese,
+            is_diocesan_church=True,
+            is_active=True
+        ).order_by('-updated_at', 'name').first()
+    except:
+        pass
 
     context = {
         'page_title': f'{diocese.name} Diocese',
@@ -139,7 +143,7 @@ def pastorate_detail(request, pastorate_slug):
     """Pastorate detail view with all churches"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
     churches = pastorate.churches.filter(is_active=True)
-    
+
     # Get Archbishop (member with dean_archbishop role)
     archbishop = None
     try:
@@ -149,7 +153,7 @@ def pastorate_detail(request, pastorate_slug):
         ).first()
     except:
         pass
-    
+
     # Get King (member with dean_king role)
     king = None
     try:
@@ -159,13 +163,13 @@ def pastorate_detail(request, pastorate_slug):
         ).first()
     except:
         pass
-    
+
     # Get Diocesan Church for this diocese
     diocesan_church = None
     try:
         diocesan_church = Church.objects.filter(
             pastorate__diocese=pastorate.diocese,
-            is_diosen_church=True,
+            is_diocesan_church=True,
             is_active=True
         ).first()
     except:
@@ -191,7 +195,7 @@ def church_detail(request, church_slug):
         members = Member.objects.filter(user_home_church=church, membership_status='Active')
     except ImportError:
         members = []
-    
+
     # Get Archbishop (member with dean_archbishop role)
     archbishop = None
     try:
@@ -201,7 +205,7 @@ def church_detail(request, church_slug):
         ).first()
     except:
         pass
-    
+
     # Get King (member with dean_king role)
     king = None
     try:
@@ -211,18 +215,18 @@ def church_detail(request, church_slug):
         ).first()
     except:
         pass
-    
+
     # Get Diocesan Church for this diocese
     diocesan_church = None
     try:
         diocesan_church = Church.objects.filter(
             pastorate__diocese=church.pastorate.diocese,
-            is_diosen_church=True,
+            is_diocesan_church=True,
             is_active=True
         ).first()
     except:
         pass
-    
+
     # Get Mission Church for this pastorate/diocese
     mission_church = None
     try:
@@ -270,7 +274,7 @@ def diocese_detail(request, diocese_slug):
     """Diocese detail view"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
     pastorates = diocese.pastorates.filter(is_active=True)
-    
+
     context = {
         'page_title': f'{diocese.name} Diocese',
         'diocese': diocese,
@@ -306,7 +310,7 @@ def pastorate_detail(request, pastorate_slug):
     """Pastorate detail view"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
     churches = pastorate.churches.filter(is_active=True)
-    
+
     context = {
         'page_title': f'{pastorate.name} Pastorate',
         'pastorate': pastorate,
@@ -384,7 +388,7 @@ def search_members(request):
     query = request.GET.get('q', '')
     if len(query) < 2:
         return JsonResponse([], safe=False)
-    
+
     members = Member.objects.filter(
         Q(first_name__icontains=query) |
         Q(last_name__icontains=query) |
@@ -392,7 +396,7 @@ def search_members(request):
         Q(phone_number__icontains=query),
         membership_status='Active'
     ).values('id', 'first_name', 'last_name', 'phone_number', 'email_address')[:20]
-    
+
     # Format for select2 or similar
     results = []
     for member in members:
@@ -402,20 +406,20 @@ def search_members(request):
             'phone': member['phone_number'],
             'email': member['email_address'] or ''
         })
-    
+
     return JsonResponse(results, safe=False)
 
 @login_required
 def delete_diocese(request, diocese_slug):
     """Delete diocese"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
-    
+
     if request.method == 'POST':
         diocese_name = diocese.name
         diocese.delete()
         messages.success(request, f'Diocese "{diocese_name}" deleted successfully!')
         return redirect('church_structure:index')
-    
+
     context = {
         'page_title': f'Delete {diocese.name} Diocese',
         'diocese': diocese,
@@ -426,13 +430,13 @@ def delete_diocese(request, diocese_slug):
 def delete_pastorate(request, pastorate_slug):
     """Delete pastorate"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-    
+
     if request.method == 'POST':
         pastorate_name = pastorate.name
         pastorate.delete()
         messages.success(request, f'Pastorate "{pastorate_name}" deleted successfully!')
         return redirect('church_structure:index')
-    
+
     context = {
         'page_title': f'Delete {pastorate.name} Pastorate',
         'pastorate': pastorate,
@@ -443,13 +447,13 @@ def delete_pastorate(request, pastorate_slug):
 def delete_church(request, church_slug):
     """Delete church"""
     church = get_object_or_404(Church, slug=church_slug)
-    
+
     if request.method == 'POST':
         church_name = church.name
         church.delete()
         messages.success(request, f'Church "{church_name}" deleted successfully!')
         return redirect('church_structure:index')
-    
+
     context = {
         'page_title': f'Delete {church.name} Church',
         'church': church,
@@ -460,7 +464,7 @@ def delete_church(request, church_slug):
 def edit_pastorate(request, pastorate_slug):
     """Edit pastorate"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-    
+
     if request.method == 'POST':
         form = PastorateForm(request.POST, instance=pastorate)
         if form.is_valid():
@@ -483,7 +487,7 @@ def edit_pastorate(request, pastorate_slug):
 def edit_church(request, church_slug):
     """Edit church"""
     church = get_object_or_404(Church, slug=church_slug)
-    
+
     if request.method == 'POST':
         form = ChurchForm(request.POST, instance=church)
         if form.is_valid():
@@ -588,7 +592,7 @@ def search_members(request):
 def diocese_description(request, diocese_slug):
     """Diocese detailed description view"""
     diocese = get_object_or_404(Diocese, slug=diocese_slug)
-    
+
     # Get Archbishop (member with dean_archbishop role)
     archbishop = None
     try:
@@ -598,7 +602,7 @@ def diocese_description(request, diocese_slug):
         ).first()
     except:
         pass
-    
+
     # Get King (member with dean_king role)
     king = None
     try:
@@ -608,18 +612,18 @@ def diocese_description(request, diocese_slug):
         ).first()
     except:
         pass
-    
+
     # Get Diocesan Church for this diocese
     diocesan_church = None
     try:
         diocesan_church = Church.objects.filter(
             pastorate__diocese=diocese,
-            is_diosen_church=True,
+            is_diocesan_church=True,
             is_active=True
         ).first()
     except:
         pass
-    
+
     context = {
         'page_title': f'{diocese.name} Diocese - About',
         'diocese': diocese,
@@ -633,7 +637,7 @@ def diocese_description(request, diocese_slug):
 def pastorate_description(request, pastorate_slug):
     """Pastorate detailed description view"""
     pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-    
+
     # Get Archbishop (member with dean_archbishop role)
     archbishop = None
     try:
@@ -643,7 +647,7 @@ def pastorate_description(request, pastorate_slug):
         ).first()
     except:
         pass
-    
+
     # Get King (member with dean_king role)
     king = None
     try:
@@ -653,18 +657,18 @@ def pastorate_description(request, pastorate_slug):
         ).first()
     except:
         pass
-    
+
     # Get Diocesan Church for this diocese
     diocesan_church = None
     try:
         diocesan_church = Church.objects.filter(
             pastorate__diocese=pastorate.diocese,
-            is_diosen_church=True,
+            is_diocesan_church=True,
             is_active=True
         ).first()
     except:
         pass
-    
+
     context = {
         'page_title': f'{pastorate.name} Pastorate - About',
         'pastorate': pastorate,
@@ -678,7 +682,7 @@ def pastorate_description(request, pastorate_slug):
 def church_description(request, church_slug):
     """Church detailed description view"""
     church = get_object_or_404(Church, slug=church_slug)
-    
+
     # Get Archbishop (member with dean_archbishop role)
     archbishop = None
     try:
@@ -688,7 +692,7 @@ def church_description(request, church_slug):
         ).first()
     except:
         pass
-    
+
     # Get King (member with dean_king role)
     king = None
     try:
@@ -698,18 +702,18 @@ def church_description(request, church_slug):
         ).first()
     except:
         pass
-    
+
     # Get Diocesan Church for this diocese
     diocesan_church = None
     try:
         diocesan_church = Church.objects.filter(
             pastorate__diocese=church.pastorate.diocese,
-            is_diosen_church=True,
+            is_diocesan_church=True,
             is_active=True
         ).first()
     except:
         pass
-    
+
     # Get Mission Church for this pastorate/diocese
     mission_church = None
     try:
@@ -720,7 +724,7 @@ def church_description(request, church_slug):
         ).first()
     except:
         pass
-    
+
     context = {
         'page_title': f'{church.name} Church - About',
         'church': church,

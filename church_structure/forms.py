@@ -88,7 +88,7 @@ class ChurchForm(forms.ModelForm):
 
     class Meta:
         model = Church
-        fields = ['name', 'pastorate', 'location', 'map_link', 'phone', 'email', 'head_teacher', 'teachers', 'service_times', 'capacity', 'established_date', 'is_mission_church', 'is_diosen_church', 'is_headquarter_church', 'is_active', 'description', 'rich_description']
+        fields = ['name', 'pastorate', 'location', 'map_link', 'phone', 'email', 'head_teacher', 'teachers', 'service_times', 'capacity', 'established_date', 'is_mission_church', 'is_diocesan_church', 'is_headquarter_church', 'is_active', 'description', 'rich_description']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Church name'}),
             'pastorate': forms.Select(attrs={'class': 'form-control'}),
@@ -100,7 +100,7 @@ class ChurchForm(forms.ModelForm):
             'capacity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Church capacity'}),
             'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'is_mission_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'is_diosen_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_diocesan_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_headquarter_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Short description (150 characters recommended)'}),

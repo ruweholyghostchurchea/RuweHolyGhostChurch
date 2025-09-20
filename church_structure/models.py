@@ -188,7 +188,7 @@ class Church(models.Model):
     description = models.TextField(blank=True)
     rich_description = models.TextField(blank=True, help_text="Rich HTML content for detailed description")
     is_mission_church = models.BooleanField(default=False, verbose_name="Mission Church")
-    is_diosen_church = models.BooleanField(default=False, verbose_name="Diosen Church")
+    is_diocesan_church = models.BooleanField(default=False, verbose_name="Diocesan Church")
     is_headquarter_church = models.BooleanField(default=False, verbose_name="Headquarter Church")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
