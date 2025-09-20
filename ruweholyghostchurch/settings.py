@@ -28,11 +28,11 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'f0c3b726-7ef8-4cf0-92a0-fb1680c094d6-00-3hu1xardo553s.janeway.replit.dev',
-    'a58f6e69-d255-4c6c-90ce-22f0d83846a1-00-2esb5fopipamu.riker.replit.dev', 
+    '87dbbb32-c453-408d-82ab-21f3361bf4a8-00-3f0z5nwtx5jwl.spock.replit.dev',
     '*.replit.app',
     '*.replit.dev',
-    '*.replit.co'
+    '*.replit.co',
+    '*'  # Allow all hosts for development
 ]
 
 # CSRF settings for Replit and Production
