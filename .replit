@@ -6,7 +6,9 @@ channel = "stable-25_05"
 packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libpng", "libtiff", "libwebp", "libxcrypt", "lsof", "openjpeg", "openssh_gssapi", "pgadmin4", "tcl", "tk", "zlib"]
 
 [deployment]
-run = ["sh", "-c", "pip install -r requirements.txt"]
+run = ["gunicorn", "--bind=0.0.0.0:5000", "--reuse-port", "ruweholyghostchurch.wsgi:application"]
+deploymentTarget = "autoscale"
+build = ["python", "manage.py", "collectstatic", "--noinput"]
 
 [workflows]
 runButton = "Project"
