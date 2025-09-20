@@ -22,8 +22,8 @@ class MemberAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('Personal Information', {
-            'fields': ('first_name', 'last_name', 'username', 'user_group', 'gender', 
-                      'date_of_birth', 'marital_status', 'location', 'education_level')
+            'fields': ('first_name', 'last_name', 'username', 'date_of_birth', 'user_group', 'gender', 
+                      'marital_status', 'location', 'education_level')
         }),
         ('Member Roles', {
             'fields': ('member_roles', 'church_clergy_roles', 'special_clergy_roles'),
@@ -78,7 +78,7 @@ class MemberAdmin(admin.ModelAdmin):
         }),
     )
     
-    readonly_fields = ['date_joined_app']
+    readonly_fields = ['date_joined_app', 'user_group']
     
     def full_name(self, obj):
         return obj.full_name

@@ -462,9 +462,28 @@ class Member(models.Model):
             if not Member.objects.filter(identifier=identifier).exists():
                 return identifier
 
+    def calculate_user_group(self):
+        """Calculate user group based on date of birth"""
+        if self.date_of_birth:
+            from datetime import date
+            today = date.today()
+            age = today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
+            
+            if 18 <= age <= 35:
+                return 'Youth'
+            elif 36 <= age <= 60:
+                return 'Adult'
+            elif age >= 61:
+                return 'Elder'
+        return 'Adult'  # Default fallback
+
     def save(self, *args, **kwargs):
         if not self.identifier:
             self.identifier = self.generate_identifier()
+        
+        # Auto-calculate user group based on date of birth
+        if self.date_of_birth:
+            self.user_group = self.calculate_user_group()
         
         # Ensure regular_member role is always present
         if 'regular_member' not in self.member_roles:

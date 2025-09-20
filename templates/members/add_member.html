@@ -43,15 +43,19 @@
                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
                 <div>
-                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">User Group *</label>
-                    <select name="user_group" required
-                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                        <option value="">Select Group</option>
-                        {% for value, label in user_groups %}
-                        <option value="{{ value }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date of Birth *</label>
+                    <input type="date" name="date_of_birth" id="date_of_birth" required onchange="calculateUserGroup()"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">User Group (Auto-calculated) *</label>
+                    <input type="text" id="user_group_display" readonly placeholder="Will be calculated from date of birth"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #2d3748; color: #ffffff; border-radius: 4px;">
+                    <input type="hidden" name="user_group" id="user_group" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Gender *</label>
                     <select name="gender" required
@@ -60,14 +64,6 @@
                         <option value="M">Male</option>
                         <option value="F">Female</option>
                     </select>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                <div>
-                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date of Birth *</label>
-                    <input type="date" name="date_of_birth" required
-                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Marital Status *</label>
@@ -1261,6 +1257,53 @@ class LocationAutocomplete {
         if (this.input.value.length >= 3) {
             this.searchLocations(this.input.value);
         }
+    }
+}
+
+// Calculate user group based on date of birth
+function calculateUserGroup() {
+    const dateOfBirth = document.getElementById('date_of_birth').value;
+    const userGroupDisplay = document.getElementById('user_group_display');
+    const userGroupHidden = document.getElementById('user_group');
+    
+    if (dateOfBirth) {
+        const birthYear = new Date(dateOfBirth).getFullYear();
+        const currentYear = new Date().getFullYear();
+        const age = currentYear - birthYear;
+        
+        let userGroup = '';
+        let userGroupLabel = '';
+        
+        if (age >= 18 && age <= 35) {
+            userGroup = 'Youth';
+            userGroupLabel = 'Youth (18-35 years)';
+        } else if (age >= 36 && age <= 60) {
+            userGroup = 'Adult';
+            userGroupLabel = 'Adult (36-60 years)';
+        } else if (age >= 61) {
+            userGroup = 'Elder';
+            userGroupLabel = 'Elder (61+ years)';
+        } else {
+            userGroup = '';
+            userGroupLabel = 'Age must be 18 or above';
+        }
+        
+        userGroupDisplay.value = userGroupLabel;
+        userGroupHidden.value = userGroup;
+        
+        // Add visual feedback for invalid age
+        if (age < 18) {
+            userGroupDisplay.style.color = '#ef4444';
+            userGroupDisplay.style.borderColor = '#ef4444';
+        } else {
+            userGroupDisplay.style.color = '#22c55e';
+            userGroupDisplay.style.borderColor = '#22c55e';
+        }
+    } else {
+        userGroupDisplay.value = '';
+        userGroupHidden.value = '';
+        userGroupDisplay.style.color = '#ffffff';
+        userGroupDisplay.style.borderColor = '#374151';
     }
 }
 
