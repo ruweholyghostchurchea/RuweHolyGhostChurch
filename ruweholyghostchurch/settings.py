@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     'authentication',
     'dashboard',
     'church_structure',
+    'ruwe_administration',
     'members',
     'visitors',
     'attendance',
