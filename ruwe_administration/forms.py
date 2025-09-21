@@ -24,7 +24,7 @@ from church_structure.models import Church, Pastorate, Diocese
 # Helper function to get staff members
 def get_staff_members_queryset():
     """Get queryset of members with staff status marked as 'Yes'"""
-    return Member.objects.filter(staff_status='Yes').order_by('first_name', 'last_name')
+    return Member.objects.filter(is_staff=True).order_by('first_name', 'last_name')
 
 # ==========================
 # CHURCH LEVEL FORMS (5)

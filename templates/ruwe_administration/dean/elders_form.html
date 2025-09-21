@@ -1,0 +1,112 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-user-tie text-primary me-2"></i>
+        {% if form.instance.pk %}Edit{% else %}Add{% endif %} Elders Office
+    </h2>
+    <a href="{% url 'ruwe_administration:dean_elders_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.head.id_for_label }}" class="form-label">Head</label>
+                    {{ form.head }}
+                    {% if form.head.errors %}
+                        <div class="invalid-feedback d-block">{{ form.head.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.assistant_head.id_for_label }}" class="form-label">Assistant Head</label>
+                    {{ form.assistant_head }}
+                    {% if form.assistant_head.errors %}
+                        <div class="invalid-feedback d-block">{{ form.assistant_head.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.chairman.id_for_label }}" class="form-label">Chairman</label>
+                    {{ form.chairman }}
+                    {% if form.chairman.errors %}
+                        <div class="invalid-feedback d-block">{{ form.chairman.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.assistant_chair.id_for_label }}" class="form-label">Assistant Chair</label>
+                    {{ form.assistant_chair }}
+                    {% if form.assistant_chair.errors %}
+                        <div class="invalid-feedback d-block">{{ form.assistant_chair.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.secretary.id_for_label }}" class="form-label">Secretary</label>
+                    {{ form.secretary }}
+                    {% if form.secretary.errors %}
+                        <div class="invalid-feedback d-block">{{ form.secretary.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.assistant_secretary.id_for_label }}" class="form-label">Assistant Secretary</label>
+                    {{ form.assistant_secretary }}
+                    {% if form.assistant_secretary.errors %}
+                        <div class="invalid-feedback d-block">{{ form.assistant_secretary.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.treasurer.id_for_label }}" class="form-label">Treasurer</label>
+                    {{ form.treasurer }}
+                    {% if form.treasurer.errors %}
+                        <div class="invalid-feedback d-block">{{ form.treasurer.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.organizing_secretary.id_for_label }}" class="form-label">Organizing Secretary</label>
+                    {{ form.organizing_secretary }}
+                    {% if form.organizing_secretary.errors %}
+                        <div class="invalid-feedback d-block">{{ form.organizing_secretary.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="invalid-feedback d-block">{{ form.description.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>
+                    {% if form.instance.pk %}Update{% else %}Save{% endif %}
+                </button>
+                <a href="{% url 'ruwe_administration:dean_elders_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
