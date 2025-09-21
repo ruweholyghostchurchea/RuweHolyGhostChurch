@@ -1,0 +1,178 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean Archbishop's Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean Archbishop's Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Office Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-crown" style="color: #fbbf24; margin-right: 10px;"></i>
+                    Dean Archbishop's Office Information
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_archbishops_edit' pk=office.pk %}" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Office
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_archbishops_add' %}" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Office Name:</strong> {{ office.name }}</p>
+                            <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span></p>
+                            <p><strong>Advisers:</strong> {{ office.advisers.count }}/15</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Aides:</strong> {{ office.aides.count }}/5</p>
+                            <p><strong>Status:</strong> 
+                                {% if office.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <small style="color: #9ca3af;">
+                                <strong>Note:</strong> The Archbishop is the most senior Bishop in the church hierarchy. Advisers provide counsel on important church matters, while Aides assist with daily administrative duties.
+                            </small>
+                        </div>
+                    </div>
+                    {% if office.description %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <p>{{ office.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No Dean Archbishop's Office has been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if office %}
+        <!-- Office Personnel -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #fbbf24; margin-right: 10px;"></i>
+                    Office Personnel (Up to 21 Total)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Advisers -->
+                    <div class="col-md-6 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #dc2626; padding-left: 10px;">Advisers (Up to 15)</h6>
+                        {% if office.advisers.all %}
+                            {% for adviser in office.advisers.all %}
+                            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #dc2626;">
+                                <h6 style="color: #ffffff; margin-bottom: 5px; font-size: 0.9em;">
+                                    <i class="fas fa-user-tie" style="color: #dc2626; margin-right: 5px;"></i>
+                                    {{ adviser.full_name }}
+                                </h6>
+                                {% if adviser.phone_number %}
+                                <p style="color: #9ca3af; margin: 0; font-size: 0.8em;">
+                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                    {{ adviser.phone_number }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #9ca3af; font-style: italic; font-size: 0.9em;">No advisers assigned</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Aides -->
+                    <div class="col-md-6 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #3b82f6; padding-left: 10px;">Aides (Up to 5)</h6>
+                        {% if office.aides.all %}
+                            {% for aide in office.aides.all %}
+                            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #3b82f6;">
+                                <h6 style="color: #ffffff; margin-bottom: 5px; font-size: 0.9em;">
+                                    <i class="fas fa-user-friends" style="color: #3b82f6; margin-right: 5px;"></i>
+                                    {{ aide.full_name }}
+                                </h6>
+                                {% if aide.phone_number %}
+                                <p style="color: #9ca3af; margin: 0; font-size: 0.8em;">
+                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                    {{ aide.phone_number }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #9ca3af; font-style: italic; font-size: 0.9em;">No aides assigned</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Woman Aide -->
+                    {% if office.woman_aide %}
+                    <div class="col-md-12 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #ec4899; padding-left: 10px;">Special Woman Aide</h6>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #ec4899;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">
+                                <i class="fas fa-female" style="color: #ec4899; margin-right: 8px;"></i>
+                                {{ office.woman_aide.full_name }}
+                            </h6>
+                            {% if office.woman_aide.phone_number %}
+                            <p style="color: #9ca3af; margin-bottom: 5px;">
+                                <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                {{ office.woman_aide.phone_number }}
+                            </p>
+                            {% endif %}
+                            {% if office.woman_aide.email_address %}
+                            <p style="color: #9ca3af; margin-bottom: 0;">
+                                <i class="fas fa-envelope" style="margin-right: 5px;"></i>
+                                {{ office.woman_aide.email_address }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.position-item {
+    color: #e5e7eb;
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.position-item:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,170 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean Ecclesiastical Cross Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean Ecclesiastical Cross Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Office Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-cross" style="color: #92400e; margin-right: 10px;"></i>
+                    Dean Ecclesiastical Cross Office Information
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_ecclesiastical_cross_edit' pk=office.pk %}" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Office
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_ecclesiastical_cross_add' %}" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Office Name:</strong> {{ office.name }}</p>
+                            <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span></p>
+                            <p><strong>Head:</strong> {{ office.head.full_name|default:"Not Assigned" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Main Woodworker:</strong> {{ office.main_woodworker.full_name|default:"Not Assigned" }}</p>
+                            <p><strong>Woodworkers:</strong> {{ office.woodworkers.count }}/5</p>
+                            <p><strong>Status:</strong> 
+                                {% if office.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% if office.description %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <p>{{ office.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No Dean Ecclesiastical Cross Office has been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if office %}
+        <!-- Office Personnel -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-sitemap" style="color: #92400e; margin-right: 10px;"></i>
+                    Office Leadership
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Leadership</h6>
+                            <div class="position-item">
+                                <strong>Head:</strong> {{ office.head.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #3b82f6;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Administrative</h6>
+                            <div class="position-item">
+                                <strong>Secretary:</strong> {{ office.secretary.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Treasurer:</strong> {{ office.treasurer.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #92400e;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Craftsmanship</h6>
+                            <div class="position-item">
+                                <strong>Main Woodworker:</strong> {{ office.main_woodworker.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Woodworkers -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-hammer" style="color: #92400e; margin-right: 10px;"></i>
+                    Woodworkers (Up to 5)
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if office.woodworkers.all %}
+                    <div class="row">
+                        {% for woodworker in office.woodworkers.all %}
+                        <div class="col-md-6 mb-3">
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #92400e;">
+                                <h6 style="color: #ffffff; margin-bottom: 8px;">
+                                    <i class="fas fa-tools" style="color: #92400e; margin-right: 5px;"></i>
+                                    {{ woodworker.full_name }}
+                                </h6>
+                                {% if woodworker.phone_number %}
+                                <p style="color: #9ca3af; margin-bottom: 5px; font-size: 0.9em;">
+                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                    {{ woodworker.phone_number }}
+                                </p>
+                                {% endif %}
+                                {% if woodworker.email_address %}
+                                <p style="color: #9ca3af; margin-bottom: 0; font-size: 0.9em;">
+                                    <i class="fas fa-envelope" style="margin-right: 5px;"></i>
+                                    {{ woodworker.email_address }}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: #9ca3af; font-style: italic; text-align: center; padding: 20px;">No woodworkers assigned</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.position-item {
+    color: #e5e7eb;
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.position-item:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,145 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean Women Leaders Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean Women Leaders Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Office Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-female" style="color: #ec4899; margin-right: 10px;"></i>
+                    Dean Women Leaders Office Information
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_women_leaders_edit' pk=office.pk %}" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Office
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_women_leaders_add' %}" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Office Name:</strong> {{ office.name }}</p>
+                            <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span></p>
+                            <p><strong>Head:</strong> {{ office.head.full_name|default:"Not Assigned" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                {% if office.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}</p>
+                            <p><strong>Last Updated:</strong> {{ office.updated_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <small style="color: #9ca3af;">
+                                <strong>Note:</strong> Women Leaders coordinate women's ministries and activities. The Head should be a Senior Woman Leader.
+                            </small>
+                        </div>
+                    </div>
+                    {% if office.description %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <p>{{ office.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No Dean Women Leaders Office has been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if office %}
+        <!-- Office Positions -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #ec4899; margin-right: 10px;"></i>
+                    Office Positions (8 Positions)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Leadership -->
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Leadership</h6>
+                            <div class="position-item">
+                                <strong>Head:</strong> {{ office.head.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Head:</strong> {{ office.assistant_head.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Chairman:</strong> {{ office.chairman.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Chair:</strong> {{ office.assistant_chair.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Administrative & Financial -->
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #3b82f6;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Administrative & Financial</h6>
+                            <div class="position-item">
+                                <strong>Secretary:</strong> {{ office.secretary.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Secretary:</strong> {{ office.assistant_secretary.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Treasurer:</strong> {{ office.treasurer.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Organizing Secretary:</strong> {{ office.organizing_secretary.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.position-item {
+    color: #e5e7eb;
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.position-item:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}
