@@ -21,6 +21,11 @@ from .models import (
 from members.models import Member
 from church_structure.models import Church, Pastorate, Diocese
 
+# Helper function to get staff members
+def get_staff_members_queryset():
+    """Get queryset of members with staff status marked as 'Yes'"""
+    return Member.objects.filter(staff_status='Yes').order_by('first_name', 'last_name')
+
 # ==========================
 # CHURCH LEVEL FORMS (5)
 # ==========================
@@ -42,6 +47,15 @@ class ChurchMainOfficeForm(forms.ModelForm):
             'assistant_organizer': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
+                          'treasurer', 'assistant_treasurer', 'organizer', 'assistant_organizer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
 
 class ChurchYouthOfficeForm(forms.ModelForm):
     class Meta:
@@ -237,6 +251,16 @@ class DeanManagementOfficeForm(forms.ModelForm):
             'assistant_organizing_secretary': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
+                          'treasurer', 'assistant_treasurer', 'internal_auditor', 'finance_records_officer',
+                          'financial_advisor', 'organizing_secretary', 'assistant_organizing_secretary']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
 
 class DeanOrganizingSecretaryOfficeForm(forms.ModelForm):
     class Meta:
@@ -246,6 +270,11 @@ class DeanOrganizingSecretaryOfficeForm(forms.ModelForm):
             'officers': forms.CheckboxSelectMultiple(),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        self.fields['officers'].queryset = get_staff_members_queryset()
 
 class DeanYouthOfficeForm(forms.ModelForm):
     class Meta:
@@ -289,6 +318,15 @@ class DeanArchbishopsOfficeForm(forms.ModelForm):
             'woman_aide': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        self.fields['advisers'].queryset = staff_members
+        self.fields['aides'].queryset = staff_members
+        self.fields['woman_aide'].queryset = staff_members.filter(gender='Female')
+        self.fields['woman_aide'].empty_label = "Select a female staff member"
 
 # Common form pattern for Dean offices with standard positions
 class DeanStandardOfficeForm(forms.ModelForm):
@@ -307,6 +345,16 @@ class DeanStandardOfficeForm(forms.ModelForm):
             'organizing_secretary': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        for field_name in ['head', 'assistant_head', 'chairman', 'assistant_chair',
+                          'secretary', 'assistant_secretary', 'treasurer', 'organizing_secretary']:
+            if field_name in self.fields:
+                self.fields[field_name].queryset = staff_members
+                self.fields[field_name].empty_label = "Select a staff member"
 
 class DeanBishopsOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):

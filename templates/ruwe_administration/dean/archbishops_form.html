@@ -1,0 +1,100 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Dean Archbishop's Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Dean Archbishop's Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-crown" style="color: #dc2626; margin-right: 10px;"></i>
+                    {{ action }} Dean Archbishop's Office
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:dean_archbishops_detail' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Advisers (15) -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                Advisers (Select up to 15)
+                            </h6>
+                            <div class="form-group">
+                                {{ form.advisers.label_tag }}
+                                {{ form.advisers }}
+                                {% if form.advisers.errors %}
+                                    <div class="text-danger">{{ form.advisers.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Select up to 15 advisers for the Archbishop's Office</small>
+                            </div>
+                        </div>
+
+                        <!-- Aides (5) -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                Aides (Select up to 5)
+                            </h6>
+                            <div class="form-group">
+                                {{ form.aides.label_tag }}
+                                {{ form.aides }}
+                                {% if form.aides.errors %}
+                                    <div class="text-danger">{{ form.aides.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Select up to 5 aides for the Archbishop's Office</small>
+                            </div>
+                        </div>
+
+                        <!-- Woman Aide -->
+                        <div class="col-md-6 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                Woman Aide
+                            </h6>
+                            <div class="form-group">
+                                {{ form.woman_aide.label_tag }}
+                                {{ form.woman_aide }}
+                                {% if form.woman_aide.errors %}
+                                    <div class="text-danger">{{ form.woman_aide.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Archbishop's Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:dean_archbishops_detail' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

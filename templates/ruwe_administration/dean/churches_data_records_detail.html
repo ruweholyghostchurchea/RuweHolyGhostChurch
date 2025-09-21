@@ -1,0 +1,133 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean Churches Data and Records Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean Churches Data and Records Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-database" style="color: #06b6d4; margin-right: 10px;"></i>
+                    Dean Churches Data and Records Office
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_churches_data_records_edit' office.pk %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_churches_data_records_add' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <!-- Office Information -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #06b6d4; padding-left: 10px;">
+                                    Office Information
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Office Name:</strong> {{ office.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Identifier:</strong> {{ office.identifier }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Status:</strong> 
+                                    <span class="badge {% if office.is_active %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if office.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Leadership Positions -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #06b6d4; padding-left: 10px;">
+                                    Leadership Positions
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Head:</strong> 
+                                    {% if office.head %}
+                                        {{ office.head.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Secretary:</strong> 
+                                    {% if office.secretary %}
+                                        {{ office.secretary.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Officers -->
+                        <div class="col-12 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #06b6d4; padding-left: 10px;">
+                                    Officers (Up to 8)
+                                </h6>
+                                {% if office.officers.exists %}
+                                    <div class="row">
+                                        {% for officer in office.officers.all %}
+                                            <div class="col-md-4 mb-2">
+                                                <div class="member-card">
+                                                    <i class="fas fa-user-tie"></i>
+                                                    {{ officer.full_name }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">No officers assigned yet.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        {% if office.description %}
+                            <div class="col-12">
+                                <div class="info-box">
+                                    <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #06b6d4; padding-left: 10px;">
+                                        Description
+                                    </h6>
+                                    <p>{{ office.description|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-database fa-4x text-muted"></i>
+                        <h4>No Churches Data and Records Office Created</h4>
+                        <p class="text-muted">Create a Dean Churches Data and Records Office to manage church data and records.</p>
+                        <a href="{% url 'ruwe_administration:dean_churches_data_records_add' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Data Records Office
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
