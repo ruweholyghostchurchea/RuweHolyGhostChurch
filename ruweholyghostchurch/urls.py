@@ -29,6 +29,7 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('church-structure/', include('church_structure.urls')),
+    path('ruwe-administration/', include('ruwe_administration.urls')),
     path('members/', include('members.urls')),
     path('visitors/', include('visitors.urls')),
     path('attendance/', include('attendance.urls')),

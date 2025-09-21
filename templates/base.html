@@ -39,6 +39,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{% url 'ruwe_administration:index' %}" class="{% if request.resolver_match.app_name == 'ruwe_administration' %}active{% endif %}">
+                            <i class="fas fa-cogs"></i>
+                            <span>Ruwe Administration</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{% url 'members:index' %}" class="{% if request.resolver_match.app_name == 'members' %}active{% endif %}">
                             <i class="fas fa-users"></i>
                             <span>Members</span>
