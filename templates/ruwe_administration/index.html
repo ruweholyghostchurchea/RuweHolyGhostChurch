@@ -1,0 +1,594 @@
+{% extends 'base.html' %}
+
+{% block title %}Ruwe Administration - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Ruwe Administration Management{% endblock %}
+
+{% block content %}
+<!-- Grand Total Statistics -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <div class="card">
+        <div style="text-align: center; padding: 20px;">
+            <i class="fas fa-cogs" style="font-size: 2.5rem; color: #dc2626; margin-bottom: 10px;"></i>
+            <h2 style="color: #ffffff; margin: 0;">{{ grand_total }}</h2>
+            <p style="color: #9ca3af; margin: 0;">Total Administration Offices</p>
+            <small style="color: #6b7280;">Across all 4 hierarchical levels</small>
+        </div>
+    </div>
+</div>
+
+<!-- Level Statistics Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <!-- Church Level Statistics -->
+    <div class="card">
+        <div style="text-align: center; padding: 20px;">
+            <i class="fas fa-church" style="font-size: 2rem; color: #3b82f6; margin-bottom: 10px;"></i>
+            <h3 style="color: #ffffff; margin: 0;">{{ church_stats.total }}</h3>
+            <p style="color: #9ca3af; margin: 0;">Church Level Offices</p>
+            <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85em;">
+                <div style="color: #22c55e;">Main: {{ church_stats.main_offices }}</div>
+                <div style="color: #f59e0b;">Youth: {{ church_stats.youth_offices }}</div>
+                <div style="color: #8b5cf6;">Development: {{ church_stats.development_offices }}</div>
+                <div style="color: #ef4444;">Travel: {{ church_stats.travel_offices }}</div>
+                <div style="color: #6b7280; grid-column: 1 / -1;">Disciplinary: {{ church_stats.disciplinary_offices }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pastorate Level Statistics -->
+    <div class="card">
+        <div style="text-align: center; padding: 20px;">
+            <i class="fas fa-landmark" style="font-size: 2rem; color: #22c55e; margin-bottom: 10px;"></i>
+            <h3 style="color: #ffffff; margin: 0;">{{ pastorate_stats.total }}</h3>
+            <p style="color: #9ca3af; margin: 0;">Pastorate Level Offices</p>
+            <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85em;">
+                <div style="color: #22c55e;">Main: {{ pastorate_stats.main_offices }}</div>
+                <div style="color: #f59e0b;">Youth: {{ pastorate_stats.youth_offices }}</div>
+                <div style="color: #8b5cf6; grid-column: 1 / -1;">Teachers: {{ pastorate_stats.teachers_offices }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diocese Level Statistics -->
+    <div class="card">
+        <div style="text-align: center; padding: 20px;">
+            <i class="fas fa-crown" style="font-size: 2rem; color: #f59e0b; margin-bottom: 10px;"></i>
+            <h3 style="color: #ffffff; margin: 0;">{{ diocese_stats.total }}</h3>
+            <p style="color: #9ca3af; margin: 0;">Diocese Level Offices</p>
+            <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85em;">
+                <div style="color: #22c55e;">Main: {{ diocese_stats.main_offices }}</div>
+                <div style="color: #f59e0b;">Youth: {{ diocese_stats.youth_offices }}</div>
+                <div style="color: #8b5cf6; grid-column: 1 / -1;">Teachers: {{ diocese_stats.teachers_offices }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dean/Headquarters Level Statistics -->
+    <div class="card">
+        <div style="text-align: center; padding: 20px;">
+            <i class="fas fa-university" style="font-size: 2rem; color: #8b5cf6; margin-bottom: 10px;"></i>
+            <h3 style="color: #ffffff; margin: 0;">{{ dean_stats.total }}</h3>
+            <p style="color: #9ca3af; margin: 0;">Dean/Headquarters Offices</p>
+            <small style="color: #6b7280;">25 specialized offices</small>
+        </div>
+    </div>
+</div>
+
+<!-- Administration Offices by Level (Vertical Layout) -->
+<div style="display: flex; flex-direction: column; gap: 30px;">
+
+    <!-- Church Level Offices -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h5 class="card-title">
+                <i class="fas fa-church" style="color: #3b82f6; margin-right: 10px;"></i>
+                Church Level Offices (5)
+            </h5>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; padding: 20px;">
+            <div class="office-card" onclick="openChurchOfficeModal('main')">
+                <i class="fas fa-building" style="color: #22c55e;"></i>
+                <h6>Main Office</h6>
+                <p>Central church administration and governance</p>
+                <span class="office-count">{{ church_stats.main_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openChurchOfficeModal('youth')">
+                <i class="fas fa-users" style="color: #f59e0b;"></i>
+                <h6>Youth Office</h6>
+                <p>Youth activities and leadership development</p>
+                <span class="office-count">{{ church_stats.youth_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openChurchOfficeModal('development')">
+                <i class="fas fa-seedling" style="color: #8b5cf6;"></i>
+                <h6>Development Office</h6>
+                <p>Church growth and development projects</p>
+                <span class="office-count">{{ church_stats.development_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openChurchOfficeModal('travel')">
+                <i class="fas fa-plane" style="color: #ef4444;"></i>
+                <h6>Travel Office</h6>
+                <p>Travel coordination and logistics</p>
+                <span class="office-count">{{ church_stats.travel_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openChurchOfficeModal('disciplinary')">
+                <i class="fas fa-gavel" style="color: #6b7280;"></i>
+                <h6>Disciplinary Office</h6>
+                <p>Church discipline and conflict resolution</p>
+                <span class="office-count">{{ church_stats.disciplinary_offices }} offices</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pastorate Level Offices -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h5 class="card-title">
+                <i class="fas fa-landmark" style="color: #22c55e; margin-right: 10px;"></i>
+                Pastorate Level Offices (3)
+            </h5>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; padding: 20px;">
+            <div class="office-card" onclick="openPastorateOfficeModal('main')">
+                <i class="fas fa-building" style="color: #22c55e;"></i>
+                <h6>Main Office</h6>
+                <p>Pastorate administration and coordination</p>
+                <span class="office-count">{{ pastorate_stats.main_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openPastorateOfficeModal('youth')">
+                <i class="fas fa-users" style="color: #f59e0b;"></i>
+                <h6>Youth Office</h6>
+                <p>Pastorate-wide youth coordination</p>
+                <span class="office-count">{{ pastorate_stats.youth_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openPastorateOfficeModal('teachers')">
+                <i class="fas fa-chalkboard-teacher" style="color: #8b5cf6;"></i>
+                <h6>Teachers Office</h6>
+                <p>Educational programs and teacher coordination</p>
+                <span class="office-count">{{ pastorate_stats.teachers_offices }} offices</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diocese Level Offices -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h5 class="card-title">
+                <i class="fas fa-crown" style="color: #f59e0b; margin-right: 10px;"></i>
+                Diocese Level Offices (3)
+            </h5>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; padding: 20px;">
+            <div class="office-card" onclick="openDioceseOfficeModal('main')">
+                <i class="fas fa-building" style="color: #22c55e;"></i>
+                <h6>Main Office</h6>
+                <p>Diocese administration and oversight</p>
+                <span class="office-count">{{ diocese_stats.main_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openDioceseOfficeModal('youth')">
+                <i class="fas fa-users" style="color: #f59e0b;"></i>
+                <h6>Youth Office</h6>
+                <p>Diocese-wide youth programs</p>
+                <span class="office-count">{{ diocese_stats.youth_offices }} offices</span>
+            </div>
+            <div class="office-card" onclick="openDioceseOfficeModal('teachers')">
+                <i class="fas fa-chalkboard-teacher" style="color: #8b5cf6;"></i>
+                <h6>Teachers Office</h6>
+                <p>Diocese educational coordination</p>
+                <span class="office-count">{{ diocese_stats.teachers_offices }} offices</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dean/Headquarters Level Offices -->
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h5 class="card-title">
+                <i class="fas fa-university" style="color: #8b5cf6; margin-right: 10px;"></i>
+                Dean/Headquarters Level Offices (25)
+            </h5>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; padding: 20px;">
+            <!-- Management & Leadership -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_management_detail' %}'">
+                <i class="fas fa-users-cog" style="color: #dc2626;"></i>
+                <h6>Management Office</h6>
+                <p>Central church management and leadership</p>
+                <span class="office-count">{{ dean_stats.management }} office{{ dean_stats.management|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_organizing_secretary_detail' %}'">
+                <i class="fas fa-tasks" style="color: #0891b2;"></i>
+                <h6>Organizing Secretary</h6>
+                <p>Central coordination and organization</p>
+                <span class="office-count">{{ dean_stats.organizing_secretary }} office{{ dean_stats.organizing_secretary|pluralize }}</span>
+            </div>
+
+            <!-- Youth & Age Groups -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_youth_detail' %}'">
+                <i class="fas fa-users" style="color: #f59e0b;"></i>
+                <h6>Youth Office</h6>
+                <p>Church-wide youth coordination</p>
+                <span class="office-count">{{ dean_stats.youth }} office{{ dean_stats.youth|pluralize }}</span>
+            </div>
+
+            <!-- Clergy Hierarchy -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_kings_detail' %}'">
+                <i class="fas fa-crown" style="color: #fbbf24;"></i>
+                <h6>King's Office</h6>
+                <p>Highest clerical leadership</p>
+                <span class="office-count">{{ dean_stats.kings }} office{{ dean_stats.kings|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_archbishops_detail' %}'">
+                <i class="fas fa-mitre" style="color: #a855f7;"></i>
+                <h6>Archbishop's Office</h6>
+                <p>Archbishops administration</p>
+                <span class="office-count">{{ dean_stats.archbishops }} office{{ dean_stats.archbishops|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_bishops_detail' %}'">
+                <i class="fas fa-chess-bishop" style="color: #8b5cf6;"></i>
+                <h6>Bishops Office</h6>
+                <p>Bishops coordination and oversight</p>
+                <span class="office-count">{{ dean_stats.bishops }} office{{ dean_stats.bishops|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_pastors_detail' %}'">
+                <i class="fas fa-user-tie" style="color: #22c55e;"></i>
+                <h6>Pastors Office</h6>
+                <p>Pastors coordination and support</p>
+                <span class="office-count">{{ dean_stats.pastors }} office{{ dean_stats.pastors|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_lay_readers_detail' %}'">
+                <i class="fas fa-book-reader" style="color: #0d9488;"></i>
+                <h6>Lay Readers Office</h6>
+                <p>Lay readers coordination</p>
+                <span class="office-count">{{ dean_stats.lay_readers }} office{{ dean_stats.lay_readers|pluralize }}</span>
+            </div>
+
+            <!-- Organizational -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_divisions_detail' %}'">
+                <i class="fas fa-sitemap" style="color: #3b82f6;"></i>
+                <h6>Divisions Office</h6>
+                <p>Church divisions coordination</p>
+                <span class="office-count">{{ dean_stats.divisions }} office{{ dean_stats.divisions|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_teachers_detail' %}'">
+                <i class="fas fa-chalkboard-teacher" style="color: #059669;"></i>
+                <h6>Teachers Office</h6>
+                <p>Church-wide education coordination</p>
+                <span class="office-count">{{ dean_stats.teachers }} office{{ dean_stats.teachers|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_women_leaders_detail' %}'">
+                <i class="fas fa-female" style="color: #ec4899;"></i>
+                <h6>Women Leaders Office</h6>
+                <p>Women's ministry leadership</p>
+                <span class="office-count">{{ dean_stats.women_leaders }} office{{ dean_stats.women_leaders|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_elders_detail' %}'">
+                <i class="fas fa-user-friends" style="color: #f97316;"></i>
+                <h6>Elders Office</h6>
+                <p>Church elders coordination</p>
+                <span class="office-count">{{ dean_stats.elders }} office{{ dean_stats.elders|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_soso_detail' %}'">
+                <i class="fas fa-hands-helping" style="color: #6366f1;"></i>
+                <h6>Soso Office</h6>
+                <p>Special support and coordination</p>
+                <span class="office-count">{{ dean_stats.soso }} office{{ dean_stats.soso|pluralize }}</span>
+            </div>
+
+            <!-- Educational & Training -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_courses_detail' %}'">
+                <i class="fas fa-graduation-cap" style="color: #10b981;"></i>
+                <h6>Courses Office</h6>
+                <p>Educational courses and training</p>
+                <span class="office-count">{{ dean_stats.courses }} office{{ dean_stats.courses|pluralize }}</span>
+            </div>
+
+            <!-- Specialized Services -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_ecclesiastical_vestment_detail' %}'">
+                <i class="fas fa-user-astronaut" style="color: #f59e0b;"></i>
+                <h6>Ecclesiastical Vestment</h6>
+                <p>Ceremonial garment production</p>
+                <span class="office-count">{{ dean_stats.ecclesiastical_vestment }} office{{ dean_stats.ecclesiastical_vestment|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_ecclesiastical_cross_detail' %}'">
+                <i class="fas fa-cross" style="color: #92400e;"></i>
+                <h6>Ecclesiastical Cross</h6>
+                <p>Religious cross manufacturing</p>
+                <span class="office-count">{{ dean_stats.ecclesiastical_cross }} office{{ dean_stats.ecclesiastical_cross|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_chaplaincy_detail' %}'">
+                <i class="fas fa-pray" style="color: #7c3aed;"></i>
+                <h6>Chaplaincy Office</h6>
+                <p>Spiritual care and counseling</p>
+                <span class="office-count">{{ dean_stats.chaplaincy }} office{{ dean_stats.chaplaincy|pluralize }}</span>
+            </div>
+
+            <!-- Administrative Services -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_churches_data_records_detail' %}'">
+                <i class="fas fa-database" style="color: #059669;"></i>
+                <h6>Data & Records</h6>
+                <p>Church data management</p>
+                <span class="office-count">{{ dean_stats.churches_data_records }} office{{ dean_stats.churches_data_records|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_education_gender_equality_detail' %}'">
+                <i class="fas fa-balance-scale" style="color: #dc2626;"></i>
+                <h6>Education & Gender Equality</h6>
+                <p>Educational equality programs</p>
+                <span class="office-count">{{ dean_stats.education_gender_equality }} office{{ dean_stats.education_gender_equality|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_development_detail' %}'">
+                <i class="fas fa-seedling" style="color: #16a34a;"></i>
+                <h6>Development Office</h6>
+                <p>Church development projects</p>
+                <span class="office-count">{{ dean_stats.development }} office{{ dean_stats.development|pluralize }}</span>
+            </div>
+
+            <!-- Governance & Legal -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_disciplinary_committee_detail' %}'">
+                <i class="fas fa-gavel" style="color: #b91c1c;"></i>
+                <h6>Disciplinary Committee</h6>
+                <p>Church discipline and standards</p>
+                <span class="office-count">{{ dean_stats.disciplinary_committee }} office{{ dean_stats.disciplinary_committee|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_arbitration_committee_detail' %}'">
+                <i class="fas fa-handshake" style="color: #0891b2;"></i>
+                <h6>Arbitration Committee</h6>
+                <p>Conflict resolution and mediation</p>
+                <span class="office-count">{{ dean_stats.arbitration_committee }} office{{ dean_stats.arbitration_committee|pluralize }}</span>
+            </div>
+
+            <!-- Support Services -->
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_health_counselling_detail' %}'">
+                <i class="fas fa-heartbeat" style="color: #ef4444;"></i>
+                <h6>Health & Counselling</h6>
+                <p>Health services and counseling</p>
+                <span class="office-count">{{ dean_stats.health_counselling }} office{{ dean_stats.health_counselling|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_churches_protocol_detail' %}'">
+                <i class="fas fa-clipboard-list" style="color: #0d9488;"></i>
+                <h6>Churches Protocol</h6>
+                <p>Church protocol and procedures</p>
+                <span class="office-count">{{ dean_stats.churches_protocol }} office{{ dean_stats.churches_protocol|pluralize }}</span>
+            </div>
+            <div class="office-card" onclick="window.location.href='{% url 'ruwe_administration:dean_media_publicity_detail' %}'">
+                <i class="fas fa-bullhorn" style="color: #7c2d12;"></i>
+                <h6>Media & Publicity</h6>
+                <p>Communications and media</p>
+                <span class="office-count">{{ dean_stats.media_publicity }} office{{ dean_stats.media_publicity|pluralize }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Church Office Selection Modal -->
+<div id="churchOfficeModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 id="churchModalTitle">Select Church</h5>
+            <span class="close" onclick="closeModal('churchOfficeModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom: 20px;">
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Select Church:</label>
+                <select id="churchSelect" style="width: 100%; padding: 8px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Choose a church...</option>
+                    {% for church in churches %}
+                    <option value="{{ church.id }}">{{ church.name }} ({{ church.pastorate.name }}, {{ church.pastorate.diocese.name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('churchOfficeModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="navigateToChurchOffice()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pastorate Office Selection Modal -->
+<div id="pastorateOfficeModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 id="pastorateModalTitle">Select Pastorate</h5>
+            <span class="close" onclick="closeModal('pastorateOfficeModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom: 20px;">
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Select Pastorate:</label>
+                <select id="pastorateSelect" style="width: 100%; padding: 8px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Choose a pastorate...</option>
+                    {% for pastorate in pastorates %}
+                    <option value="{{ pastorate.id }}">{{ pastorate.name }} ({{ pastorate.diocese.name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('pastorateOfficeModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="navigateToPastorateOffice()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diocese Office Selection Modal -->
+<div id="dioceseOfficeModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 id="dioceseModalTitle">Select Diocese</h5>
+            <span class="close" onclick="closeModal('dioceseOfficeModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom: 20px;">
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Select Diocese:</label>
+                <select id="dioceseSelect" style="width: 100%; padding: 8px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Choose a diocese...</option>
+                    {% for diocese in dioceses %}
+                    <option value="{{ diocese.id }}">{{ diocese.name }} ({{ diocese.country }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('dioceseOfficeModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="navigateToDioceseOffice()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.office-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.office-card:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #dc2626;
+    transform: translateY(-2px);
+}
+
+.office-card i {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.office-card h6 {
+    color: #ffffff;
+    margin: 8px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.office-card p {
+    color: #9ca3af;
+    margin: 0;
+    font-size: 0.8rem;
+    flex-grow: 1;
+}
+
+.office-count {
+    color: #22c55e;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #1f2937;
+    margin: 15% auto;
+    padding: 0;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #374151;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h5 {
+    margin: 0;
+    color: #ffffff;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.close {
+    color: #9ca3af;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #ffffff;
+}
+</style>
+
+<script>
+let currentOfficeType = '';
+let currentLevel = '';
+
+function openChurchOfficeModal(officeType) {
+    currentOfficeType = officeType;
+    currentLevel = 'church';
+    document.getElementById('churchModalTitle').textContent = `Select Church for ${officeType.charAt(0).toUpperCase() + officeType.slice(1)} Office`;
+    document.getElementById('churchOfficeModal').style.display = 'block';
+}
+
+function openPastorateOfficeModal(officeType) {
+    currentOfficeType = officeType;
+    currentLevel = 'pastorate';
+    document.getElementById('pastorateModalTitle').textContent = `Select Pastorate for ${officeType.charAt(0).toUpperCase() + officeType.slice(1)} Office`;
+    document.getElementById('pastorateOfficeModal').style.display = 'block';
+}
+
+function openDioceseOfficeModal(officeType) {
+    currentOfficeType = officeType;
+    currentLevel = 'diocese';
+    document.getElementById('dioceseModalTitle').textContent = `Select Diocese for ${officeType.charAt(0).toUpperCase() + officeType.slice(1)} Office`;
+    document.getElementById('dioceseOfficeModal').style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function navigateToChurchOffice() {
+    const churchId = document.getElementById('churchSelect').value;
+    if (churchId) {
+        window.location.href = `{% url 'ruwe_administration:index' %}church/${currentOfficeType}/${churchId}/`;
+    }
+}
+
+function navigateToPastorateOffice() {
+    const pastorateId = document.getElementById('pastorateSelect').value;
+    if (pastorateId) {
+        window.location.href = `{% url 'ruwe_administration:index' %}pastorate/${currentOfficeType}/${pastorateId}/`;
+    }
+}
+
+function navigateToDioceseOffice() {
+    const dioceseId = document.getElementById('dioceseSelect').value;
+    if (dioceseId) {
+        window.location.href = `{% url 'ruwe_administration:index' %}diocese/${currentOfficeType}/${dioceseId}/`;
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modals = ['churchOfficeModal', 'pastorateOfficeModal', 'dioceseOfficeModal'];
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}
