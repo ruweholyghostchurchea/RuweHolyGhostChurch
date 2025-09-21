@@ -1,0 +1,116 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean Media & Publicity Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean Media & Publicity Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Office Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-bullhorn" style="color: #7c2d12; margin-right: 10px;"></i>
+                    Dean Media & Publicity Office Information
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_media_publicity_edit' pk=office.pk %}" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Office
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_media_publicity_add' %}" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Office Name:</strong> {{ office.name }}</p>
+                            <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span></p>
+                            <p><strong>Head:</strong> {{ office.head.full_name|default:"Not Assigned" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                {% if office.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}</p>
+                            <p><strong>Last Updated:</strong> {{ office.updated_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    {% if office.description %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <p>{{ office.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No Dean Media & Publicity Office has been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if office %}
+        <!-- Office Positions -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #7c2d12; margin-right: 10px;"></i>
+                    Office Positions (3 Positions)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 6px; border-left: 4px solid #7c2d12;">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                                        <i class="fas fa-user-tie" style="color: #dc2626; font-size: 2rem; margin-bottom: 10px;"></i>
+                                        <h6 style="color: #ffffff; margin-bottom: 5px;">Head</h6>
+                                        <p style="color: #e5e7eb; margin: 0;">{{ office.head.full_name|default:"Not Assigned" }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                                        <i class="fas fa-user-friends" style="color: #22c55e; font-size: 2rem; margin-bottom: 10px;"></i>
+                                        <h6 style="color: #ffffff; margin-bottom: 5px;">Assistant Head</h6>
+                                        <p style="color: #e5e7eb; margin: 0;">{{ office.assistant_head.full_name|default:"Not Assigned" }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                                        <i class="fas fa-paint-brush" style="color: #f59e0b; font-size: 2rem; margin-bottom: 10px;"></i>
+                                        <h6 style="color: #ffffff; margin-bottom: 5px;">Designer</h6>
+                                        <p style="color: #e5e7eb; margin: 0;">{{ office.designer.full_name|default:"Not Assigned" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

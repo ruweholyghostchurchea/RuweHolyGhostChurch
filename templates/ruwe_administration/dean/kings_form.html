@@ -1,0 +1,107 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Dean King's Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Dean King's Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-crown" style="color: #fbbf24; margin-right: 10px;"></i>
+                    {{ action }} Dean King's Office
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:dean_kings_detail' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- King's Advisers -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                King's Advisers (Select up to 10)
+                            </h6>
+                            <div class="mb-3">
+                                <small style="color: #9ca3af;">
+                                    <strong>Recommended Composition:</strong> 2 Family Members (Church Members), 2 Bishops, 2 Pastors, 1 Teacher, and 3 Highly Educated Church Members
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                {{ form.advisers }}
+                                {% if form.advisers.errors %}
+                                    <div class="text-danger">{{ form.advisers.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- King's Aides -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #22c55e; padding-left: 10px;">
+                                King's Aides (Select up to 3)
+                            </h6>
+                            <div class="form-group">
+                                {{ form.aides }}
+                                {% if form.aides.errors %}
+                                    <div class="text-danger">{{ form.aides.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:dean_kings_detail' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-check {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    border-left: 3px solid #fbbf24;
+}
+
+.form-check-input {
+    margin-top: 0.3em;
+}
+
+.form-check-label {
+    color: #e5e7eb;
+    margin-left: 8px;
+}
+
+.form-check:hover {
+    background: rgba(255,255,255,0.1);
+}
+</style>
+{% endblock %}

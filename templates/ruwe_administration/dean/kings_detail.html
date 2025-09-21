@@ -1,0 +1,156 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean King's Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean King's Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Office Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-crown" style="color: #fbbf24; margin-right: 10px;"></i>
+                    Dean King's Office Information
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_kings_edit' pk=office.pk %}" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Office
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_kings_add' %}" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Office Name:</strong> {{ office.name }}</p>
+                            <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span></p>
+                            <p><strong>Total Advisers:</strong> {{ office.advisers.count }}/10</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Total Aides:</strong> {{ office.aides.count }}/3</p>
+                            <p><strong>Status:</strong> 
+                                {% if office.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    {% if office.description %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <p>{{ office.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No Dean King's Office has been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if office %}
+        <!-- King's Advisers -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-user-tie" style="color: #dc2626; margin-right: 10px;"></i>
+                    King's Advisers (10 Members)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <small style="color: #9ca3af;">
+                        <strong>Recommended Composition:</strong> 2 Family Members (Church Members), 2 Bishops, 2 Pastors, 1 Teacher, and 3 Highly Educated Church Members
+                    </small>
+                </div>
+                {% if office.advisers.all %}
+                    <div class="row">
+                        {% for adviser in office.advisers.all %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
+                                <h6 style="color: #ffffff; margin-bottom: 8px;">
+                                    <i class="fas fa-user-tie" style="color: #dc2626; margin-right: 5px;"></i>
+                                    Adviser {{ forloop.counter }}
+                                </h6>
+                                <p style="color: #e5e7eb; margin: 0;">{{ adviser.full_name }}</p>
+                                {% if adviser.position %}
+                                <p style="color: #fbbf24; margin: 5px 0 0 0; font-size: 0.9em;">
+                                    <i class="fas fa-star" style="margin-right: 5px;"></i>
+                                    {{ adviser.position }}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-user-plus" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No advisers appointed yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- King's Aides -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-hands-helping" style="color: #22c55e; margin-right: 10px;"></i>
+                    King's Aides (3 Members)
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if office.aides.all %}
+                    <div class="row">
+                        {% for aide in office.aides.all %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #22c55e;">
+                                <h6 style="color: #ffffff; margin-bottom: 8px;">
+                                    <i class="fas fa-hands-helping" style="color: #22c55e; margin-right: 5px;"></i>
+                                    Aide {{ forloop.counter }}
+                                </h6>
+                                <p style="color: #e5e7eb; margin: 0;">{{ aide.full_name }}</p>
+                                {% if aide.phone %}
+                                <p style="color: #9ca3af; margin: 5px 0 0 0; font-size: 0.9em;">
+                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                    {{ aide.phone }}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-user-plus" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No aides appointed yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

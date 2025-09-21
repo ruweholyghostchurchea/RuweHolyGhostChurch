@@ -1,0 +1,168 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Dean Management Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Dean Management Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users-cog" style="color: #dc2626; margin-right: 10px;"></i>
+                    {{ action }} Dean Management Office
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:dean_management_detail' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Leadership Positions -->
+                        <div class="col-md-6 mb-3">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">Leadership Positions</h6>
+                            
+                            <div class="form-group mb-3">
+                                <label for="{{ form.chairperson.id_for_label }}" class="form-label">Chairperson</label>
+                                {{ form.chairperson }}
+                                {% if form.chairperson.errors %}
+                                    <div class="text-danger">{{ form.chairperson.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="{{ form.assistant_chairperson.id_for_label }}" class="form-label">Assistant Chairperson</label>
+                                {{ form.assistant_chairperson }}
+                                {% if form.assistant_chairperson.errors %}
+                                    <div class="text-danger">{{ form.assistant_chairperson.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Administrative Positions -->
+                        <div class="col-md-6 mb-3">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #3b82f6; padding-left: 10px;">Administrative Positions</h6>
+                            
+                            <div class="form-group mb-3">
+                                <label for="{{ form.secretary.id_for_label }}" class="form-label">Secretary</label>
+                                {{ form.secretary }}
+                                {% if form.secretary.errors %}
+                                    <div class="text-danger">{{ form.secretary.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="{{ form.assistant_secretary.id_for_label }}" class="form-label">Assistant Secretary</label>
+                                {{ form.assistant_secretary }}
+                                {% if form.assistant_secretary.errors %}
+                                    <div class="text-danger">{{ form.assistant_secretary.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="{{ form.organizing_secretary.id_for_label }}" class="form-label">Organizing Secretary</label>
+                                {{ form.organizing_secretary }}
+                                {% if form.organizing_secretary.errors %}
+                                    <div class="text-danger">{{ form.organizing_secretary.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="{{ form.assistant_organizing_secretary.id_for_label }}" class="form-label">Assistant Organizing Secretary</label>
+                                {{ form.assistant_organizing_secretary }}
+                                {% if form.assistant_organizing_secretary.errors %}
+                                    <div class="text-danger">{{ form.assistant_organizing_secretary.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Financial Positions -->
+                        <div class="col-12 mb-3">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #22c55e; padding-left: 10px;">Financial Positions</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="{{ form.treasurer.id_for_label }}" class="form-label">Treasurer</label>
+                                        {{ form.treasurer }}
+                                        {% if form.treasurer.errors %}
+                                            <div class="text-danger">{{ form.treasurer.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="{{ form.assistant_treasurer.id_for_label }}" class="form-label">Assistant Treasurer</label>
+                                        {{ form.assistant_treasurer }}
+                                        {% if form.assistant_treasurer.errors %}
+                                            <div class="text-danger">{{ form.assistant_treasurer.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="{{ form.internal_auditor.id_for_label }}" class="form-label">Internal Auditor</label>
+                                        {{ form.internal_auditor }}
+                                        {% if form.internal_auditor.errors %}
+                                            <div class="text-danger">{{ form.internal_auditor.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="{{ form.finance_records_officer.id_for_label }}" class="form-label">Finance Records Officer</label>
+                                        {{ form.finance_records_officer }}
+                                        {% if form.finance_records_officer.errors %}
+                                            <div class="text-danger">{{ form.finance_records_officer.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="{{ form.financial_advisor.id_for_label }}" class="form-label">Financial Advisor</label>
+                                        {{ form.financial_advisor }}
+                                        {% if form.financial_advisor.errors %}
+                                            <div class="text-danger">{{ form.financial_advisor.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:dean_management_detail' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

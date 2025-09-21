@@ -1,0 +1,213 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean Youth Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean Youth Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Office Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #f59e0b; margin-right: 10px;"></i>
+                    Dean Youth Office Information
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_youth_edit' pk=office.pk %}" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Office
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_youth_add' %}" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Office Name:</strong> {{ office.name }}</p>
+                            <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span></p>
+                            <p><strong>Diocese Representatives:</strong> {{ office.diocese_youth_representatives.count }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Pastorate Representatives:</strong> {{ office.pastorate_youth_representatives.count }}</p>
+                            <p><strong>Church Representatives:</strong> {{ office.church_youth_representatives.count }}</p>
+                            <p><strong>Status:</strong> 
+                                {% if office.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% if office.description %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <p>{{ office.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No Dean Youth Office has been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if office %}
+        <!-- Office Positions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-sitemap" style="color: #f59e0b; margin-right: 10px;"></i>
+                    Office Leadership (8 Core Positions)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Leadership</h6>
+                            <div class="position-item">
+                                <strong>Chairperson:</strong> {{ office.chairperson.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Chairperson:</strong> {{ office.assistant_chairperson.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #3b82f6;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Administrative</h6>
+                            <div class="position-item">
+                                <strong>Secretary:</strong> {{ office.secretary.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Secretary:</strong> {{ office.assistant_secretary.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #22c55e;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Financial</h6>
+                            <div class="position-item">
+                                <strong>Treasurer:</strong> {{ office.treasurer.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Treasurer:</strong> {{ office.assistant_treasurer.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #f59e0b;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Organizational</h6>
+                            <div class="position-item">
+                                <strong>Organizer:</strong> {{ office.organizer.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Organizer:</strong> {{ office.assistant_organizer.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Representatives -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-handshake" style="color: #8b5cf6; margin-right: 10px;"></i>
+                    Youth Representatives
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Diocese Representatives -->
+                    <div class="col-md-4 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #dc2626; padding-left: 10px;">Diocese Representatives</h6>
+                        {% if office.diocese_youth_representatives.all %}
+                            {% for rep in office.diocese_youth_representatives.all %}
+                            <div class="rep-item">
+                                <i class="fas fa-user" style="color: #dc2626; margin-right: 5px;"></i>
+                                {{ rep.full_name }}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #9ca3af; font-style: italic; font-size: 0.9em;">No representatives assigned</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Pastorate Representatives -->
+                    <div class="col-md-4 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #22c55e; padding-left: 10px;">Pastorate Representatives</h6>
+                        {% if office.pastorate_youth_representatives.all %}
+                            {% for rep in office.pastorate_youth_representatives.all %}
+                            <div class="rep-item">
+                                <i class="fas fa-user" style="color: #22c55e; margin-right: 5px;"></i>
+                                {{ rep.full_name }}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #9ca3af; font-style: italic; font-size: 0.9em;">No representatives assigned</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Church Representatives -->
+                    <div class="col-md-4 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #3b82f6; padding-left: 10px;">Church Representatives</h6>
+                        {% if office.church_youth_representatives.all %}
+                            {% for rep in office.church_youth_representatives.all %}
+                            <div class="rep-item">
+                                <i class="fas fa-user" style="color: #3b82f6; margin-right: 5px;"></i>
+                                {{ rep.full_name }}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #9ca3af; font-style: italic; font-size: 0.9em;">No representatives assigned</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.position-item {
+    color: #e5e7eb;
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.position-item:last-child {
+    border-bottom: none;
+}
+
+.rep-item {
+    color: #e5e7eb;
+    margin-bottom: 5px;
+    padding: 3px 0;
+    font-size: 0.9em;
+}
+</style>
+{% endblock %}

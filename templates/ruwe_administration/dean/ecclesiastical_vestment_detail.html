@@ -1,0 +1,186 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dean Ecclesiastical Vestment Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Dean Ecclesiastical Vestment Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Office Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-user-astronaut" style="color: #f59e0b; margin-right: 10px;"></i>
+                    Dean Ecclesiastical Vestment Office Information
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:dean_ecclesiastical_vestment_edit' pk=office.pk %}" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Office
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:dean_ecclesiastical_vestment_add' %}" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Office Name:</strong> {{ office.name }}</p>
+                            <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span></p>
+                            <p><strong>Male Tailors:</strong> {{ office.male_tailors.count }}/5</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Female Tailors:</strong> {{ office.female_tailors.count }}/5</p>
+                            <p><strong>Status:</strong> 
+                                {% if office.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    {% if office.description %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <p>{{ office.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        No Dean Ecclesiastical Vestment Office has been created yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if office %}
+        <!-- Office Leadership -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-sitemap" style="color: #f59e0b; margin-right: 10px;"></i>
+                    Office Leadership
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Leadership</h6>
+                            <div class="position-item">
+                                <strong>Head:</strong> {{ office.head.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Assistant Head:</strong> {{ office.assistant_head.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #3b82f6;">
+                            <h6 style="color: #ffffff; margin-bottom: 10px;">Administrative & Financial</h6>
+                            <div class="position-item">
+                                <strong>Secretary:</strong> {{ office.secretary.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Treasurer:</strong> {{ office.treasurer.full_name|default:"Not Assigned" }}
+                            </div>
+                            <div class="position-item">
+                                <strong>Embroiderer:</strong> {{ office.embroiderer.full_name|default:"Not Assigned" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tailors -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-cut" style="color: #8b5cf6; margin-right: 10px;"></i>
+                    Vestment Tailors (Up to 10 Total)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Male Tailors -->
+                    <div class="col-md-6 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #3b82f6; padding-left: 10px;">Male Tailors (Up to 5)</h6>
+                        {% if office.male_tailors.all %}
+                            {% for tailor in office.male_tailors.all %}
+                            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #3b82f6;">
+                                <h6 style="color: #ffffff; margin-bottom: 5px; font-size: 0.9em;">
+                                    <i class="fas fa-male" style="color: #3b82f6; margin-right: 5px;"></i>
+                                    {{ tailor.full_name }}
+                                </h6>
+                                {% if tailor.phone %}
+                                <p style="color: #9ca3af; margin: 0; font-size: 0.8em;">
+                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                    {{ tailor.phone }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #9ca3af; font-style: italic; font-size: 0.9em;">No male tailors assigned</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Female Tailors -->
+                    <div class="col-md-6 mb-3">
+                        <h6 style="color: #ffffff; margin-bottom: 10px; border-left: 3px solid #ec4899; padding-left: 10px;">Female Tailors (Up to 5)</h6>
+                        {% if office.female_tailors.all %}
+                            {% for tailor in office.female_tailors.all %}
+                            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #ec4899;">
+                                <h6 style="color: #ffffff; margin-bottom: 5px; font-size: 0.9em;">
+                                    <i class="fas fa-female" style="color: #ec4899; margin-right: 5px;"></i>
+                                    {{ tailor.full_name }}
+                                </h6>
+                                {% if tailor.phone %}
+                                <p style="color: #9ca3af; margin: 0; font-size: 0.8em;">
+                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
+                                    {{ tailor.phone }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #9ca3af; font-style: italic; font-size: 0.9em;">No female tailors assigned</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.position-item {
+    color: #e5e7eb;
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.position-item:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}

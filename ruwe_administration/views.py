@@ -672,10 +672,12 @@ def diocese_teachers_office_edit(request, pk):
 def create_dean_office_views(model_class, form_class, template_prefix):
     """Factory function to create standard dean office views"""
     
+    @login_required
     def detail_view(request):
         office = get_office_or_none(model_class)
         return render(request, f'ruwe_administration/dean/{template_prefix}_detail.html', {'office': office})
     
+    @login_required
     def add_view(request):
         if request.method == 'POST':
             form = form_class(request.POST)
@@ -690,6 +692,7 @@ def create_dean_office_views(model_class, form_class, template_prefix):
             'form': form, 'action': 'Add'
         })
     
+    @login_required
     def edit_view(request, pk):
         office = get_object_or_404(model_class, pk=pk)
         if request.method == 'POST':
