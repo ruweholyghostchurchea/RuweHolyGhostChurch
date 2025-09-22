@@ -1,0 +1,97 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Dean Churches Data Records Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Dean Churches Data Records Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-database" style="color: #06b6d4; margin-right: 10px;"></i>
+                    {{ action }} Dean Churches Data and Records Office
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:dean_churches_data_records_detail' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Leadership Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #06b6d4; padding-left: 10px;">
+                                Leadership Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.head.label_tag }}
+                                        {{ form.head }}
+                                        {% if form.head.errors %}
+                                            <div class="text-danger">{{ form.head.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.secretary.label_tag }}
+                                        {{ form.secretary }}
+                                        {% if form.secretary.errors %}
+                                            <div class="text-danger">{{ form.secretary.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Officers -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #06b6d4; padding-left: 10px;">
+                                Officers (Select up to 8)
+                            </h6>
+                            <div class="form-group">
+                                {{ form.officers }}
+                                {% if form.officers.errors %}
+                                    <div class="text-danger">{{ form.officers.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Select up to 8 officers for data management and record keeping</small>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #06b6d4; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Data Records Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:dean_churches_data_records_detail' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Dean Ecclesiastical Cross Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Dean Ecclesiastical Cross Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-cross" style="color: #92400e; margin-right: 10px;"></i>
+                    {{ action }} Dean Ecclesiastical Cross Office
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:dean_ecclesiastical_cross_detail' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Leadership Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #92400e; padding-left: 10px;">
+                                Leadership Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.head.label_tag }}
+                                        {{ form.head }}
+                                        {% if form.head.errors %}
+                                            <div class="text-danger">{{ form.head.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.secretary.label_tag }}
+                                        {{ form.secretary }}
+                                        {% if form.secretary.errors %}
+                                            <div class="text-danger">{{ form.secretary.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.treasurer.label_tag }}
+                                        {{ form.treasurer }}
+                                        {% if form.treasurer.errors %}
+                                            <div class="text-danger">{{ form.treasurer.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.main_woodworker.label_tag }}
+                                        {{ form.main_woodworker }}
+                                        {% if form.main_woodworker.errors %}
+                                            <div class="text-danger">{{ form.main_woodworker.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Woodworkers -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #92400e; padding-left: 10px;">
+                                Woodworkers (Select up to 5)
+                            </h6>
+                            <div class="form-group">
+                                {{ form.woodworkers }}
+                                {% if form.woodworkers.errors %}
+                                    <div class="text-danger">{{ form.woodworkers.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Select up to 5 woodworkers for ecclesiastical cross crafting</small>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #92400e; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Ecclesiastical Cross Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:dean_ecclesiastical_cross_detail' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

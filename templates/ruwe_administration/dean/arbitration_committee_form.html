@@ -1,0 +1,128 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Dean Arbitration Committee Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Dean Arbitration Committee Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-balance-scale" style="color: #7c3aed; margin-right: 10px;"></i>
+                    {{ action }} Dean Appeal/Justice/Arbitration Committee Office
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:dean_arbitration_committee_detail' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Committee Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                Committee Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.head.label_tag }}
+                                        {{ form.head }}
+                                        {% if form.head.errors %}
+                                            <div class="text-danger">{{ form.head.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.assistant_head.label_tag }}
+                                        {{ form.assistant_head }}
+                                        {% if form.assistant_head.errors %}
+                                            <div class="text-danger">{{ form.assistant_head.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.chairperson.label_tag }}
+                                        {{ form.chairperson }}
+                                        {% if form.chairperson.errors %}
+                                            <div class="text-danger">{{ form.chairperson.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.assistant_chairperson.label_tag }}
+                                        {{ form.assistant_chairperson }}
+                                        {% if form.assistant_chairperson.errors %}
+                                            <div class="text-danger">{{ form.assistant_chairperson.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.secretary.label_tag }}
+                                        {{ form.secretary }}
+                                        {% if form.secretary.errors %}
+                                            <div class="text-danger">{{ form.secretary.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.women_leader.label_tag }}
+                                        {{ form.women_leader }}
+                                        {% if form.women_leader.errors %}
+                                            <div class="text-danger">{{ form.women_leader.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.messenger.label_tag }}
+                                        {{ form.messenger }}
+                                        {% if form.messenger.errors %}
+                                            <div class="text-danger">{{ form.messenger.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Arbitration Committee Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:dean_arbitration_committee_detail' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

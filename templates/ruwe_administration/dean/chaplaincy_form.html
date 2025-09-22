@@ -1,0 +1,97 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Dean Chaplaincy Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Dean Chaplaincy Office{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-praying-hands" style="color: #8b5cf6; margin-right: 10px;"></i>
+                    {{ action }} Dean Chaplaincy/Evangelism Office
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:dean_chaplaincy_detail' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Leadership Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #8b5cf6; padding-left: 10px;">
+                                Leadership Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.head.label_tag }}
+                                        {{ form.head }}
+                                        {% if form.head.errors %}
+                                            <div class="text-danger">{{ form.head.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.assistant_head.label_tag }}
+                                        {{ form.assistant_head }}
+                                        {% if form.assistant_head.errors %}
+                                            <div class="text-danger">{{ form.assistant_head.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Officers -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #8b5cf6; padding-left: 10px;">
+                                Officers (Select up to 12)
+                            </h6>
+                            <div class="form-group">
+                                {{ form.officers }}
+                                {% if form.officers.errors %}
+                                    <div class="text-danger">{{ form.officers.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Select up to 12 officers for chaplaincy and evangelism activities</small>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #8b5cf6; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Chaplaincy Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:dean_chaplaincy_detail' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
