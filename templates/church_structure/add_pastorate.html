@@ -30,15 +30,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="diocese" style="color: #ffffff; margin-bottom: 5px;">Diocese *</label>
-                                    <select name="diocese" id="diocese" required
-                                            class="form-control"
-                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                                        <option value="">Select a diocese</option>
-                                        {% for diocese in form.diocese.queryset %}
-                                        <option value="{{ diocese.id }}">{{ diocese.name }} ({{ diocese.country }})</option>
-                                        {% endfor %}
-                                    </select>
+                                    <label for="{{ form.diocese.id_for_label }}" style="color: #ffffff; margin-bottom: 5px;">Diocese *</label>
+                                    {{ form.diocese }}
                                     {% if form.diocese.errors %}
                                         <div class="text-danger">{{ form.diocese.errors.0 }}</div>
                                     {% endif %}

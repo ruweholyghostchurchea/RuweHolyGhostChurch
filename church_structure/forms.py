@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import Q
+from django.core.cache import cache
 from .models import Diocese, Pastorate, Church
 from members.models import Member
 
@@ -33,8 +34,19 @@ class DioceseForm(forms.ModelForm):
 
 
 class PastorateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Cache diocese IDs for better performance
+        diocese_ids = cache.get('active_diocese_ids')
+        if diocese_ids is None:
+            diocese_ids = list(Diocese.objects.filter(is_active=True).values_list('id', flat=True))
+            cache.set('active_diocese_ids', diocese_ids, 300)  # Cache for 5 minutes
+        
+        # Reconstruct queryset from cached IDs
+        self.fields['diocese'].queryset = Diocese.objects.filter(id__in=diocese_ids).order_by('country', 'name')
+    
     diocese = forms.ModelChoiceField(
-        queryset=Diocese.objects.filter(is_active=True).order_by('country', 'name'),
+        queryset=Diocese.objects.none(),  # Will be set in __init__
         required=True,
         empty_label="Select a diocese",
         widget=forms.Select(attrs={
@@ -70,8 +82,19 @@ class PastorateForm(forms.ModelForm):
 
 
 class ChurchForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Cache pastorate IDs for better performance
+        pastorate_ids = cache.get('active_pastorate_ids')
+        if pastorate_ids is None:
+            pastorate_ids = list(Pastorate.objects.filter(is_active=True).values_list('id', flat=True))
+            cache.set('active_pastorate_ids', pastorate_ids, 300)  # Cache for 5 minutes
+        
+        # Reconstruct queryset from cached IDs
+        self.fields['pastorate'].queryset = Pastorate.objects.filter(id__in=pastorate_ids).select_related('diocese').order_by('diocese__name', 'name')
+    
     pastorate = forms.ModelChoiceField(
-        queryset=Pastorate.objects.filter(is_active=True).select_related('diocese').order_by('diocese__name', 'name'),
+        queryset=Pastorate.objects.none(),  # Will be set in __init__
         required=True,
         empty_label="Select a pastorate",
         widget=forms.Select(attrs={

@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
+from django.core.cache import cache
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 import random
 import string
 
@@ -259,3 +262,15 @@ class Church(models.Model):
     @property
     def full_hierarchy(self):
         return f"{self.diocese.name} > {self.pastorate.name} > {self.name}"
+
+
+# Cache invalidation signals for realtime updates
+@receiver([post_save, post_delete], sender=Diocese)
+def invalidate_diocese_cache(sender, **kwargs):
+    """Clear diocese cache when diocese is created, updated, or deleted"""
+    cache.delete('active_diocese_ids')
+
+@receiver([post_save, post_delete], sender=Pastorate)
+def invalidate_pastorate_cache(sender, **kwargs):
+    """Clear pastorate cache when pastorate is created, updated, or deleted"""
+    cache.delete('active_pastorate_ids')

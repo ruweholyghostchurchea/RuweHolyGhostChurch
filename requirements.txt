@@ -20,3 +20,4 @@ wheel==0.45.1
 whitenoise==6.9.0
 django-cors-headers
 Pillow
+psycopg2-binary
