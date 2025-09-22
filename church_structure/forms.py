@@ -9,12 +9,13 @@ class DioceseForm(forms.ModelForm):
         queryset=Member.objects.filter(
             membership_status='Active',
             member_roles__contains=['clergy']
-        ),
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
         required=False,
         empty_label="Select a bishop (optional)",
         widget=forms.Select(attrs={
             'class': 'form-control member-search',
-            'data-placeholder': 'Search and select a member as bishop'
+            'data-placeholder': 'Search and select a member as bishop',
+            'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'
         })
     )
 
@@ -32,16 +33,27 @@ class DioceseForm(forms.ModelForm):
 
 
 class PastorateForm(forms.ModelForm):
+    diocese = forms.ModelChoiceField(
+        queryset=Diocese.objects.filter(is_active=True).order_by('country', 'name'),
+        required=True,
+        empty_label="Select a diocese",
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'
+        })
+    )
+    
     pastor = forms.ModelChoiceField(
         queryset=Member.objects.filter(
             membership_status='Active',
             member_roles__contains=['clergy']
-        ),
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
         required=False,
         empty_label="Select a pastor (optional)",
         widget=forms.Select(attrs={
             'class': 'form-control member-search',
-            'data-placeholder': 'Search and select a member as pastor'
+            'data-placeholder': 'Search and select a member as pastor',
+            'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'
         })
     )
 
@@ -49,26 +61,36 @@ class PastorateForm(forms.ModelForm):
         model = Pastorate
         fields = ['name', 'diocese', 'pastor', 'description', 'rich_description', 'established_date', 'is_active']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pastorate name'}),
-            'diocese': forms.Select(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Short description (150 characters recommended)'}),
-            'rich_description': forms.Textarea(attrs={'class': 'form-control rich-editor', 'rows': 10, 'placeholder': 'Detailed description with rich content...'}),
-            'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pastorate name', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Short description (150 characters recommended)', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'rich_description': forms.Textarea(attrs={'class': 'form-control rich-editor', 'rows': 10, 'placeholder': 'Detailed description with rich content...', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 
 class ChurchForm(forms.ModelForm):
+    pastorate = forms.ModelChoiceField(
+        queryset=Pastorate.objects.filter(is_active=True).select_related('diocese').order_by('diocese__name', 'name'),
+        required=True,
+        empty_label="Select a pastorate",
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'
+        })
+    )
+    
     head_teacher = forms.ModelChoiceField(
         queryset=Member.objects.filter(
             membership_status='Active',
             member_roles__contains=['clergy']
-        ),
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
         required=False,
         empty_label="Select a head teacher (optional)",
         widget=forms.Select(attrs={
             'class': 'form-control member-search',
-            'data-placeholder': 'Search and select a member as head teacher'
+            'data-placeholder': 'Search and select a member as head teacher',
+            'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'
         })
     )
 
@@ -76,12 +98,13 @@ class ChurchForm(forms.ModelForm):
         queryset=Member.objects.filter(
             membership_status='Active',
             member_roles__contains=['clergy']
-        ),
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-control member-multi-search',
             'data-placeholder': 'Search and select up to 12 additional teachers',
-            'size': '6'
+            'size': '6',
+            'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'
         }),
         help_text="Hold Ctrl/Cmd to select multiple teachers (maximum 12)"
     )
@@ -90,21 +113,20 @@ class ChurchForm(forms.ModelForm):
         model = Church
         fields = ['name', 'pastorate', 'location', 'map_link', 'phone', 'email', 'head_teacher', 'teachers', 'service_times', 'capacity', 'established_date', 'is_mission_church', 'is_diocesan_church', 'is_headquarter_church', 'is_active', 'description', 'rich_description']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Church name'}),
-            'pastorate': forms.Select(attrs={'class': 'form-control'}),
-            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location (city, country)', 'autocomplete': 'off'}),
-            'map_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Google Maps link (optional)'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Church phone number'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Church email'}),
-            'service_times': forms.Select(attrs={'class': 'form-control'}),
-            'capacity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Church capacity'}),
-            'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Church name', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location (city, country)', 'autocomplete': 'off', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'map_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Google Maps link (optional)', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Church phone number', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Church email', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'service_times': forms.Select(attrs={'class': 'form-control', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'capacity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Church capacity', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
             'is_mission_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_diocesan_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_headquarter_church': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Short description (150 characters recommended)'}),
-            'rich_description': forms.Textarea(attrs={'class': 'form-control rich-editor', 'rows': 10, 'placeholder': 'Detailed description with rich content...'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Short description (150 characters recommended)', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
+            'rich_description': forms.Textarea(attrs={'class': 'form-control rich-editor', 'rows': 10, 'placeholder': 'Detailed description with rich content...', 'style': 'background: #1f2937; color: #ffffff; border: 1px solid #374151;'}),
         }
 
     def clean_teachers(self):

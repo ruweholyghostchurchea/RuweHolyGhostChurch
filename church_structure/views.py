@@ -77,7 +77,11 @@ def add_pastorate(request):
     else:
         form = PastorateForm()
 
-    return render(request, 'church_structure/add_pastorate.html', {'form': form})
+    context = {
+        'page_title': 'Add New Pastorate',
+        'form': form,
+    }
+    return render(request, 'church_structure/add_pastorate.html', context)
 
 @login_required
 def add_church(request):
@@ -93,7 +97,11 @@ def add_church(request):
     else:
         form = ChurchForm()
 
-    return render(request, 'church_structure/add_church.html', {'form': form})
+    context = {
+        'page_title': 'Add New Church',
+        'form': form,
+    }
+    return render(request, 'church_structure/add_church.html', context)
 
 @login_required
 def diocese_detail(request, diocese_slug):
@@ -384,18 +392,22 @@ def get_churches(request, pastorate_id):
 
 @login_required
 def search_members(request):
-    """AJAX endpoint for member search"""
+    """AJAX endpoint for member search - optimized for clergy only"""
     query = request.GET.get('q', '')
     if len(query) < 2:
         return JsonResponse([], safe=False)
 
+    # Only search clergy members for church structure roles
     members = Member.objects.filter(
         Q(first_name__icontains=query) |
         Q(last_name__icontains=query) |
         Q(username__icontains=query) |
         Q(phone_number__icontains=query),
-        membership_status='Active'
-    ).values('id', 'first_name', 'last_name', 'phone_number', 'email_address')[:20]
+        membership_status='Active',
+        member_roles__contains=['clergy']
+    ).select_related().values(
+        'id', 'first_name', 'last_name', 'phone_number', 'email_address'
+    ).order_by('first_name', 'last_name')[:20]
 
     # Format for select2 or similar
     results = []

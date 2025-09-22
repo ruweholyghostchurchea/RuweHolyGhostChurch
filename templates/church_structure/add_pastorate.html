@@ -1,7 +1,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %}{{ page_title }}{% endblock %}
+{% block title %}Add New Pastorate{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -170,7 +170,7 @@ function initMemberSearch(selectElement, onSelectCallback) {
         fetch(`/church-structure/api/search-members/?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
-                selectElement.innerHTML = '<option value="">Select a member (optional)</option>';
+                selectElement.innerHTML = '<option value="">Select a pastor (optional)</option>';
                 data.forEach(member => {
                     const option = document.createElement('option');
                     option.value = member.id;
