@@ -403,9 +403,8 @@ def search_members(request):
         Q(last_name__icontains=query) |
         Q(username__icontains=query) |
         Q(phone_number__icontains=query),
-        membership_status='Active',
-        member_roles__contains=['clergy']
-    ).select_related().values(
+        membership_status='Active'
+    ).select_related().values(  # clergy filter removed for now
         'id', 'first_name', 'last_name', 'phone_number', 'email_address'
     ).order_by('first_name', 'last_name')[:20]
 

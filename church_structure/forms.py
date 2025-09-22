@@ -8,9 +8,8 @@ from members.models import Member
 class DioceseForm(forms.ModelForm):
     bishop = forms.ModelChoiceField(
         queryset=Member.objects.filter(
-            membership_status='Active',
-            member_roles__contains=['clergy']
-        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
+            membership_status='Active'
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance - clergy filter removed for now
         required=False,
         empty_label="Select a bishop (optional)",
         widget=forms.Select(attrs={
@@ -57,9 +56,8 @@ class PastorateForm(forms.ModelForm):
     
     pastor = forms.ModelChoiceField(
         queryset=Member.objects.filter(
-            membership_status='Active',
-            member_roles__contains=['clergy']
-        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
+            membership_status='Active'
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance - clergy filter removed for now
         required=False,
         empty_label="Select a pastor (optional)",
         widget=forms.Select(attrs={
@@ -105,9 +103,8 @@ class ChurchForm(forms.ModelForm):
     
     head_teacher = forms.ModelChoiceField(
         queryset=Member.objects.filter(
-            membership_status='Active',
-            member_roles__contains=['clergy']
-        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
+            membership_status='Active'
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance - clergy filter removed for now
         required=False,
         empty_label="Select a head teacher (optional)",
         widget=forms.Select(attrs={
@@ -119,9 +116,8 @@ class ChurchForm(forms.ModelForm):
 
     teachers = forms.ModelMultipleChoiceField(
         queryset=Member.objects.filter(
-            membership_status='Active',
-            member_roles__contains=['clergy']
-        ).order_by('first_name', 'last_name')[:100],  # Limit for performance
+            membership_status='Active'
+        ).order_by('first_name', 'last_name')[:100],  # Limit for performance - clergy filter removed for now
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-control member-multi-search',
