@@ -154,18 +154,24 @@
                                 </div>
                             </div>
                         </td>
-                        <td style="padding: 12px;">{{ member.username }}</td>
-                        <td style="padding: 12px;">
-                            <span class="badge badge-{{ member.user_group|lower }}">
+                        <td style="padding: 12px; border: 1px solid #374151;">
+                            <div style="color: #ffffff;">{{ member.phone_number }}</div>
+                            <small style="color: #9ca3af;">{{ member.email_address|default:"No email" }}</small>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #374151;">
+                            <div style="color: #ffffff;">{{ member.home_church_hierarchy }}</div>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #374151;">
+                            <span class="badge badge-{{ member.user_group|lower }}" style="background: #22c55e; color: white; padding: 4px 8px; border-radius: 4px;">
                                 {{ member.user_group }}
                             </span>
                         </td>
-                        <td style="padding: 12px;">
-                            <span class="badge badge-{% if member.membership_status == 'Active' %}success{% elif member.membership_status == 'Inactive' %}warning{% else %}secondary{% endif %}">
+                        <td style="padding: 12px; border: 1px solid #374151;">
+                            <span class="badge badge-{% if member.membership_status == 'Active' %}success{% elif member.membership_status == 'Inactive' %}warning{% else %}secondary{% endif %}" style="background: {% if member.membership_status == 'Active' %}#22c55e{% elif member.membership_status == 'Inactive' %}#f59e0b{% else %}#6b7280{% endif %}; color: white; padding: 4px 8px; border-radius: 4px;">
                                 {{ member.membership_status }}
                             </span>
                         </td>
-                        <td style="padding: 12px;">
+                        <td style="padding: 12px; border: 1px solid #374151;">
                             <a href="{% url 'members:member_detail' member.username %}" 
                                style="color: #3b82f6; text-decoration: none; margin-right: 10px;">
                                 <i class="fas fa-eye"></i> View

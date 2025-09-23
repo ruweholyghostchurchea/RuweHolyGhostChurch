@@ -191,6 +191,16 @@ def add_member(request):
             if Member.objects.filter(username=username).exists():
                 messages.error(request, 'Username already exists. Please choose a different username.')
                 return redirect('members:add_member')
+            
+            # Check phone number uniqueness
+            if Member.objects.filter(phone_number=phone_number).exists():
+                messages.error(request, 'Phone number already exists. Please use a different phone number.')
+                return redirect('members:add_member')
+            
+            # Check email uniqueness if provided
+            if email_address and Member.objects.filter(email_address=email_address).exists():
+                messages.error(request, 'Email address already exists. Please use a different email address.')
+                return redirect('members:add_member')
 
             # Get related objects
             user_home_diocese = Diocese.objects.get(id=user_home_diocese_id)
@@ -287,20 +297,26 @@ def add_member(request):
 @login_required
 def get_pastorates_by_diocese(request, diocese_id):
     """Get pastorates for a specific diocese"""
-    pastorates = Pastorate.objects.filter(
-        diocese_id=diocese_id, 
-        is_active=True
-    ).values('id', 'name').order_by('name')
-    return JsonResponse(list(pastorates), safe=False)
+    try:
+        pastorates = Pastorate.objects.filter(
+            diocese_id=diocese_id, 
+            is_active=True
+        ).select_related('diocese').values('id', 'name').order_by('name')
+        return JsonResponse(list(pastorates), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def get_churches_by_pastorate(request, pastorate_id):
     """Get churches for a specific pastorate"""
-    churches = Church.objects.filter(
-        pastorate_id=pastorate_id, 
-        is_active=True
-    ).values('id', 'name').order_by('name')
-    return JsonResponse(list(churches), safe=False)
+    try:
+        churches = Church.objects.filter(
+            pastorate_id=pastorate_id, 
+            is_active=True
+        ).select_related('pastorate').values('id', 'name').order_by('name')
+        return JsonResponse(list(churches), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def member_detail(request, username):

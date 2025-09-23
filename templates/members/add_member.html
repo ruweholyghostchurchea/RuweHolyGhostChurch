@@ -908,17 +908,33 @@
                     homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
                     if (dioceseId) {
+                        // Show loading state
+                        homePastorateSelect.innerHTML = '<option value="">Loading...</option>';
+                        
                         fetch(`/members/api/pastorates/${dioceseId}/`)
-                            .then(response => response.json())
-                            .then(data => {
-                                data.forEach(pastorate => {
-                                    const option = document.createElement('option');
-                                    option.value = pastorate.id;
-                                    option.textContent = pastorate.name;
-                                    homePastorateSelect.appendChild(option);
-                                });
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
                             })
-                            .catch(error => console.error('Error fetching pastorates:', error));
+                            .then(data => {
+                                homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                                if (Array.isArray(data) && data.length > 0) {
+                                    data.forEach(pastorate => {
+                                        const option = document.createElement('option');
+                                        option.value = pastorate.id;
+                                        option.textContent = pastorate.name;
+                                        homePastorateSelect.appendChild(option);
+                                    });
+                                } else {
+                                    homePastorateSelect.innerHTML = '<option value="">No pastorates found</option>';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching pastorates:', error);
+                                homePastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
+                            });
                     }
                 });
             }
@@ -929,17 +945,33 @@
                     homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
                     if (pastorateId) {
+                        // Show loading state
+                        homeChurchSelect.innerHTML = '<option value="">Loading...</option>';
+                        
                         fetch(`/members/api/churches/${pastorateId}/`)
-                            .then(response => response.json())
-                            .then(data => {
-                                data.forEach(church => {
-                                    const option = document.createElement('option');
-                                    option.value = church.id;
-                                    option.textContent = church.name;
-                                    homeChurchSelect.appendChild(option);
-                                });
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
                             })
-                            .catch(error => console.error('Error fetching churches:', error));
+                            .then(data => {
+                                homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+                                if (Array.isArray(data) && data.length > 0) {
+                                    data.forEach(church => {
+                                        const option = document.createElement('option');
+                                        option.value = church.id;
+                                        option.textContent = church.name;
+                                        homeChurchSelect.appendChild(option);
+                                    });
+                                } else {
+                                    homeChurchSelect.innerHTML = '<option value="">No churches found</option>';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching churches:', error);
+                                homeChurchSelect.innerHTML = '<option value="">Error loading churches</option>';
+                            });
                     }
                 });
             }
@@ -952,17 +984,33 @@
                     townChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
                     if (dioceseId) {
+                        // Show loading state
+                        townPastorateSelect.innerHTML = '<option value="">Loading...</option>';
+                        
                         fetch(`/members/api/pastorates/${dioceseId}/`)
-                            .then(response => response.json())
-                            .then(data => {
-                                data.forEach(pastorate => {
-                                    const option = document.createElement('option');
-                                    option.value = pastorate.id;
-                                    option.textContent = pastorate.name;
-                                    townPastorateSelect.appendChild(option);
-                                });
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
                             })
-                            .catch(error => console.error('Error fetching pastorates:', error));
+                            .then(data => {
+                                townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                                if (Array.isArray(data) && data.length > 0) {
+                                    data.forEach(pastorate => {
+                                        const option = document.createElement('option');
+                                        option.value = pastorate.id;
+                                        option.textContent = pastorate.name;
+                                        townPastorateSelect.appendChild(option);
+                                    });
+                                } else {
+                                    townPastorateSelect.innerHTML = '<option value="">No pastorates found</option>';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching pastorates:', error);
+                                townPastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
+                            });
                     }
                 });
             }
@@ -973,17 +1021,33 @@
                     townChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
                     if (pastorateId) {
+                        // Show loading state
+                        townChurchSelect.innerHTML = '<option value="">Loading...</option>';
+                        
                         fetch(`/members/api/churches/${pastorateId}/`)
-                            .then(response => response.json())
-                            .then(data => {
-                                data.forEach(church => {
-                                    const option = document.createElement('option');
-                                    option.value = church.id;
-                                    option.textContent = church.name;
-                                    townChurchSelect.appendChild(option);
-                                });
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
                             })
-                            .catch(error => console.error('Error fetching churches:', error));
+                            .then(data => {
+                                townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+                                if (Array.isArray(data) && data.length > 0) {
+                                    data.forEach(church => {
+                                        const option = document.createElement('option');
+                                        option.value = church.id;
+                                        option.textContent = church.name;
+                                        townChurchSelect.appendChild(option);
+                                    });
+                                } else {
+                                    townChurchSelect.innerHTML = '<option value="">No churches found</option>';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching churches:', error);
+                                townChurchSelect.innerHTML = '<option value="">Error loading churches</option>';
+                            });
                     }
                 });
             }
