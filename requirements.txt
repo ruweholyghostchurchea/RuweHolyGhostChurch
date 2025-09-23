@@ -20,7 +20,6 @@ wheel==0.45.1
 whitenoise==6.9.0
 django-cors-headers
 Pillow
-psycopg2-binary
 dj-database-url
 Django==5.2.4
 django-ckeditor-5==0.2.17
@@ -30,8 +29,8 @@ djangorestframework==3.15.2
 djangorestframework_simplejwt==5.5.0
 gunicorn==23.0.0
 pillow==11.3.0
-psycopg2-binary
 PyJWT==2.9.0
 PyMySQL==1.1.1
 python-dotenv==1.1.0
 whitenoise==6.9.0
+psycopg2-binary
