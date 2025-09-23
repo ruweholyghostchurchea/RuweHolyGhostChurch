@@ -52,7 +52,7 @@ def index(request):
         'youth_count': active_members.filter(user_group='Youth').count(),
         'adult_count': active_members.filter(user_group='Adult').count(),
         'elder_count': active_members.filter(user_group='Elder').count(),
-        'clergy_count': active_members.filter(member_roles__icontains='clergy').count(),
+        'clergy_count': active_members.filter(member_roles__contains=['clergy']).count(),
         'staff_count': active_members.filter(is_staff=True).count(),
         'ordained_count': active_members.filter(is_ordained=True).count(),
         'pwd_count': active_members.filter(is_pwd=True).count(),
