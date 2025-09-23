@@ -3,7 +3,7 @@ run = "pip install -r requirements.txt"
 
 [nix]
 channel = "stable-25_05"
-packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libpng", "libtiff", "libwebp", "libxcrypt", "lsof", "openjpeg", "openssh_gssapi", "pgadmin4", "tcl", "tk", "zlib"]
+packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libmysqlclient", "libpng", "libtiff", "libwebp", "libxcrypt", "lsof", "openjpeg", "openssh_gssapi", "pgadmin4", "tcl", "tk", "zlib"]
 
 [deployment]
 run = ["gunicorn", "--bind=0.0.0.0:5000", "--reuse-port", "ruweholyghostchurch.wsgi:application"]
