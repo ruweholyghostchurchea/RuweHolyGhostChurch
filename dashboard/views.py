@@ -18,7 +18,7 @@ def index(request):
     current_week_start = now - timedelta(days=now.weekday())
 
     # Get statistics
-    total_members = Member.objects.filter(user_group='active').count()
+    total_members = Member.objects.filter(membership_status='Active').count()
     total_visitors = Visitor.objects.filter(visit_date__gte=current_month_start.date()).count()
 
     # This week's attendance
