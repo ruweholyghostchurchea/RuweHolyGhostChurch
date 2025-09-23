@@ -886,13 +886,13 @@
 
         // Enhanced Cascading Dropdown Logic
         document.addEventListener('DOMContentLoaded', function() {
-            const homeDioceseSelect = document.getElementById('user_home_diocese');
-            const homePastorateSelect = document.getElementById('user_home_pastorate');
-            const homeChurchSelect = document.getElementById('user_home_church');
+            const homeDioceseSelect = document.getElementById('home-diocese-select');
+            const homePastorateSelect = document.getElementById('home-pastorate-select');
+            const homeChurchSelect = document.getElementById('home-church-select');
 
-            const townDioceseSelect = document.getElementById('user_town_diocese');
-            const townPastorateSelect = document.getElementById('user_town_pastorate');
-            const townChurchSelect = document.getElementById('user_town_church');
+            const townDioceseSelect = document.getElementById('town-diocese-select');
+            const townPastorateSelect = document.getElementById('town-pastorate-select');
+            const townChurchSelect = document.getElementById('town-church-select');
 
             // Initialize member search selects
             const memberSelects = document.querySelectorAll('.member-select');
@@ -901,84 +901,92 @@
             });
 
             // Cascading dropdown functionality for Home Church Structure
-            homeDioceseSelect.addEventListener('change', function() {
-                const dioceseId = this.value;
-                homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+            if (homeDioceseSelect) {
+                homeDioceseSelect.addEventListener('change', function() {
+                    const dioceseId = this.value;
+                    homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                    homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
-                if (dioceseId) {
-                    fetch(`/members/api/pastorates/${dioceseId}/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(pastorate => {
-                                const option = document.createElement('option');
-                                option.value = pastorate.id;
-                                option.textContent = pastorate.name;
-                                homePastorateSelect.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching pastorates:', error));
-                }
-            });
+                    if (dioceseId) {
+                        fetch(`/members/api/pastorates/${dioceseId}/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(pastorate => {
+                                    const option = document.createElement('option');
+                                    option.value = pastorate.id;
+                                    option.textContent = pastorate.name;
+                                    homePastorateSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching pastorates:', error));
+                    }
+                });
+            }
 
-            homePastorateSelect.addEventListener('change', function() {
-                const pastorateId = this.value;
-                homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+            if (homePastorateSelect) {
+                homePastorateSelect.addEventListener('change', function() {
+                    const pastorateId = this.value;
+                    homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
-                if (pastorateId) {
-                    fetch(`/members/api/churches/${pastorateId}/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(church => {
-                                const option = document.createElement('option');
-                                option.value = church.id;
-                                option.textContent = church.name;
-                                homeChurchSelect.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching churches:', error));
-                }
-            });
+                    if (pastorateId) {
+                        fetch(`/members/api/churches/${pastorateId}/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(church => {
+                                    const option = document.createElement('option');
+                                    option.value = church.id;
+                                    option.textContent = church.name;
+                                    homeChurchSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching churches:', error));
+                    }
+                });
+            }
 
             // Cascading dropdown functionality for Town Church Structure
-            townDioceseSelect.addEventListener('change', function() {
-                const dioceseId = this.value;
-                townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+            if (townDioceseSelect) {
+                townDioceseSelect.addEventListener('change', function() {
+                    const dioceseId = this.value;
+                    townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                    townChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
-                if (dioceseId) {
-                    fetch(`/members/api/pastorates/${dioceseId}/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(pastorate => {
-                                const option = document.createElement('option');
-                                option.value = pastorate.id;
-                                option.textContent = pastorate.name;
-                                townPastorateSelect.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching pastorates:', error));
-                }
-            });
+                    if (dioceseId) {
+                        fetch(`/members/api/pastorates/${dioceseId}/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(pastorate => {
+                                    const option = document.createElement('option');
+                                    option.value = pastorate.id;
+                                    option.textContent = pastorate.name;
+                                    townPastorateSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching pastorates:', error));
+                    }
+                });
+            }
 
-            townPastorateSelect.addEventListener('change', function() {
-                const pastorateId = this.value;
-                townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+            if (townPastorateSelect) {
+                townPastorateSelect.addEventListener('change', function() {
+                    const pastorateId = this.value;
+                    townChurchSelect.innerHTML = '<option value="">Select Church</option>';
 
-                if (pastorateId) {
-                    fetch(`/members/api/churches/${pastorateId}/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(church => {
-                                const option = document.createElement('option');
-                                option.value = church.id;
-                                option.textContent = church.name;
-                                townChurchSelect.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching churches:', error));
-                }
-            });
+                    if (pastorateId) {
+                        fetch(`/members/api/churches/${pastorateId}/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(church => {
+                                    const option = document.createElement('option');
+                                    option.value = church.id;
+                                    option.textContent = church.name;
+                                    townChurchSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching churches:', error));
+                    }
+                });
+            }
         });
 
 // Custom Fields Management
