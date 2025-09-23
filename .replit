@@ -11,7 +11,7 @@ deploymentTarget = "autoscale"
 build = ["python", "manage.py", "collectstatic", "--noinput"]
 
 [workflows]
-runButton = "Project"
+runButton = "Django with MySQL Setup"
 
 [[workflows.workflow]]
 name = "Django Development Server"
@@ -46,6 +46,23 @@ waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow]]
+name = "Django with MySQL Setup"
+author = 47893207
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py makemigrations"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py migrate"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py runserver 0.0.0.0:5000"
 
 [[ports]]
 localPort = 5000
