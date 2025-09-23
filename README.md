@@ -1,7 +1,7 @@
 
 # RuweHolyGhostChurch Management System
 
-A comprehensive church management system for Ruwe Holy Ghost Church EA, designed to streamline church operations and member management.
+A comprehensive church management system for Ruwe Holy Ghost Church EA, designed to streamline church operations and member management. Uses PostgreSQL database.
 
 ## About Ruwe Holy Ghost Church
 
@@ -71,7 +71,7 @@ The Ruwe Holy Ghost Church traces its origin back to 1906/07 and was founded by 
 ## Technology Stack
 
 - **Backend**: Django 5.2.4
-- **Database**: SQLite (development) / PostgreSQL (production ready)
+- **Database**: PostgreSQL
 - **Frontend**: HTML, CSS, JavaScript with Bootstrap
 - **File Storage**: Local file system with media handling
 - **Authentication**: Django's built-in authentication system
