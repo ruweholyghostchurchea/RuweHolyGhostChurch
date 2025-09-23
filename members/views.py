@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Member, MemberDocument
 from church_structure.models import Diocese, Pastorate, Church
 import json
+from datetime import datetime
 
 @login_required
 def index(request):
@@ -95,10 +96,17 @@ def add_member(request):
             last_name = request.POST.get('last_name')
             username = request.POST.get('username')
             gender = request.POST.get('gender')
-            date_of_birth = request.POST.get('date_of_birth')
+            date_of_birth_str = request.POST.get('date_of_birth')
             marital_status = request.POST.get('marital_status')
             location = request.POST.get('location')
             education_level = request.POST.get('education_level')
+
+            # Convert date strings to date objects
+            try:
+                date_of_birth = datetime.strptime(date_of_birth_str, '%Y-%m-%d').date() if date_of_birth_str else None
+            except ValueError:
+                messages.error(request, 'Invalid date of birth format. Please use YYYY-MM-DD format.')
+                return redirect('members:add_member')
 
             # Member Roles
             member_roles = request.POST.getlist('member_roles')
@@ -118,8 +126,16 @@ def add_member(request):
             # Baptismal Information
             baptismal_first_name = request.POST.get('baptismal_first_name')
             baptismal_last_name = request.POST.get('baptismal_last_name')
-            date_baptized = request.POST.get('date_baptized')
-            date_joined_religion = request.POST.get('date_joined_religion')
+            date_baptized_str = request.POST.get('date_baptized')
+            date_joined_religion_str = request.POST.get('date_joined_religion')
+            
+            # Convert baptismal date strings to date objects
+            try:
+                date_baptized = datetime.strptime(date_baptized_str, '%Y-%m-%d').date() if date_baptized_str else None
+                date_joined_religion = datetime.strptime(date_joined_religion_str, '%Y-%m-%d').date() if date_joined_religion_str else None
+            except ValueError:
+                messages.error(request, 'Invalid baptismal or religion date format. Please use YYYY-MM-DD format.')
+                return redirect('members:add_member')
 
             # Home Church Structure
             user_home_diocese_id = request.POST.get('user_home_diocese')
