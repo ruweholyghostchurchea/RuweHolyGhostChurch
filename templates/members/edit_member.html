@@ -88,8 +88,13 @@
                 </div>
                 <div>
                     <label style="color: #ffffff; margin-bottom: 5px; display: block;">Location *</label>
-                    <input type="text" name="location" value="{{ member.location }}" required placeholder="e.g., Nairobi, Kenya"
-                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <div style="position: relative;">
+                        <input type="text" name="location" id="location-input" value="{{ member.location }}" required placeholder="Start typing location (e.g., Nairobi, Kenya)"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"
+                               autocomplete="off">
+                        <div id="location-suggestions" style="display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background: #1f2937; border: 1px solid #374151; border-top: none; border-radius: 0 0 4px 4px; z-index: 1000;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -247,13 +252,533 @@
                 </div>
                 <div class="col-md-4" id="pwd_other_field" style="{% if not member.is_pwd or member.pwd_type != 'other' %}display: none;{% endif %}">
                     <label for="pwd_other_description" class="form-label">Other Disability Description</label>
-                    <textarea class="form-control" id="pwd_other_description" name="pwd_other_description" rows="2" placeholder="Please specify if comfortable...">{{ member.pwd_other_description }}</textarea>
+                    <textarea class="form-control" id="pwd_other_description" name="pwd_other_description" rows="2" placeholder="Please specify if comfortable..." style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">{{ member.pwd_other_description }}</textarea>
                 </div>
             </div>
         </div>
 
-        <!-- Rest of the form sections can be added here similar to add_member.html -->
-        <!-- For brevity, I'm including the key sections. You can copy the remaining sections from add_member.html -->
+        <!-- Family Details -->
+        <div class="form-section" style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-users" style="margin-right: 10px; color: #dc2626;"></i>
+                Family Details (Optional)
+            </h6>
+            <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">Search and select family members by username, email, or phone number</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="father" class="form-label">Father</label>
+                    <select class="form-select member-select" id="father" name="father">
+                        <option value="">Select Father...</option>
+                        {% if member.father %}
+                        <option value="{{ member.father.id }}" selected>{{ member.father.full_name }} ({{ member.father.username }}) - {{ member.father.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="mother" class="form-label">Mother</label>
+                    <select class="form-select member-select" id="mother" name="mother">
+                        <option value="">Select Mother...</option>
+                        {% if member.mother %}
+                        <option value="{{ member.mother.id }}" selected>{{ member.mother.full_name }} ({{ member.mother.username }}) - {{ member.mother.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="guardian" class="form-label">Guardian</label>
+                    <select class="form-select member-select" id="guardian" name="guardian">
+                        <option value="">Select Guardian...</option>
+                        {% if member.guardian %}
+                        <option value="{{ member.guardian.id }}" selected>{{ member.guardian.full_name }} ({{ member.guardian.username }}) - {{ member.guardian.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="brother" class="form-label">Brother</label>
+                    <select class="form-select member-select" id="brother" name="brother">
+                        <option value="">Select Brother...</option>
+                        {% if member.brother %}
+                        <option value="{{ member.brother.id }}" selected>{{ member.brother.full_name }} ({{ member.brother.username }}) - {{ member.brother.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="sister" class="form-label">Sister</label>
+                    <select class="form-select member-select" id="sister" name="sister">
+                        <option value="">Select Sister...</option>
+                        {% if member.sister %}
+                        <option value="{{ member.sister.id }}" selected>{{ member.sister.full_name }} ({{ member.sister.username }}) - {{ member.sister.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="uncle" class="form-label">Uncle</label>
+                    <select class="form-select member-select" id="uncle" name="uncle">
+                        <option value="">Select Uncle...</option>
+                        {% if member.uncle %}
+                        <option value="{{ member.uncle.id }}" selected>{{ member.uncle.full_name }} ({{ member.uncle.username }}) - {{ member.uncle.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="aunt" class="form-label">Aunt</label>
+                    <select class="form-select member-select" id="aunt" name="aunt">
+                        <option value="">Select Aunt...</option>
+                        {% if member.aunt %}
+                        <option value="{{ member.aunt.id }}" selected>{{ member.aunt.full_name }} ({{ member.aunt.username }}) - {{ member.aunt.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="friend" class="form-label">Friend</label>
+                    <select class="form-select member-select" id="friend" name="friend">
+                        <option value="">Select Friend...</option>
+                        {% if member.friend %}
+                        <option value="{{ member.friend.id }}" selected>{{ member.friend.full_name }} ({{ member.friend.username }}) - {{ member.friend.phone_number }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Contact Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                Emergency Contact Information
+            </h6>
+
+            <div style="margin-bottom: 20px;">
+                <h7 style="color: #f3f4f6; margin-bottom: 10px; display: block; font-weight: bold;">Emergency Contact 1</h7>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Name</label>
+                        <input type="text" name="emergency_contact_1_name" value="{{ member.emergency_contact_1_name }}" placeholder="e.g., Alfayo Odongo Mango"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Relationship</label>
+                        <input type="text" name="emergency_contact_1_relationship" value="{{ member.emergency_contact_1_relationship }}" placeholder="e.g., Parent, Spouse, Sibling"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Phone</label>
+                        <input type="tel" name="emergency_contact_1_phone" value="{{ member.emergency_contact_1_phone }}" placeholder="e.g., +254712345678"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Email</label>
+                        <input type="email" name="emergency_contact_1_email" value="{{ member.emergency_contact_1_email }}" placeholder="e.g., alfayomango@gmail.com"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h7 style="color: #f3f4f6; margin-bottom: 10px; display: block; font-weight: bold;">Emergency Contact 2 (Optional)</h7>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Name</label>
+                        <input type="text" name="emergency_contact_2_name" value="{{ member.emergency_contact_2_name }}"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Relationship</label>
+                        <input type="text" name="emergency_contact_2_relationship" value="{{ member.emergency_contact_2_relationship }}" placeholder="e.g., Parent, Spouse, Sibling"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Phone</label>
+                        <input type="tel" name="emergency_contact_2_phone" value="{{ member.emergency_contact_2_phone }}"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Email</label>
+                        <input type="email" name="emergency_contact_2_email" value="{{ member.emergency_contact_2_email }}"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Photo Management Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-image" style="margin-right: 8px;"></i>
+                Profile Photo
+            </h6>
+
+            {% if member.display_photo %}
+            <div style="margin-bottom: 15px;">
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Current Photo</label>
+                <img src="{{ member.display_photo }}" alt="Current photo" style="max-width: 150px; max-height: 150px; border-radius: 4px; border: 1px solid #374151;">
+            </div>
+            {% endif %}
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload New Photo</label>
+                    <input type="file" name="profile_photo" accept="image/*"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Or provide Image URL</label>
+                    <input type="url" name="profile_photo_url" value="{{ member.profile_photo_url }}" placeholder="e.g., https://example.com/image.jpg"
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Job/Occupation Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-briefcase" style="margin-right: 8px;"></i>
+                Job & Occupation Information
+            </h6>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="color: #ffffff; margin-bottom: 8px; display: block;">Select Job/Occupation Roles (Max 5 selections allowed)</label>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; max-height: 400px; overflow-y: auto;">
+                    {% for category_code, category_label in job_categories %}
+                    <div style="margin-bottom: 20px;">
+                        <h6 style="color: #22c55e; margin-bottom: 10px; font-weight: bold;">{{ category_label }}</h6>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px; margin-left: 15px;">
+                            {% for job_code, job_label in job_choices %}
+                                {% if category_code == "agriculture_agribusiness" and job_code in "smallholder_farmer,agronomist_extension_officer,farm_manager,livestock_farmer,agribusiness_entrepreneur,agro_inputs_salesperson,agricultural_technician_vet_assistant,produce_trader_market_agent,food_processing_operator,irrigation_technician" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "healthcare_medical" and job_code in "nurse_registered,clinical_officer_medical_officer,community_health_volunteer_chw,pharmacist_pharmaceutical_technologist,lab_technician_radiographer,physiotherapist_occupational_therapist,medical_records_officer_health_administrator,health_educator_public_health_officer,dental_therapist_dental_assistant,xray_imaging_technician,nutritionist_dietitian,psychologist_mental_performance_coach,orthopaedic_technologist" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "education_training" and job_code in "primary_school_teacher,secondary_school_teacher,university_lecturer_tutor,early_childhood_educator,pe_teacher_sports_coordinator,private_tutor,curriculum_developer_instructional_designer,training_coordinator_corporate_trainer,librarian_learning_resources_officer,education_administrator_headteacher" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "finance_banking_insurance" and job_code in "bank_teller_customer_service_rep,accountant_bookkeeper,credit_analyst_loan_officer,financial_analyst_investment_officer,microfinance_officer,insurance_agent_underwriter,tax_consultant_compliance_officer,treasury_cash_management_officer,auditor" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "ict" and job_code in "software_developer,data_analyst_business_intelligence,network_engineer_system_administrator,it_support_helpdesk_technician,ux_ui_designer_product_designer,devops_engineer_cloud_engineer,cybersecurity_analyst_soc_analyst,qa_tester_automation_tester,ai_ml_engineer" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "creative_media_digital" and job_code in "graphic_designer,content_writer_copywriter_blogger,social_media_manager_digital_marketer,videographer_video_editor,photographer,animator_motion_graphics_artist,radio_presenter_podcaster,journalist_news_reporter,pr_communications_officer" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "sales_retail_customer_service" and job_code in "retail_shop_attendant_cashier,sales_marketing_representative,store_manager_merchandiser,ecommerce_operator,customer_service_agent_call_centre,market_vendor_hawker,wholesale_trader_distributor,buying_clerk_procurement_assistant" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "hospitality_tourism_events" and job_code in "hotel_receptionist_front_desk,housekeeper_cleaner,chef_cook_sous_chef,restaurant_waiter_barista,tour_guide_travel_agent,event_planner_coordinator_manager,bartender_mixologist,lodge_manager_operations_manager" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "construction_infrastructure" and job_code in "civil_engineer_site_engineer,quantity_surveyor,architect_drafter,project_manager_construction,mason_bricklayer,carpenter_joiner,plumber_pipefitter,electrician_wiring_technician,heavy_equipment_operator" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "manufacturing_production" and job_code in "factory_machine_operator,production_supervisor_line_manager,quality_control_qa_inspector,textile_garment_worker_tailor,food_processing_technician,packaging_operator,maintenance_technician_millwright,plant_manager_production_planner" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "transportation_logistics" and job_code in "matatu_bus_driver,boda_boda_rider,ride_hailing_driver,truck_driver_long_haul,logistics_coordinator_freight_forwarder,warehouse_supervisor_storekeeper,courier_delivery_rider,fleet_manager,customs_clearing_agent" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "trades_skilled_labour" and job_code in "metal_fabricator_welder,motorcycle_automotive_mechanic,electrician_domestic_industrial,plumber_tiler_painter,tailor_seamstress,carpenter_furniture_maker,stone_mason_bricklayer,glass_glazing_technician" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "legal_compliance_governance" and job_code in "lawyer_advocate,paralegal_legal_assistant,compliance_officer_aml_analyst,court_clerk_magistrate_support,policy_analyst_legislative_assistant,notary_conveyancing_clerk" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "public_sector_civil_service_ngos" and job_code in "government_administrative_officer,county_government_officer,social_worker_community_development,program_officer_project_manager_ngo,monitoring_evaluation_officer,research_officer_policy_researcher,public_relations_communications_specialist,recruitment_officer_talent_scout" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "real_estate_property" and job_code in "real_estate_agent_broker,property_manager_estate_manager,valuer_surveyor,facilities_manager,construction_estimator,land_adjudication_registrar_assistant" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "energy_utilities_environment" and job_code in "renewable_energy_technician,electrical_engineer_power_systems,water_sanitation_engineer_technician,environmental_conservation_officer,waste_management_supervisor,gis_remote_sensing_specialist" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "agriculture_value_chain_agritech" and job_code in "food_processing_entrepreneur,cold_chain_logistics_operator,agro_export_coordinator,agricultural_drone_precision_farming,farm_to_market_aggregator" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "automotive_mechanical" and job_code in "auto_electrician,vehicle_mechanic_diagnostics,panel_beater_spray_painter,tyre_technician_alignment_specialist,auto_parts_salesperson" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "personal_services_beauty" and job_code in "barber_hairstylist,beautician_cosmetologist,massage_therapist,fitness_instructor_personal_trainer,house_cleaner_domestic_worker,childcare_provider_nanny" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "security_protective_services" and job_code in "security_guard_corporate_security,private_investigator,firefighter_emergency_responder,loss_prevention_officer" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "gig_economy_freelance_remote" and job_code in "freelance_developer_designer,virtual_assistant_remote_support,online_english_tutor,transcriptionist_translator,micro_task_worker" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "science_research_higher_education" and job_code in "laboratory_researcher_scientist,research_assistant,clinical_trial_coordinator,data_scientist_statistician,environmental_scientist_ecologist" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "entrepreneurship_small_business" and job_code in "kiosk_retail_owner,salon_barber_shop_owner,food_vendor_street_food_stall,courier_startup_founder,tech_startup_founder" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "creative_entrepreneurship_arts" and job_code in "fashion_designer_tailor_entrepreneur,musician_audio_producer,craft_maker_artisan,film_documentary_maker_producer" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% elif category_code == "sports_recreation_fitness" and job_code in "sports_administrator_club_manager,referee_umpire_match_official,sports_coach,sports_football,sports_athletics,sports_rugby,sports_basketball,sports_boxing_taekwondo,fitness_instructor_gym_trainer" %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="job_occupations" value="{{ job_code }}" id="job_{{ job_code }}" class="form-check-input job-checkbox" onchange="checkJobSelectionLimit()" {% if job_code in member.job_occupations %}checked{% endif %}>
+                                    <label for="job_{{ job_code }}" class="form-check-label" style="color: #ffffff; font-size: 0.9em;">{{ job_label }}</label>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Additional Income & Occupation Details (Optional)</label>
+                <textarea name="income_details" rows="3" placeholder="Enter additional income information, occupation details, or other relevant information..."
+                          style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">{{ member.income_details }}</textarea>
+            </div>
+        </div>
+
+        <!-- Baptismal Information Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-cross" style="margin-right: 8px;"></i>
+                Baptismal Information
+            </h6>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Baptismal First Name *</label>
+                    <input type="text" name="baptismal_first_name" value="{{ member.baptismal_first_name }}" required
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Baptismal Last Name *</label>
+                    <input type="text" name="baptismal_last_name" value="{{ member.baptismal_last_name }}" required
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date Baptized *</label>
+                    <input type="date" name="date_baptized" value="{{ member.date_baptized|date:'Y-m-d' }}" required
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Date Joined Religion *</label>
+                    <input type="date" name="date_joined_religion" value="{{ member.date_joined_religion|date:'Y-m-d' }}" required
+                           style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Church Structure Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #dc2626;">
+                <i class="fas fa-home" style="margin-right: 8px;"></i>
+                Home Church Structure *
+            </h6>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Diocese *</label>
+                    <select name="user_home_diocese" id="home-diocese-select" required
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Diocese</option>
+                        {% for diocese in dioceses %}
+                        <option value="{{ diocese.id }}" {% if member.user_home_diocese.id == diocese.id %}selected{% endif %}>{{ diocese.name }} ({{ diocese.country }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Pastorate *</label>
+                    <select name="user_home_pastorate" id="home-pastorate-select" required
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Pastorate</option>
+                        <option value="{{ member.user_home_pastorate.id }}" selected>{{ member.user_home_pastorate.name }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Home Church *</label>
+                    <select name="user_home_church" id="home-church-select" required
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Church</option>
+                        <option value="{{ member.user_home_church.id }}" selected>{{ member.user_home_church.name }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Town Church Structure Section (Optional) -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #6b7280;">
+                <i class="fas fa-building" style="margin-right: 8px;"></i>
+                Town Church Structure (Optional - for work/education/treatment)
+            </h6>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Diocese</label>
+                    <select name="user_town_diocese" id="town-diocese-select"
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Diocese</option>
+                        {% for diocese in dioceses %}
+                        <option value="{{ diocese.id }}" {% if member.user_town_diocese and member.user_town_diocese.id == diocese.id %}selected{% endif %}>{{ diocese.name }} ({{ diocese.country }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Pastorate</label>
+                    <select name="user_town_pastorate" id="town-pastorate-select"
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Pastorate</option>
+                        {% if member.user_town_pastorate %}
+                        <option value="{{ member.user_town_pastorate.id }}" selected>{{ member.user_town_pastorate.name }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #ffffff; margin-bottom: 5px; display: block;">Town Church</label>
+                    <select name="user_town_church" id="town-church-select"
+                            style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                        <option value="">Select Church</option>
+                        {% if member.user_town_church %}
+                        <option value="{{ member.user_town_church.id }}" selected>{{ member.user_town_church.name }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Fields Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #6b7280;">
+                <i class="fas fa-sliders-h" style="margin-right: 8px;"></i>
+                Custom Fields Configuration
+            </h6>
+
+            <div id="custom-fields-container">
+                {% for key, value in member.custom_fields.items %}
+                <div class="custom-field-row" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Name</label>
+                        <input type="text" name="custom_field_names[]" value="{{ key }}" placeholder="e.g., Marital Status, Education Level"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Value</label>
+                        <input type="text" name="custom_field_values[]" value="{{ value }}" placeholder="Enter value"
+                               style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    </div>
+                    <div style="display: flex; align-items: end;">
+                        <button type="button" onclick="removeCustomField(this)"
+                                style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" onclick="addCustomField()" class="btn btn-info" style="margin-top: 10px;">
+                <i class="fas fa-plus" style="margin-right: 5px;"></i>
+                Add Custom Field
+            </button>
+        </div>
+
+        <!-- Document Attachments Section -->
+        <div style="margin-bottom: 30px;">
+            <h6 style="color: #ffffff; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #6b7280;">
+                <i class="fas fa-file-alt" style="margin-right: 8px;"></i>
+                Document Attachments
+            </h6>
+
+            <!-- Existing Documents -->
+            {% if member.documents.all %}
+            <div style="margin-bottom: 20px;">
+                <h7 style="color: #f3f4f6; margin-bottom: 10px; display: block; font-weight: bold;">Existing Documents</h7>
+                {% for document in member.documents.all %}
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="color: #ffffff; font-weight: bold;">{{ document.title }}</span>
+                        <span style="color: #9ca3af; margin-left: 10px;">({{ document.get_document_type_display }})</span>
+                        <br>
+                        <small style="color: #6b7280;">{{ document.description }}</small>
+                    </div>
+                    <a href="{{ document.document_file.url }}" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div id="documents-container">
+                <!-- New document attachments will be added here dynamically -->
+            </div>
+            <button type="button" onclick="addDocument()" class="btn btn-info" style="margin-top: 10px;">
+                <i class="fas fa-plus" style="margin-right: 5px;"></i>
+                Add Document
+            </button>
+        </div>
 
         <!-- Form Actions -->
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #374151;">
@@ -271,7 +796,6 @@
 
 <script>
 // Include all the JavaScript functions from add_member.html
-// PWD Fields Toggle, Member Roles Toggle, etc.
 
 // Calculate user group based on date of birth
 function calculateUserGroup() {
@@ -369,10 +893,25 @@ function enforceSingleChurchClergy(selectedCheckbox) {
     }
 }
 
-// Single selection enforcement for Special Clergy Roles
+// Single selection enforcement for Special Clergy Roles with validation
 function enforceSingleSpecialClergy(selectedCheckbox) {
     const specialClergyCheckboxes = document.querySelectorAll('input[name="special_clergy_roles"]');
+
     if (selectedCheckbox.checked) {
+        const selectedRole = selectedCheckbox.value;
+
+        // Check if trying to select a special clergy role
+        if (['dean_king', 'dean_king_wife', 'dean_archdeacon', 'dean_archdeacon_wife'].includes(selectedRole)) {
+            // Show warning about uniqueness
+            const confirmMsg = `Warning: Only one ${selectedCheckbox.nextElementSibling.textContent} can exist in the entire church system. If you proceed, any existing ${selectedCheckbox.nextElementSibling.textContent} will need to be updated. Are you sure you want to assign this role?`;
+
+            if (!confirm(confirmMsg)) {
+                selectedCheckbox.checked = false;
+                return;
+            }
+        }
+
+        // Uncheck other special clergy roles
         specialClergyCheckboxes.forEach(checkbox => {
             if (checkbox !== selectedCheckbox) {
                 checkbox.checked = false;
@@ -381,14 +920,623 @@ function enforceSingleSpecialClergy(selectedCheckbox) {
     }
 }
 
-// Initialize page state
+// Member Search Functionality
+class MemberSearchSelect {
+    constructor(selectElement) {
+        this.selectElement = selectElement;
+        this.searchInput = null;
+        this.init();
+    }
+
+    init() {
+        this.createSearchInput();
+        this.bindEvents();
+    }
+
+    createSearchInput() {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'member-search-wrapper';
+        wrapper.style.cssText = 'position: relative;';
+
+        this.searchInput = document.createElement('input');
+        this.searchInput.type = 'text';
+        this.searchInput.className = 'form-control';
+        this.searchInput.placeholder = 'Type to search members...';
+        this.searchInput.style.cssText = 'margin-bottom: 5px; width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;';
+
+        this.selectElement.parentNode.insertBefore(wrapper, this.selectElement);
+        wrapper.appendChild(this.searchInput);
+        wrapper.appendChild(this.selectElement);
+
+        this.selectElement.style.display = 'none';
+    }
+
+    bindEvents() {
+        let timeout;
+        this.searchInput.addEventListener('input', (e) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                this.searchMembers(e.target.value);
+            }, 300);
+        });
+
+        this.searchInput.addEventListener('focus', () => {
+            if (this.searchInput.value.length >= 2) {
+                this.searchMembers(this.searchInput.value);
+            }
+        });
+    }
+
+    searchMembers(query) {
+        if (query.length < 2) {
+            this.clearResults();
+            return;
+        }
+
+        fetch(`/members/api/search/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                this.displayResults(data);
+            })
+            .catch(error => {
+                console.error('Error searching members:', error);
+            });
+    }
+
+    displayResults(members) {
+        this.clearResults();
+
+        if (members.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'No members found';
+            this.selectElement.appendChild(option);
+            this.selectElement.style.display = 'block';
+            return;
+        }
+
+        members.forEach(member => {
+            const option = document.createElement('option');
+            option.value = member.id;
+            option.textContent = member.display;
+            this.selectElement.appendChild(option);
+        });
+
+        this.selectElement.style.display = 'block';
+
+        this.selectElement.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const selectedOption = e.target.options[e.target.selectedIndex];
+                this.searchInput.value = selectedOption.textContent;
+                this.selectElement.style.display = 'none';
+            }
+        }, { once: true });
+    }
+
+    clearResults() {
+        // Keep existing selected option
+        const existingSelected = this.selectElement.querySelector('option[selected]');
+        this.selectElement.innerHTML = '<option value="">Select...</option>';
+        if (existingSelected) {
+            this.selectElement.appendChild(existingSelected);
+        }
+        this.selectElement.style.display = 'none';
+    }
+}
+
+// Enhanced Cascading Dropdown Logic
 document.addEventListener('DOMContentLoaded', function() {
-    // Trigger pwd field visibility if pwd is selected
+    const homeDioceseSelect = document.getElementById('home-diocese-select');
+    const homePastorateSelect = document.getElementById('home-pastorate-select');
+    const homeChurchSelect = document.getElementById('home-church-select');
+
+    const townDioceseSelect = document.getElementById('town-diocese-select');
+    const townPastorateSelect = document.getElementById('town-pastorate-select');
+    const townChurchSelect = document.getElementById('town-church-select');
+
+    // Initialize member search selects
+    const memberSelects = document.querySelectorAll('.member-select');
+    memberSelects.forEach(select => {
+        new MemberSearchSelect(select);
+    });
+
+    // Cascading dropdown functionality for Home Church Structure
+    if (homeDioceseSelect) {
+        homeDioceseSelect.addEventListener('change', function() {
+            const dioceseId = this.value;
+            const currentPastorateId = homePastorateSelect.querySelector('option[selected]')?.value;
+            const currentChurchId = homeChurchSelect.querySelector('option[selected]')?.value;
+            
+            homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+            homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+            if (dioceseId) {
+                // Show loading state
+                homePastorateSelect.innerHTML = '<option value="">Loading...</option>';
+                
+                fetch(`/members/api/pastorates/${dioceseId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(pastorate => {
+                                const option = document.createElement('option');
+                                option.value = pastorate.id;
+                                option.textContent = pastorate.name;
+                                if (pastorate.id == currentPastorateId) {
+                                    option.selected = true;
+                                }
+                                homePastorateSelect.appendChild(option);
+                            });
+                            
+                            // Trigger pastorate change to load churches if a pastorate was selected
+                            if (currentPastorateId) {
+                                homePastorateSelect.dispatchEvent(new Event('change'));
+                            }
+                        } else {
+                            homePastorateSelect.innerHTML = '<option value="">No pastorates found</option>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching pastorates:', error);
+                        homePastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
+                    });
+            }
+        });
+        
+        // Trigger initial load if diocese is already selected
+        if (homeDioceseSelect.value) {
+            homeDioceseSelect.dispatchEvent(new Event('change'));
+        }
+    }
+
+    if (homePastorateSelect) {
+        homePastorateSelect.addEventListener('change', function() {
+            const pastorateId = this.value;
+            const currentChurchId = homeChurchSelect.querySelector('option[selected]')?.value;
+            
+            homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+            if (pastorateId) {
+                // Show loading state
+                homeChurchSelect.innerHTML = '<option value="">Loading...</option>';
+                
+                fetch(`/members/api/churches/${pastorateId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(church => {
+                                const option = document.createElement('option');
+                                option.value = church.id;
+                                option.textContent = church.name;
+                                if (church.id == currentChurchId) {
+                                    option.selected = true;
+                                }
+                                homeChurchSelect.appendChild(option);
+                            });
+                        } else {
+                            homeChurchSelect.innerHTML = '<option value="">No churches found</option>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching churches:', error);
+                        homeChurchSelect.innerHTML = '<option value="">Error loading churches</option>';
+                    });
+            }
+        });
+    }
+
+    // Cascading dropdown functionality for Town Church Structure
+    if (townDioceseSelect) {
+        townDioceseSelect.addEventListener('change', function() {
+            const dioceseId = this.value;
+            const currentPastorateId = townPastorateSelect.querySelector('option[selected]')?.value;
+            const currentChurchId = townChurchSelect.querySelector('option[selected]')?.value;
+            
+            townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+            townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+            if (dioceseId) {
+                // Show loading state
+                townPastorateSelect.innerHTML = '<option value="">Loading...</option>';
+                
+                fetch(`/members/api/pastorates/${dioceseId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(pastorate => {
+                                const option = document.createElement('option');
+                                option.value = pastorate.id;
+                                option.textContent = pastorate.name;
+                                if (pastorate.id == currentPastorateId) {
+                                    option.selected = true;
+                                }
+                                townPastorateSelect.appendChild(option);
+                            });
+                            
+                            // Trigger pastorate change to load churches if a pastorate was selected
+                            if (currentPastorateId) {
+                                townPastorateSelect.dispatchEvent(new Event('change'));
+                            }
+                        } else {
+                            townPastorateSelect.innerHTML = '<option value="">No pastorates found</option>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching pastorates:', error);
+                        townPastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
+                    });
+            }
+        });
+        
+        // Trigger initial load if diocese is already selected
+        if (townDioceseSelect.value) {
+            townDioceseSelect.dispatchEvent(new Event('change'));
+        }
+    }
+
+    if (townPastorateSelect) {
+        townPastorateSelect.addEventListener('change', function() {
+            const pastorateId = this.value;
+            const currentChurchId = townChurchSelect.querySelector('option[selected]')?.value;
+            
+            townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+
+            if (pastorateId) {
+                // Show loading state
+                townChurchSelect.innerHTML = '<option value="">Loading...</option>';
+                
+                fetch(`/members/api/churches/${pastorateId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        townChurchSelect.innerHTML = '<option value="">Select Church</option>';
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(church => {
+                                const option = document.createElement('option');
+                                option.value = church.id;
+                                option.textContent = church.name;
+                                if (church.id == currentChurchId) {
+                                    option.selected = true;
+                                }
+                                townChurchSelect.appendChild(option);
+                            });
+                        } else {
+                            townChurchSelect.innerHTML = '<option value="">No churches found</option>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching churches:', error);
+                        townChurchSelect.innerHTML = '<option value="">Error loading churches</option>';
+                    });
+            }
+        });
+    }
+
+    // Initialize page state
     togglePwdFields();
     
     // Trigger clergy roles visibility if clergy is selected
     if (document.getElementById('role_clergy').checked) {
         toggleClergyRoles();
+    }
+    
+    // Calculate initial user group based on existing date
+    calculateUserGroup();
+});
+
+// Custom Fields Management
+function addCustomField() {
+    const container = document.getElementById('custom-fields-container');
+    const newRow = document.createElement('div');
+    newRow.className = 'custom-field-row';
+    newRow.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 15px;';
+
+    newRow.innerHTML = `
+        <div>
+            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Name</label>
+            <input type="text" name="custom_field_names[]" placeholder="e.g., Marital Status, Education Level"
+                   style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+        </div>
+        <div>
+            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Value</label>
+            <input type="text" name="custom_field_values[]" placeholder="Enter value"
+                   style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+        </div>
+        <div style="display: flex; align-items: end;">
+            <button type="button" onclick="removeCustomField(this)"
+                    style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(newRow);
+}
+
+function removeCustomField(button) {
+    button.closest('.custom-field-row').remove();
+}
+
+// Document Management
+function addDocument() {
+    const container = document.getElementById('documents-container');
+    const newRow = document.createElement('div');
+    newRow.className = 'document-row';
+    newRow.style.cssText = 'border: 1px solid #374151; padding: 15px; border-radius: 4px; margin-bottom: 15px; background: #1f2937;';
+
+    newRow.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Document Type</label>
+                <select name="document_types[]"
+                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+                    <option value="">Select Document Type</option>
+                    <option value="baptism_certificate">Baptism Certificate</option>
+                    <option value="annual_tithe_card">Annual Tithe Card</option>
+                    <option value="id_document">ID Document</option>
+                    <option value="medical_record">Medical Record</option>
+                    <option value="membership_certificate">Membership Certificate</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Document Title</label>
+                <input type="text" name="document_titles[]" placeholder="e.g., Baptism Certificate 2023"
+                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+            </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Description (Optional)</label>
+            <textarea name="document_descriptions[]" rows="2" placeholder="Additional notes about this document"
+                      style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: end;">
+            <div>
+                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload Document</label>
+                <input type="file" name="document_files[]"
+                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
+            </div>
+            <button type="button" onclick="removeDocument(this)"
+                    style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(newRow);
+}
+
+function removeDocument(button) {
+    button.closest('.document-row').remove();
+}
+
+// Job Selection Limit
+function checkJobSelectionLimit() {
+    const checkboxes = document.querySelectorAll('.job-checkbox:checked');
+    const limit = 5;
+    let messageElement = document.getElementById('job-selection-message');
+
+    if (checkboxes.length > limit) {
+        alert(`You can select a maximum of ${limit} jobs.`);
+        // Uncheck the last checked checkbox to enforce the limit
+        checkboxes[checkboxes.length - 1].checked = false;
+    }
+
+    // Optionally, display a message to the user
+    if (!messageElement) {
+        const parentDiv = document.querySelector('label'); // Get first label, adjust as needed
+        const msgEl = document.createElement('span');
+        msgEl.id = 'job-selection-message';
+        msgEl.style.color = '#ffcc00'; // Yellow color for warning
+        msgEl.style.marginLeft = '10px';
+        msgEl.style.fontSize = '0.8em';
+        if (parentDiv && parentDiv.parentNode) {
+            parentDiv.parentNode.insertBefore(msgEl, parentDiv.nextSibling);
+        }
+        messageElement = msgEl;
+    }
+    if (messageElement) {
+        messageElement.textContent = `Selected: ${checkboxes.length}/${limit}`;
+    }
+}
+
+// Location Autocomplete Functionality
+class LocationAutocomplete {
+    constructor(inputElement, suggestionsElement) {
+        this.input = inputElement;
+        this.suggestions = suggestionsElement;
+        this.selectedIndex = -1;
+        this.searchTimeout = null;
+        this.init();
+    }
+
+    init() {
+        this.input.addEventListener('input', (e) => this.handleInput(e));
+        this.input.addEventListener('keydown', (e) => this.handleKeydown(e));
+        this.input.addEventListener('blur', (e) => this.handleBlur(e));
+        this.input.addEventListener('focus', (e) => this.handleFocus(e));
+    }
+
+    handleInput(e) {
+        const query = e.target.value.trim();
+        
+        if (query.length < 3) {
+            this.hideSuggestions();
+            return;
+        }
+
+        // Clear previous timeout
+        if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+        }
+
+        // Debounce the search to avoid too many API calls
+        this.searchTimeout = setTimeout(() => {
+            this.searchLocations(query);
+        }, 300);
+    }
+
+    async searchLocations(query) {
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1`);
+            const data = await response.json();
+            this.showSuggestions(data);
+        } catch (error) {
+            console.error('Error fetching location suggestions:', error);
+            this.hideSuggestions();
+        }
+    }
+
+    showSuggestions(locations) {
+        if (locations.length === 0) {
+            this.hideSuggestions();
+            return;
+        }
+
+        this.suggestions.innerHTML = '';
+        this.selectedIndex = -1;
+
+        locations.forEach((location, index) => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'location-suggestion-item';
+            suggestionItem.style.cssText = `
+                padding: 10px;
+                cursor: pointer;
+                border-bottom: 1px solid #374151;
+                color: #ffffff;
+                transition: background-color 0.2s;
+            `;
+            
+            // Format the display name
+            const displayName = this.formatLocationName(location);
+            suggestionItem.textContent = displayName;
+            suggestionItem.dataset.fullName = displayName;
+            suggestionItem.dataset.index = index;
+
+            suggestionItem.addEventListener('mousedown', (e) => {
+                e.preventDefault(); // Prevent blur event
+                this.selectSuggestion(displayName);
+            });
+
+            suggestionItem.addEventListener('mouseenter', () => {
+                this.selectedIndex = index;
+                this.highlightSuggestion();
+            });
+
+            this.suggestions.appendChild(suggestionItem);
+        });
+
+        this.suggestions.style.display = 'block';
+    }
+
+    formatLocationName(location) {
+        const address = location.address || {};
+        const parts = [];
+
+        // Add city/town/village
+        if (address.city) parts.push(address.city);
+        else if (address.town) parts.push(address.town);
+        else if (address.village) parts.push(address.village);
+        else if (address.county) parts.push(address.county);
+
+        // Add state/region if different from city
+        if (address.state && !parts.includes(address.state)) {
+            parts.push(address.state);
+        }
+
+        // Add country
+        if (address.country) parts.push(address.country);
+
+        return parts.length > 0 ? parts.join(', ') : location.display_name;
+    }
+
+    hideSuggestions() {
+        this.suggestions.style.display = 'none';
+        this.selectedIndex = -1;
+    }
+
+    handleKeydown(e) {
+        const suggestionItems = this.suggestions.querySelectorAll('.location-suggestion-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            this.selectedIndex = Math.min(this.selectedIndex + 1, suggestionItems.length - 1);
+            this.highlightSuggestion();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
+            this.highlightSuggestion();
+        } else if (e.key === 'Enter' && this.selectedIndex >= 0) {
+            e.preventDefault();
+            const selectedItem = suggestionItems[this.selectedIndex];
+            if (selectedItem) {
+                this.selectSuggestion(selectedItem.dataset.fullName);
+            }
+        } else if (e.key === 'Escape') {
+            this.hideSuggestions();
+        }
+    }
+
+    highlightSuggestion() {
+        const suggestionItems = this.suggestions.querySelectorAll('.location-suggestion-item');
+        suggestionItems.forEach((item, index) => {
+            if (index === this.selectedIndex) {
+                item.style.backgroundColor = '#374151';
+            } else {
+                item.style.backgroundColor = 'transparent';
+            }
+        });
+    }
+
+    selectSuggestion(locationName) {
+        this.input.value = locationName;
+        this.hideSuggestions();
+        this.input.focus();
+    }
+
+    handleBlur(e) {
+        // Delay hiding suggestions to allow for click events
+        setTimeout(() => {
+            this.hideSuggestions();
+        }, 150);
+    }
+
+    handleFocus(e) {
+        if (this.input.value.length >= 3) {
+            this.searchLocations(this.input.value);
+        }
+    }
+}
+
+// Initialize location autocomplete when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const locationInput = document.getElementById('location-input');
+    const locationSuggestions = document.getElementById('location-suggestions');
+    
+    if (locationInput && locationSuggestions) {
+        new LocationAutocomplete(locationInput, locationSuggestions);
     }
 });
 </script>
