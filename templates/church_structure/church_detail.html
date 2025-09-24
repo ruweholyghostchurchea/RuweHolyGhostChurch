@@ -359,7 +359,7 @@
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #374151;">
                                     <strong style="color: #ffffff;">{{ member.first_name }} {{ member.last_name }}</strong>
-                                    {% if member.photo %}
+                                    {% if member.display_photo %}
                                     <br><small style="color: #9ca3af;">
                                         <i class="fas fa-image" style="margin-right: 5px;"></i>
                                         Has photo
@@ -367,22 +367,22 @@
                                     {% endif %}
                                 </td>
                                 <td style="padding: 10px; border: 1px solid #374151; color: #e5e7eb;">
-                                    {{ member.phone|default:"Not provided" }}
+                                    {{ member.phone_number|default:"Not provided" }}
                                 </td>
                                 <td style="padding: 10px; border: 1px solid #374151; color: #e5e7eb;">
-                                    {{ member.email|default:"Not provided" }}
+                                    {{ member.email_address|default:"Not provided" }}
                                 </td>
                                 <td style="padding: 10px; border: 1px solid #374151; color: #e5e7eb;">
-                                    {% if member.emergency_contact_name %}
-                                        <strong>{{ member.emergency_contact_name }}</strong><br>
-                                        <small>{{ member.emergency_contact_phone|default:"No phone" }}</small>
+                                    {% if member.emergency_contact_1_name %}
+                                        <strong>{{ member.emergency_contact_1_name }}</strong><br>
+                                        <small>{{ member.emergency_contact_1_phone|default:"No phone" }}</small>
                                     {% else %}
                                         Not provided
                                     {% endif %}
                                 </td>
                                 <td style="padding: 10px; border: 1px solid #374151;">
                                     <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8em;
-                                               background: {% if member.membership_status == 'active' %}#10b981{% elif member.membership_status == 'inactive' %}#f59e0b{% else %}#6b7280{% endif %};
+                                               background: {% if member.membership_status == 'Active' %}#10b981{% elif member.membership_status == 'Inactive' %}#f59e0b{% else %}#6b7280{% endif %};
                                                color: white;">
                                         {{ member.get_membership_status_display|default:member.membership_status }}
                                     </span>
