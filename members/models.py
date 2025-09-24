@@ -434,8 +434,8 @@ class Member(models.Model):
     is_ordained = models.BooleanField(default=False, verbose_name="Ordained Member")
     
     # Profile Photo
-    profile_photo = models.URLField(blank=True, null=True, help_text='Member photo URL')
-    profile_photo_url = models.URLField(blank=True, help_text="Alternative to uploading a photo")
+    profile_photo = models.ImageField(upload_to='member_photos/', blank=True, null=True, help_text='Upload member photo')
+    profile_photo_url = models.URLField(blank=True, help_text="Alternative to uploading - provide image URL (e.g., https://i.imgur.com/BUxE9oF.jpeg)")
     
     # Custom Fields (JSON field for flexible custom data)
     custom_fields = models.JSONField(default=dict, blank=True, help_text="Store custom member data as key-value pairs")
@@ -516,7 +516,7 @@ class Member(models.Model):
     def display_photo(self):
         """Return the profile photo URL or uploaded photo URL"""
         if self.profile_photo:
-            return self.profile_photo
+            return self.profile_photo.url
         elif self.profile_photo_url:
             return self.profile_photo_url
         return None
