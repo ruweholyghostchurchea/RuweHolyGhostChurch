@@ -127,6 +127,7 @@
                         <th style="padding: 12px; color: white; border: 1px solid #374151;">Member</th>
                         <th style="padding: 12px; color: white; border: 1px solid #374151;">Contact</th>
                         <th style="padding: 12px; color: white; border: 1px solid #374151;">Church</th>
+                        <th style="padding: 12px; color: white; border: 1px solid #374151;">User Group</th>
                         <th style="padding: 12px; color: white; border: 1px solid #374151;">Status</th>
                         <th style="padding: 12px; color: white; border: 1px solid #374151;">Actions</th>
                     </tr>
@@ -162,19 +163,23 @@
                             <div style="color: #ffffff;">{{ member.home_church_hierarchy }}</div>
                         </td>
                         <td style="padding: 12px; border: 1px solid #374151;">
-                            <span class="badge badge-{{ member.user_group|lower }}" style="background: #22c55e; color: white; padding: 4px 8px; border-radius: 4px;">
+                            <span style="background: {% if member.user_group == 'Youth' %}#22c55e{% elif member.user_group == 'Adult' %}#3b82f6{% else %}#f59e0b{% endif %}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">
                                 {{ member.user_group }}
                             </span>
                         </td>
                         <td style="padding: 12px; border: 1px solid #374151;">
-                            <span class="badge badge-{% if member.membership_status == 'Active' %}success{% elif member.membership_status == 'Inactive' %}warning{% else %}secondary{% endif %}" style="background: {% if member.membership_status == 'Active' %}#22c55e{% elif member.membership_status == 'Inactive' %}#f59e0b{% else %}#6b7280{% endif %}; color: white; padding: 4px 8px; border-radius: 4px;">
+                            <span style="background: {% if member.membership_status == 'Active' %}#22c55e{% elif member.membership_status == 'Inactive' %}#f59e0b{% elif member.membership_status == 'Transferred' %}#3b82f6{% elif member.membership_status == 'Left/Quit' %}#ef4444{% elif member.membership_status == 'Dead' %}#6b7280{% else %}#6b7280{% endif %}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">
                                 {{ member.membership_status }}
                             </span>
                         </td>
                         <td style="padding: 12px; border: 1px solid #374151;">
                             <a href="{% url 'members:member_detail' member.username %}" 
-                               style="color: #3b82f6; text-decoration: none; margin-right: 10px;">
-                                <i class="fas fa-eye"></i> View
+                               style="color: #3b82f6; text-decoration: none; margin-right: 10px;" title="View Member">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'members:edit_member' member.username %}" 
+                               style="color: #22c55e; text-decoration: none;" title="Update Member">
+                                <i class="fas fa-edit"></i>
                             </a>
                         </td>
                     </tr>

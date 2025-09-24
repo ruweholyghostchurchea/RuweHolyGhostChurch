@@ -345,6 +345,194 @@ def member_detail(request, username):
     return render(request, 'members/member_detail.html', context)
 
 @login_required
+def edit_member(request, username):
+    """Edit existing member view"""
+    member = get_object_or_404(Member, username=username)
+    
+    if request.method == 'GET':
+        dioceses = Diocese.objects.filter(is_active=True).order_by('country', 'name')
+        context = {
+            'page_title': f'Edit Member - {member.full_name}',
+            'member': member,
+            'dioceses': dioceses,
+            'membership_statuses': Member.MEMBERSHIP_STATUS_CHOICES,
+            'pwd_types': Member.PWD_TYPE_CHOICES,
+            'member_roles': Member.MEMBER_ROLES,
+            'church_clergy_roles': Member.CHURCH_CLERGY_ROLES,
+            'special_clergy_roles': Member.SPECIAL_CLERGY_ROLES,
+            'job_categories': Member.JOB_CATEGORIES,
+            'job_choices': Member.JOB_CHOICES,
+        }
+        return render(request, 'members/edit_member.html', context)
+
+    elif request.method == 'POST':
+        try:
+            # Personal Information
+            member.first_name = request.POST.get('first_name')
+            member.last_name = request.POST.get('last_name')
+            new_username = request.POST.get('username')
+            member.gender = request.POST.get('gender')
+            date_of_birth_str = request.POST.get('date_of_birth')
+            member.marital_status = request.POST.get('marital_status')
+            member.location = request.POST.get('location')
+            member.education_level = request.POST.get('education_level')
+
+            # Check username uniqueness if changed
+            if new_username != member.username:
+                if Member.objects.filter(username=new_username).exists():
+                    messages.error(request, 'Username already exists. Please choose a different username.')
+                    return redirect('members:edit_member', username=username)
+                member.username = new_username
+
+            # Convert date strings to date objects
+            try:
+                member.date_of_birth = datetime.strptime(date_of_birth_str, '%Y-%m-%d').date() if date_of_birth_str else None
+            except ValueError:
+                messages.error(request, 'Invalid date of birth format. Please use YYYY-MM-DD format.')
+                return redirect('members:edit_member', username=username)
+
+            # Member Roles
+            member_roles = request.POST.getlist('member_roles')
+            church_clergy_roles = request.POST.getlist('church_clergy_roles') if 'clergy' in member_roles else []
+            special_clergy_roles = request.POST.getlist('special_clergy_roles') if 'clergy' in member_roles else []
+
+            # Ensure regular_member is always included
+            if 'regular_member' not in member_roles:
+                member_roles.append('regular_member')
+
+            member.member_roles = member_roles
+            member.church_clergy_roles = church_clergy_roles
+            member.special_clergy_roles = special_clergy_roles
+
+            phone_number = request.POST.get('phone_number')
+            email_address = request.POST.get('email_address', '')
+
+            # Check phone number uniqueness if changed
+            if phone_number != member.phone_number:
+                if Member.objects.filter(phone_number=phone_number).exists():
+                    messages.error(request, 'Phone number already exists. Please use a different phone number.')
+                    return redirect('members:edit_member', username=username)
+                member.phone_number = phone_number
+
+            # Check email uniqueness if changed
+            if email_address != member.email_address:
+                if email_address and Member.objects.filter(email_address=email_address).exists():
+                    messages.error(request, 'Email address already exists. Please use a different email address.')
+                    return redirect('members:edit_member', username=username)
+                member.email_address = email_address
+
+            # Job Information
+            member.job_occupations = request.POST.getlist('job_occupations')
+            member.income_details = request.POST.get('income_details', '')
+
+            # Baptismal Information
+            member.baptismal_first_name = request.POST.get('baptismal_first_name')
+            member.baptismal_last_name = request.POST.get('baptismal_last_name')
+            date_baptized_str = request.POST.get('date_baptized')
+            date_joined_religion_str = request.POST.get('date_joined_religion')
+            
+            # Convert baptismal date strings to date objects
+            try:
+                member.date_baptized = datetime.strptime(date_baptized_str, '%Y-%m-%d').date() if date_baptized_str else None
+                member.date_joined_religion = datetime.strptime(date_joined_religion_str, '%Y-%m-%d').date() if date_joined_religion_str else None
+            except ValueError:
+                messages.error(request, 'Invalid baptismal or religion date format. Please use YYYY-MM-DD format.')
+                return redirect('members:edit_member', username=username)
+
+            # Home Church Structure
+            user_home_diocese_id = request.POST.get('user_home_diocese')
+            user_home_pastorate_id = request.POST.get('user_home_pastorate')
+            user_home_church_id = request.POST.get('user_home_church')
+
+            # Emergency Contacts
+            member.emergency_contact_1_name = request.POST.get('emergency_contact_1_name', '')
+            member.emergency_contact_1_relationship = request.POST.get('emergency_contact_1_relationship', '')
+            member.emergency_contact_1_phone = request.POST.get('emergency_contact_1_phone', '')
+            member.emergency_contact_1_email = request.POST.get('emergency_contact_1_email', '')
+
+            member.emergency_contact_2_name = request.POST.get('emergency_contact_2_name', '')
+            member.emergency_contact_2_relationship = request.POST.get('emergency_contact_2_relationship', '')
+            member.emergency_contact_2_phone = request.POST.get('emergency_contact_2_phone', '')
+            member.emergency_contact_2_email = request.POST.get('emergency_contact_2_email', '')
+
+            # Profile Photo
+            profile_photo = request.FILES.get('profile_photo')
+            profile_photo_url = request.POST.get('profile_photo_url', '').strip()
+            
+            if profile_photo:
+                member.profile_photo = profile_photo
+            if profile_photo_url:
+                member.profile_photo_url = profile_photo_url
+
+            # Custom Fields
+            custom_field_names = request.POST.getlist('custom_field_names[]')
+            custom_field_values = request.POST.getlist('custom_field_values[]')
+            custom_fields = {}
+            for name, value in zip(custom_field_names, custom_field_values):
+                if name and value:  # Only add non-empty fields
+                    custom_fields[name] = value
+            member.custom_fields = custom_fields
+
+            # New Fields
+            member.membership_status = request.POST.get('membership_status', 'Active')
+            member.is_pwd = request.POST.get('is_pwd') == 'Yes'
+            member.pwd_type = request.POST.get('pwd_type', '') if member.is_pwd else ''
+            member.pwd_other_description = request.POST.get('pwd_other_description', '')
+            member.is_staff = request.POST.get('is_staff') == 'Yes'
+            member.is_ordained = request.POST.get('is_ordained') == 'Yes'
+
+            # Family Details (optional)
+            member.father_id = request.POST.get('father') or None
+            member.mother_id = request.POST.get('mother') or None
+            member.guardian_id = request.POST.get('guardian') or None
+            member.brother_id = request.POST.get('brother') or None
+            member.sister_id = request.POST.get('sister') or None
+            member.uncle_id = request.POST.get('uncle') or None
+            member.aunt_id = request.POST.get('aunt') or None
+            member.friend_id = request.POST.get('friend') or None
+
+            # Town Church Structure (Optional)
+            user_town_diocese_id = request.POST.get('user_town_diocese') or None
+            user_town_pastorate_id = request.POST.get('user_town_pastorate') or None
+            user_town_church_id = request.POST.get('user_town_church') or None
+
+            # Get related objects
+            member.user_home_diocese = Diocese.objects.get(id=user_home_diocese_id)
+            member.user_home_pastorate = Pastorate.objects.get(id=user_home_pastorate_id)
+            member.user_home_church = Church.objects.get(id=user_home_church_id)
+
+            member.user_town_diocese = Diocese.objects.get(id=user_town_diocese_id) if user_town_diocese_id else None
+            member.user_town_pastorate = Pastorate.objects.get(id=user_town_pastorate_id) if user_town_pastorate_id else None
+            member.user_town_church = Church.objects.get(id=user_town_church_id) if user_town_church_id else None
+
+            # Save the member
+            member.save()
+
+            # Handle document uploads
+            document_types = request.POST.getlist('document_types[]')
+            document_titles = request.POST.getlist('document_titles[]')
+            document_descriptions = request.POST.getlist('document_descriptions[]')
+            document_files = request.FILES.getlist('document_files[]')
+
+            for i, (doc_type, title, description, file) in enumerate(zip(document_types, document_titles, document_descriptions, document_files)):
+                if doc_type and title and file:  # Only process if all required fields are present
+                    MemberDocument.objects.create(
+                        member=member,
+                        document_type=doc_type,
+                        title=title,
+                        description=description,
+                        document_file=file,
+                        uploaded_by=f"Admin Update"
+                    )
+
+            messages.success(request, f'Member "{member.full_name}" has been successfully updated!')
+            return redirect('members:member_detail', username=member.username)
+
+        except Exception as e:
+            messages.error(request, f'Error updating member: {str(e)}')
+            return redirect('members:edit_member', username=username)
+
+@login_required
 def search_members_api(request):
     """API endpoint to search members for family relationships"""
     search_term = request.GET.get('q', '').strip()
