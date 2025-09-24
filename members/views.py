@@ -6,7 +6,6 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from .models import Member, MemberDocument
 from church_structure.models import Diocese, Pastorate, Church
-from django.core.exceptions import ObjectDoesNotExist
 import json
 from datetime import datetime
 
