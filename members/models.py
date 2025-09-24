@@ -516,7 +516,7 @@ class Member(models.Model):
     def display_photo(self):
         """Return the profile photo URL or uploaded photo URL"""
         if self.profile_photo:
-            return self.profile_photo.url
+            return self.profile_photo
         elif self.profile_photo_url:
             return self.profile_photo_url
         return None
