@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from .models import Member, MemberDocument
 from church_structure.models import Diocese, Pastorate, Church
+from django.core.exceptions import ObjectDoesNotExist
 import json
 from datetime import datetime
 
@@ -496,14 +497,27 @@ def edit_member(request, username):
             user_town_pastorate_id = request.POST.get('user_town_pastorate') or None
             user_town_church_id = request.POST.get('user_town_church') or None
 
-            # Get related objects
-            member.user_home_diocese = Diocese.objects.get(id=user_home_diocese_id)
-            member.user_home_pastorate = Pastorate.objects.get(id=user_home_pastorate_id)
-            member.user_home_church = Church.objects.get(id=user_home_church_id)
+            # Validation for required church structure fields
+            required_church_fields = [
+                user_home_diocese_id, user_home_pastorate_id, user_home_church_id
+            ]
 
-            member.user_town_diocese = Diocese.objects.get(id=user_town_diocese_id) if user_town_diocese_id else None
-            member.user_town_pastorate = Pastorate.objects.get(id=user_town_pastorate_id) if user_town_pastorate_id else None
-            member.user_town_church = Church.objects.get(id=user_town_church_id) if user_town_church_id else None
+            if not all(required_church_fields):
+                messages.error(request, 'Please fill in all required church structure fields (Home Diocese, Pastorate, Church).')
+                return redirect('members:edit_member', username=username)
+
+            # Get related objects with error handling
+            try:
+                member.user_home_diocese = Diocese.objects.get(id=user_home_diocese_id)
+                member.user_home_pastorate = Pastorate.objects.get(id=user_home_pastorate_id)
+                member.user_home_church = Church.objects.get(id=user_home_church_id)
+
+                member.user_town_diocese = Diocese.objects.get(id=user_town_diocese_id) if user_town_diocese_id else None
+                member.user_town_pastorate = Pastorate.objects.get(id=user_town_pastorate_id) if user_town_pastorate_id else None
+                member.user_town_church = Church.objects.get(id=user_town_church_id) if user_town_church_id else None
+            except (Diocese.DoesNotExist, Pastorate.DoesNotExist, Church.DoesNotExist) as e:
+                messages.error(request, f'Invalid church structure selection: {str(e)}')
+                return redirect('members:edit_member', username=username)
 
             # Save the member
             member.save()
