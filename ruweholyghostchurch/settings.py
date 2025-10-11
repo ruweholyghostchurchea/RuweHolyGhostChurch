@@ -112,6 +112,8 @@ INSTALLED_APPS = [
     'equipment',
     'reports',
     'church_settings',
+    'members_portal',  # Members-facing portal
+    'public_site',  # Public website
 ]
 
 MIDDLEWARE = [
