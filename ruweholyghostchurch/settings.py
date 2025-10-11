@@ -32,7 +32,13 @@ ALLOWED_HOSTS = [
     '*.replit.app',
     '*.replit.dev',
     '*.replit.co',
-    '*'  # Allow all hosts for development
+    # Subdomain support for production
+    'ruweholyghostchurch.org',
+    '*.ruweholyghostchurch.org',
+    'cms.ruweholyghostchurch.org',
+    'members.ruweholyghostchurch.org',
+    'www.ruweholyghostchurch.org',
+    '*'  # Allow all hosts for development (remove in production)
 ]
 
 # CSRF settings for Replit and Production
@@ -40,6 +46,12 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.dev',
     'https://*.replit.co',
     'https://*.replit.app',
+    # Production subdomains
+    'https://ruweholyghostchurch.org',
+    'https://*.ruweholyghostchurch.org',
+    'https://cms.ruweholyghostchurch.org',
+    'https://members.ruweholyghostchurch.org',
+    'https://www.ruweholyghostchurch.org',
 ]
 
 # Enhanced CSRF settings
@@ -64,6 +76,10 @@ SECURE_HSTS_PRELOAD = not DEBUG
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# Subdomain support - share sessions across subdomains
+SESSION_COOKIE_DOMAIN = '.ruweholyghostchurch.org' if not DEBUG else None
+SESSION_COOKIE_NAME = 'ruwehg_sessionid'
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
@@ -103,6 +119,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 'django.middleware.cache.UpdateCacheMiddleware',  # Temporarily disabled
     'corsheaders.middleware.CorsMiddleware',
+    'ruweholyghostchurch.middleware.SubdomainMiddleware',  # Subdomain routing
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware',  # Temporarily disabled
     'django.middleware.csrf.CsrfViewMiddleware',
