@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.contrib.auth.models import User
 from church_structure.models import Diocese, Pastorate, Church
 import json
 import random
@@ -356,6 +357,9 @@ class Member(models.Model):
         ('sports_boxing_taekwondo', 'Sports boxing / taekwondo'),
         ('fitness_instructor_gym_trainer', 'Fitness instructor / gym trainer / group class instructor (yoga, aerobics, spin)'),
     ]
+    
+    # Link to Django User (for authentication - optional, allows members without login access)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='member_profile', help_text="Linked user account for member login access")
     
     # Personal Information
     first_name = models.CharField(max_length=100)
