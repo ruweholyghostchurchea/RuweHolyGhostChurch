@@ -86,7 +86,7 @@ def create_user_for_member(sender, instance, created, **kwargs):
                 instance.user = user
                 # Use update to avoid infinite loop
                 Member.objects.filter(pk=instance.pk).update(user=user)
-            elif not user.member_profile:
-                # Link existing user to member
+            elif not hasattr(user, 'member_profile'):
+                # Link existing user to member (user has no member profile yet)
                 instance.user = user
                 Member.objects.filter(pk=instance.pk).update(user=user)

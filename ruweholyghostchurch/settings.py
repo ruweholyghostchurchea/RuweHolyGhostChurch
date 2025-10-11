@@ -38,8 +38,11 @@ ALLOWED_HOSTS = [
     'cms.ruweholyghostchurch.org',
     'members.ruweholyghostchurch.org',
     'www.ruweholyghostchurch.org',
-    '*'  # Allow all hosts for development (remove in production)
 ]
+
+# Add wildcard only in DEBUG mode (development)
+if DEBUG:
+    ALLOWED_HOSTS.append('*')
 
 # CSRF settings for Replit and Production
 CSRF_TRUSTED_ORIGINS = [
