@@ -17,8 +17,28 @@ from django.contrib.auth.decorators import login_required
 
 @csrf_protect
 def login_view(request):
+    """
+    Handle user login with multi-subdomain support.
+    Redirects based on user role and subdomain:
+    - Admins/Staff -> CMS Dashboard (dashboard:index)
+    - Regular Members -> Members Portal (members_portal:dashboard)
+    """
     if request.user.is_authenticated:
-        return redirect('dashboard:index')
+        # Redirect authenticated users based on their role
+        if request.user.is_staff or request.user.is_superuser:
+            # Admin users go to CMS dashboard (only available on cms subdomain)
+            try:
+                return redirect('dashboard:index')
+            except:
+                # If dashboard namespace not available, redirect to members portal
+                return redirect('members_portal:dashboard')
+        else:
+            # Regular members go to members portal
+            try:
+                return redirect('members_portal:dashboard')
+            except:
+                # Fallback to home if members portal not available
+                return redirect('public_site:home')
     
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -38,7 +58,22 @@ def login_view(request):
                     request.session.set_expiry(1209600)  # 2 weeks
                 
                 messages.success(request, f'Welcome back, {user.first_name or user.username}!')
-                return redirect('dashboard:index')
+                
+                # Redirect based on user role
+                if user.is_staff or user.is_superuser:
+                    # Admin users go to CMS dashboard
+                    try:
+                        return redirect('dashboard:index')
+                    except:
+                        # If dashboard not available, redirect to members portal
+                        return redirect('members_portal:dashboard')
+                else:
+                    # Regular members go to members portal
+                    try:
+                        return redirect('members_portal:dashboard')
+                    except:
+                        # Fallback to home if members portal not available
+                        return redirect('public_site:home')
             else:
                 messages.error(request, 'Your account has been deactivated. Contact the administrator.')
         else:
@@ -49,9 +84,19 @@ def login_view(request):
 
 @login_required
 def logout_view(request):
+    """
+    Handle user logout with multi-subdomain support.
+    Always redirects to public site home page after logout.
+    """
     logout(request)
     messages.info(request, 'You have been successfully logged out.')
-    return redirect('authentication:login')
+    
+    # Redirect to public site home page
+    try:
+        return redirect('public_site:home')
+    except:
+        # Fallback to login page if public site not available
+        return redirect('authentication:login')
 
 
 @csrf_protect
