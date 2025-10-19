@@ -30,6 +30,36 @@ def create_member_for_superuser(sender, instance, created, **kwargs):
                 # Create basic member profile - will need to be completed by admin
                 # We'll create a minimal profile that can be updated later
                 from datetime import date
+                from church_structure.models import Diocese, Pastorate, Church
+                
+                # Get or create default church structure
+                default_diocese, _ = Diocese.objects.get_or_create(
+                    name="Default Diocese",
+                    defaults={
+                        'country': 'Kenya',
+                        'description': 'Default diocese for initial setup',
+                        'is_active': True
+                    }
+                )
+                default_pastorate, _ = Pastorate.objects.get_or_create(
+                    name="Default Pastorate",
+                    diocese=default_diocese,
+                    defaults={
+                        'description': 'Default pastorate for initial setup',
+                        'is_active': True
+                    }
+                )
+                default_church, _ = Church.objects.get_or_create(
+                    name="Default Church",
+                    pastorate=default_pastorate,
+                    defaults={
+                        'location': 'Default Location',
+                        'description': 'Default church for initial setup',
+                        'is_active': True,
+                        'is_headquarter_church': True
+                    }
+                )
+                
                 Member.objects.create(
                     user=instance,
                     first_name=instance.first_name or instance.username,
@@ -49,8 +79,10 @@ def create_member_for_superuser(sender, instance, created, **kwargs):
                     baptismal_last_name=instance.last_name or 'Admin',
                     date_baptized=date(2000, 1, 1),  # Placeholder
                     date_joined_religion=date(2000, 1, 1),  # Placeholder
-                    # Note: Church structure fields will need to be set by admin
-                    # These are required but we can't auto-fill them
+                    # Set church structure fields to defaults
+                    user_home_diocese=default_diocese,
+                    user_home_pastorate=default_pastorate,
+                    user_home_church=default_church,
                 )
 
 
