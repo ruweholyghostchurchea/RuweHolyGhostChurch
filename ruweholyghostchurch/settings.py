@@ -178,21 +178,25 @@ WSGI_APPLICATION = 'ruweholyghostchurch.wsgi.application'
 
 import os
 
-# Use SQLite for development, PostgreSQL for production
+# Use PostgreSQL for both development and production
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DATABASE_NAME', 'ruweholyghostchurch_db'),
+        'USER': os.environ.get('DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DATABASE_PORT', '5432'),
+        'OPTIONS': {
+            'sslmode': 'prefer',
+        },
+    }
+}
+
+# If DATABASE_URL is provided (for production/Replit PostgreSQL), use it
 if 'DATABASE_URL' in os.environ:
-    # Production: Use PostgreSQL via DATABASE_URL
     import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ['DATABASE_URL'])
-    }
-else:
-    # Development: Use SQLite
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+    DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'])
 
 
 # Password validation
