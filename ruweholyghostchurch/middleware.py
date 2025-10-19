@@ -19,9 +19,9 @@ class SubdomainMiddleware(MiddlewareMixin):
         
         # For development (localhost, Replit domains)
         if 'localhost' in host or 'replit' in host or '127.0.0.1' in host:
-            # Default to CMS for development
-            request.subdomain = 'cms'
-            request.urlconf = 'ruweholyghostchurch.cms_urls'
+            # Default to Public site for development
+            request.subdomain = 'public'
+            request.urlconf = 'ruweholyghostchurch.public_urls'
             return
         
         # Extract subdomain from host

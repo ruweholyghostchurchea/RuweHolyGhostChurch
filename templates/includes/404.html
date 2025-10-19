@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Not Found - Ruwe Holy Ghost Church EA</title>
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/UkrjXEc.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@1&family=Lora:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/public_site.css' %}">
+    
+    <style>
+        .error-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            color: white;
+        }
+        .error-logo {
+            max-width: 150px;
+            margin-bottom: 2rem;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: 700;
+            color: #dc143c;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        .error-message {
+            font-family: 'Lora', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        .error-description {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #dc143c;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #b01030;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        .btn-secondary:hover {
+            background: white;
+            color: #000;
+        }
+        
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 5rem;
+            }
+            .error-message {
+                font-size: 1.4rem;
+            }
+            .error-description {
+                font-size: 1rem;
+            }
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-page">
+        <img src="https://i.imgur.com/UkrjXEc.jpg" alt="Ruwe Holy Ghost Church EA Logo" class="error-logo">
+        <div class="error-code">404</div>
+        <h1 class="error-message">Page Not Found</h1>
+        <p class="error-description">
+            The page you're looking for doesn't exist or has been moved. 
+            Let us guide you back to our spiritual home.
+        </p>
+        <div class="error-actions">
+            <a href="{% url 'public_site:home' %}" class="btn btn-primary">
+                <i class="fas fa-home"></i> Return Home
+            </a>
+            <a href="{% url 'public_site:contact' %}" class="btn btn-secondary">
+                <i class="fas fa-envelope"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</body>
+</html>

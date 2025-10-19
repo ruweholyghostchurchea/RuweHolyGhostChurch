@@ -1,0 +1,46 @@
+<header class="site-header">
+    <div class="header-top">
+        <div class="container">
+            <div class="header-contact">
+                <span><i class="fas fa-phone"></i> +254713049858</span>
+                <span><i class="fas fa-envelope"></i> info@ruweholyghostchurch.org</span>
+            </div>
+            <div class="header-social">
+                <a href="https://www.facebook.com/RuweHolyGhostChurchEA/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/RuweHolyGhostChurchEA/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/RuweChurch" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.youtube.com/@RuweHolyGhostChurch" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.linkedin.com/in/RuweHolyGhostChurch" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="{% url 'public_site:home' %}">
+                        <img src="https://i.imgur.com/UkrjXEc.jpg" alt="Ruwe Holy Ghost Church EA Logo">
+                        <span class="logo-text">Ruwe Holy Ghost Church EA</span>
+                    </a>
+                </div>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <ul class="nav-menu">
+                    <li><a href="{% url 'public_site:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+                    <li><a href="{% url 'public_site:about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
+                    <li><a href="{% url 'public_site:history' %}" class="{% if request.resolver_match.url_name == 'history' %}active{% endif %}">Our History</a></li>
+                    <li><a href="{% url 'public_site:services' %}" class="{% if request.resolver_match.url_name == 'services' %}active{% endif %}">Worship</a></li>
+                    <li><a href="{% url 'public_site:events' %}" class="{% if request.resolver_match.url_name == 'events' %}active{% endif %}">Events</a></li>
+                    <li><a href="{% url 'public_site:contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
+                    <li><a href="{% url 'public_site:donation' %}" class="btn-donate">Donate</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,107 @@
+{% extends 'public_site/base.html' %}
+{% load static %}
+
+{% block title %}Worship & Services - Ruwe Holy Ghost Church of East Africa{% endblock %}
+
+{% block meta_description %}Experience worship at Ruwe Holy Ghost Church EA - Learn about Dhoroho liturgy, healing ministry, and our distinctive practices centered on the Holy Spirit.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 3rem 1rem;">
+    <div class="container">
+        <h1>Our Worship: An Encounter with the Spirit</h1>
+        <p class="tagline">Join Us for Worship</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="content-block" style="max-width: 900px; margin: 0 auto;">
+            <p style="text-align: center; font-size: 1.1rem;">Our theology is distinctive for its pneumatological focus: the Holy Spirit (Roho) is the central locus of divine revelation, healing, and ecclesial authority. We emphasize the experiential knowledge of the Spirit.</p>
+            <p style="text-align: center; font-size: 1.1rem; margin-top: 1rem;">When you worship with us, you are joining a sacred space where prophetic utterance, spirit possession, and communal testimony are normative practices.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section section-dark">
+    <div class="container">
+        <h2 class="section-title" style="color: white;">Our Liturgical Life</h2>
+        
+        <div class="content-block" style="max-width: 900px; margin: 0 auto;">
+            <h3 style="color: #dc143c; text-align: center; font-size: 1.8rem;">Dhoroho: The Language of the Spirit</h3>
+            <p style="margin-top: 1.5rem;">One of our most conspicuous religious innovations is the Dhoroho liturgical practice.</p>
+            
+            <div style="margin-top: 2rem;">
+                <h4 style="color: #dc143c; margin-bottom: 0.8rem;">What it is:</h4>
+                <p>Often described as the "language of the Spirit" Dhoroho is a liturgical register that comprises hymns, creeds, and formulas.</p>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <h4 style="color: #dc143c; margin-bottom: 0.8rem;">Its Origin:</h4>
+                <p>Dhoroho language was revealed to Paulo Rang'enga Ojoro shortly after the Musanda martyrdom.</p>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <h4 style="color: #dc143c; margin-bottom: 0.8rem;">Its Function:</h4>
+                <p>It encodes our doctrinal memory, structures our worship, and functions as a shared identity marker that is passed down to our children.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title red">Healing and Prophetic Ministry</h2>
+        <p style="text-align: center; max-width: 900px; margin: 0 auto 2rem; font-size: 1.1rem;">
+            Healing ministry and prophetic acts are central to Ruwe worship. Our evangelistic meetings emphasize:
+        </p>
+        
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Exorcism of Evil Spirits</h3>
+                <p>Through the power of the Holy Spirit, we cast out evil spirits and restore spiritual freedom.</p>
+            </div>
+            <div class="card">
+                <h3>Prayer for the Sick</h3>
+                <p>We believe in divine healing through prayer, laying on of hands, and the power of the Roho.</p>
+            </div>
+            <div class="card">
+                <h3>Prophetic Guidance</h3>
+                <p>The Holy Spirit speaks through prophetic utterances to guide and direct our community.</p>
+            </div>
+        </div>
+
+        <div class="content-block" style="margin-top: 3rem; max-width: 900px; margin-left: auto; margin-right: auto;">
+            <p style="text-align: center; font-size: 1.05rem;">
+                Healing practices employ Dhoroho songs, the laying on of hands, communal fasting, and public sin confession to secure divine intervention. Women play a central spiritual role in this ministry as healers (laktar) and prophetic mediums.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section section-light">
+    <div class="container">
+        <h2 class="section-title red">Our Practices and Moral Codes</h2>
+        <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem;">Ruwe places a high value on strict religious observance and moral conduct.</p>
+        
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Sabbath Observance</h3>
+                <p>We observe the Sabbath on Saturday, dedicating this day to worship, rest, and spiritual renewal.</p>
+            </div>
+            <div class="card">
+                <h3>Moral Prohibitions</h3>
+                <p>We adhere to strict moral codes, which historically forbid alcohol, tobacco, and secular music/dancing.</p>
+            </div>
+            <div class="card">
+                <h3>Fasting</h3>
+                <p>Communal fasts are a key practice, often preceding major events to seek the Spirit's favor or prophetic clarity.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{% url 'public_site:events' %}" class="btn btn-primary">View Upcoming Events</a>
+            <a href="{% url 'public_site:contact' %}" class="btn btn-secondary" style="margin-left: 1rem;">Visit Us</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

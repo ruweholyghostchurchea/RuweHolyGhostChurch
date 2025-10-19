@@ -1,0 +1,112 @@
+{% extends 'public_site/base.html' %}
+{% load static %}
+
+{% block title %}Ruwe Holy Ghost Church of East Africa - A Church of the Spirit, for the People with the Spirit{% endblock %}
+
+{% block meta_description %}Welcome to Ruwe Holy Ghost Church EA - An indigenous Roho (Holy Spirit) church based in Ruwe, Siaya, Kenya. Join us in worship, fellowship, and spiritual growth.{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to the Ruwe Holy Ghost Church EA</h1>
+        <p class="tagline">"A Church of the Spirit, for the People with the Spirit"</p>
+        <p class="lead">Join us in worship, fellowship, and spiritual growth as we serve God together</p>
+        <p class="lead">We are an indigenous Roho (Holy Spirit) church, born from a series of prophetic revelations in the early 20th century. Our faith is not merely a doctrine, but a direct, living encounter with the Holy Spirit (Roho).</p>
+        <div class="hero-buttons">
+            <a href="{% url 'public_site:history' %}" class="btn btn-primary">Learn More About Our History</a>
+            <a href="{% url 'public_site:services' %}" class="btn btn-secondary">Join Us for Worship</a>
+            <a href="{% url 'public_site:donation' %}" class="btn btn-primary">Support Our Vision</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="content-block">
+            <h2 class="section-title">Our Motto</h2>
+            <p class="section-subtitle">'Roho en Singruok, Roho ok en din'</p>
+            <p style="text-align: center; font-size: 1.1rem;">(English: The Spirit is a sacrifice/covenant, The Spirit is not a Religion)</p>
+        </div>
+        
+        <div class="content-block" style="margin-top: 3rem;">
+            <h2 class="section-title">Our Slogan</h2>
+            <p class="section-subtitle">'Singruok Tek'</p>
+            <p style="text-align: center; font-size: 1.1rem;">(English: Sacrifice is strenuous)</p>
+        </div>
+    </div>
+</section>
+
+<section class="section section-dark">
+    <div class="container">
+        <h2 class="section-title" style="color: white;">Our Guiding Philosophy</h2>
+        <p style="text-align: center; max-width: 900px; margin: 0 auto; font-size: 1.1rem; line-height: 1.8;">
+            We believe that faith is not merely a doctrine to be learned, but a direct, living encounter with the Holy Spirit (Roho). 
+            Our purpose is to create a sacred space where this encounter through Roho possession, prophecy, and healing is the 
+            normative experience of every believer.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title red">Our Core Values</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Spirit-Centeredness</h3>
+                <p>We believe the Holy Spirit (Roho) is the ultimate source of revelation, authority, and power in our lives and worship.</p>
+            </div>
+            <div class="card">
+                <h3>Divine Healing</h3>
+                <p>We believe in the power of the Holy Spirit (Roho) to heal the sick, cast out evil, and restore the broken.</p>
+            </div>
+            <div class="card">
+                <h3>Moral Purity</h3>
+                <p>We adhere to a life of holiness, marked by strict moral codes, Sabbath observance, and prayer/fasting.</p>
+            </div>
+            <div class="card">
+                <h3>Remembrance</h3>
+                <p>We sanctify our history through the annual commemoration of the Musanda events and the honoring of our sacred symbols.</p>
+            </div>
+            <div class="card">
+                <h3>Heritage</h3>
+                <p>We are dedicated to preserving and passing down the oral histories, hymns, and traditions of our founders.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-light">
+    <div class="container">
+        <h2 class="section-title red">Our Vision: A Prophecy Being Fulfilled</h2>
+        <div class="content-block">
+            <p style="text-align: center; max-width: 900px; margin: 0 auto 2rem; font-size: 1.1rem; line-height: 1.8;">
+                We are working to see the prophecies of our founders fulfilled. A key part of this vision is the construction of 
+                a new Archcathedral at Ruwe with twelve doors, as prophesied by our founder, Lawi Obonyo. This, along with our 
+                other objectives, aims to build a self-reliant, educated, and spiritually vibrant community that honors God.
+            </p>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="{% url 'public_site:about' %}" class="btn btn-primary">Learn About Our Objectives</a>
+                <a href="{% url 'public_site:donation' %}" class="btn btn-secondary" style="margin-left: 1rem;">Support Our Mission</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-dark">
+    <div class="container">
+        <h2 class="section-title" style="color: white;">Mission & Vision</h2>
+        <div class="cards-grid">
+            <div class="card dark">
+                <h3>Our Mission</h3>
+                <p>To embody the living power of the Holy Spirit (Roho) by spreading the Gospel through the power of the Roho, 
+                   healing the sick, and building faithful communities in East Africa and beyond.</p>
+            </div>
+            <div class="card dark">
+                <h3>Our Vision</h3>
+                <p>To see the prophecies of our founders fulfilled: a self-reliant, educated, and spiritually vibrant community 
+                   that stands as a beacon of Roho faith, building institutions that uplift our people and honor God.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

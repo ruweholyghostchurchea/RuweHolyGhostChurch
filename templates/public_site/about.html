@@ -1,0 +1,81 @@
+{% extends 'public_site/base.html' %}
+{% load static %}
+
+{% block title %}About Us - Ruwe Holy Ghost Church of East Africa{% endblock %}
+
+{% block meta_description %}Learn about the Ruwe Holy Ghost Church of East Africa - our mission, vision, leadership, and objectives for building a self-reliant, spiritually vibrant community.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 3rem 1rem;">
+    <div class="container">
+        <h1>About the Ruwe Holy Ghost Church of East Africa (RHGCEA)</h1>
+        <p class="tagline">"A Church of the Spirit, for the People with the Spirit"</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="content-block">
+            <h2>Who We Are</h2>
+            <p>The Ruwe Holy Ghost Church of East Africa (RHGCEA) is an indigenous Roho (Holy Spirit) church. Our movement originated among the Luo of Nyanza and Western Kenya and is now present in Tanzania, Uganda and many other countries.</p>
+            <p>Our narrative is defined by a sequence of prophetic revelations that began in the early 1907. This history was sealed by dramatic episodes of repression and martyrdom at Musanda in January 1934, which became the central founding History of our church.</p>
+        </div>
+
+        <div class="content-block">
+            <h2>Our Mission</h2>
+            <p>To embody the living power of the Holy Spirit (Roho) by spreading the Gospel through the power of the Roho, healing the sick, and building faithful communities in East Africa and beyond.</p>
+        </div>
+
+        <div class="content-block">
+            <h2>Our Vision</h2>
+            <p>To see the prophecies of our founders fulfilled: a self-reliant, educated, and spiritually vibrant community that stands as a beacon of Roho faith, building institutions that uplift our people and honor God.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section section-dark">
+    <div class="container">
+        <h2 class="section-title" style="color: white;">Our Leadership</h2>
+        <div class="content-block" style="max-width: 900px; margin: 0 auto;">
+            <h3 style="color: #dc143c; text-align: center;">Fourth Archbishop Daniel Were Ohola (b. 1944)</h3>
+            <p style="text-align: center;">The RHGCEA is currently led by the Fourth Archbishop, Daniel Were Ohola (b. 1944).</p>
+            <p>Archbishop Ohola has led the church since late 2002. His leadership emphasizes the preservation of our sacred Dhoroho liturgy and the faithful observance of our annual commemorations. He represents the church in ecumenical and public fora and engages with government and other churches on civic matters. Under his leadership, church elders have increasingly sought to preserve our oral histories, hymns, and distinct liturgical texts.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title red">Our Future Objectives</h2>
+        <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem;">To fulfill our vision, we are committed to these goals by 2034, the 100th anniversary of the Musanda martyrdom:</p>
+        
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Build the Archcathedral</h3>
+                <p>To build a new Archcathedral Church at Ruwe with twelve doors, as prophesied by Lawi Obonyo.</p>
+            </div>
+            <div class="card">
+                <h3>Education</h3>
+                <p>To develop and implement a standardized curriculum for Roho/Dhoroho learning and Bible study in all Dioceses.</p>
+            </div>
+            <div class="card">
+                <h3>Expansion</h3>
+                <p>To establish five new Dioceses in urban centers across East Africa and beyond to serve our migrating congregants.</p>
+            </div>
+            <div class="card">
+                <h3>Preservation</h3>
+                <p>To complete the digitization of all known Roho/Dhoroho hymns, liturgical texts, and testimonies.</p>
+            </div>
+            <div class="card">
+                <h3>Community</h3>
+                <p>To launch community-based social programs focused on Education and Youth/Women's empowerment.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{% url 'public_site:donation' %}" class="btn btn-primary">Support Our Objectives</a>
+            <a href="{% url 'public_site:history' %}" class="btn btn-secondary" style="margin-left: 1rem;">Learn Our History</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

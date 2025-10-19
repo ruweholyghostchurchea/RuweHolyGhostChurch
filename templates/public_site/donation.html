@@ -1,0 +1,153 @@
+{% extends 'public_site/base.html' %}
+{% load static %}
+
+{% block title %}Support Our Mission - Ruwe Holy Ghost Church of East Africa{% endblock %}
+
+{% block meta_description %}Support Ruwe Holy Ghost Church EA - Your donations help build the 12-door Archcathedral, preserve our heritage, and empower our community. Singruok Tek - Sacrifice is strenuous.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 3rem 1rem;">
+    <div class="container">
+        <h1>Support Our Mission & Vision</h1>
+        <p class="tagline">'Singruok Tek' (Sacrifice is strenuous)</p>
+        <p class="lead">The Ruwe Holy Ghost Church of East Africa is built on a legacy of sacrifice. Your support allows us to continue our mission to spread the Gospel, heal the sick, and fulfill the prophecies of our founders.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title red">Your Support Builds Our Future</h2>
+        <p style="text-align: center; max-width: 900px; margin: 0 auto 3rem; font-size: 1.1rem;">
+            Your generous giving directly funds our key objectives:
+        </p>
+        
+        <div class="cards-grid">
+            <div class="card">
+                <h3>The 12-Door Archcathedral</h3>
+                <p>Construction of our new Archcathedral at Ruwe, as prophesied by Lawi Obonyo. This sacred building will stand as a testament to our faith and a beacon for generations to come.</p>
+            </div>
+            <div class="card">
+                <h3>Heritage Preservation</h3>
+                <p>The digitization of our unique Dhoroho hymns, oral histories, and liturgical texts for future generations. Preserving our sacred traditions is vital to our identity.</p>
+            </div>
+            <div class="card">
+                <h3>Education & Empowerment</h3>
+                <p>Community-based social programs focused on Education and Youth/Women's empowerment, building a self-reliant and educated community.</p>
+            </div>
+            <div class="card">
+                <h3>Church Expansion</h3>
+                <p>Establishing new Dioceses in urban centers across East Africa and beyond to serve our migrating congregants and spread the Gospel.</p>
+            </div>
+            <div class="card">
+                <h3>Roho/Dhoroho Learning</h3>
+                <p>Developing standardized curricula for Roho/Dhoroho learning and Bible study in all Dioceses, ensuring our unique teachings are passed down faithfully.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-dark">
+    <div class="container">
+        <h2 class="section-title" style="color: white;">How to Give</h2>
+        
+        <div class="payment-methods">
+            <div class="payment-card">
+                <h3><i class="fas fa-mobile-alt" style="margin-right: 0.5rem;"></i> M-Pesa Paybill</h3>
+                <p style="margin-bottom: 1.5rem;">The easiest way to support our mission from Kenya:</p>
+                
+                <div class="payment-detail">
+                    <span class="payment-label">1. Paybill Number</span>
+                    <div class="payment-value">581041</div>
+                </div>
+                
+                <div class="payment-detail">
+                    <span class="payment-label">2. Account Number</span>
+                    <div class="payment-value">RHCEA</div>
+                    <p style="margin-top: 0.5rem; font-size: 0.95rem; color: #666;">
+                        Or use: YourName, YourPastorate, or YourDiocese
+                    </p>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f0f0; border-left: 4px solid #dc143c; border-radius: 5px;">
+                    <strong>Steps:</strong>
+                    <ol style="margin: 0.5rem 0 0 1rem; padding-left: 0.5rem;">
+                        <li>Go to M-Pesa menu</li>
+                        <li>Select "Lipa na M-Pesa"</li>
+                        <li>Select "Pay Bill"</li>
+                        <li>Enter Business No: <strong>581041</strong></li>
+                        <li>Enter Account: <strong>RHCEA</strong> (or your identifier)</li>
+                        <li>Enter Amount</li>
+                        <li>Enter PIN and confirm</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="payment-card">
+                <h3><i class="fas fa-university" style="margin-right: 0.5rem;"></i> Bank Deposit</h3>
+                <p style="margin-bottom: 1.5rem;">For larger donations or international transfers:</p>
+                
+                <div class="payment-detail">
+                    <span class="payment-label">Bank Name</span>
+                    <div class="payment-value">Co-operative Bank Kenya</div>
+                </div>
+                
+                <div class="payment-detail">
+                    <span class="payment-label">Account Number</span>
+                    <div class="payment-value">01128431652700</div>
+                </div>
+                
+                <div class="payment-detail">
+                    <span class="payment-label">Account Name</span>
+                    <div class="payment-value">RHGCEA</div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f0f0; border-radius: 5px;">
+                    <p style="margin: 0; font-size: 0.95rem;">
+                        <i class="fas fa-info-circle" style="color: #dc143c; margin-right: 0.3rem;"></i>
+                        For international transfers, please <a href="{% url 'public_site:contact' %}" style="color: #dc143c; font-weight: bold;">contact us</a> for SWIFT code and additional banking details.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-light">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <h2 class="section-title red">Every Gift Makes a Difference</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+                Whether large or small, every donation helps us fulfill the prophecies of our founders and build a stronger, 
+                more vibrant church community. Your generosity is an act of worship and partnership in God's work.
+            </p>
+            
+            <div style="background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%); color: white; padding: 2.5rem; border-radius: 10px; margin-top: 3rem;">
+                <p style="font-family: 'Sorts Mill Goudy', serif; font-style: italic; font-size: 21px; margin-bottom: 1rem; color: #dc143c;">
+                    'Singruok Tek'
+                </p>
+                <p style="font-size: 1.15rem; margin-bottom: 0;">
+                    (Sacrifice is strenuous)
+                </p>
+                <p style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.9;">
+                    Our founders gave their lives for this faith. Today, we honor their sacrifice by supporting the vision they died for.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, #dc143c 0%, #b01030 100%); border-radius: 10px; color: white;">
+            <h2 style="margin-bottom: 1rem;">Questions About Giving?</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                If you have questions about donations, need assistance, or want to discuss larger gifts and partnerships, 
+                we're here to help.
+            </p>
+            <a href="{% url 'public_site:contact' %}" class="btn btn-secondary">
+                <i class="fas fa-envelope"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

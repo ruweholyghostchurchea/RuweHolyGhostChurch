@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <title>{% block title %}Ruwe Holy Ghost Church of East Africa{% endblock %}</title>
+    
+    <meta name="description" content="{% block meta_description %}Ruwe Holy Ghost Church EA - An indigenous Roho (Holy Spirit) church based in Ruwe, Siaya, Kenya. Experience the living power of the Holy Spirit through worship, healing, and faithful community.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}Ruwe Holy Ghost Church, RHGCEA, Roho Church, Holy Spirit Church, Siaya Kenya, East Africa Church, Dhoroho, Luo Church, Indigenous African Church{% endblock %}">
+    <meta name="author" content="Ruwe Holy Ghost Church of East Africa">
+    
+    <meta property="og:title" content="{% block og_title %}Ruwe Holy Ghost Church of East Africa{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}A Church of the Spirit, for the People with the Spirit - Experience the living encounter with the Holy Spirit (Roho){% endblock %}">
+    <meta property="og:image" content="https://i.imgur.com/UkrjXEc.jpg">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Ruwe Holy Ghost Church EA{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}A Church of the Spirit, for the People with the Spirit{% endblock %}">
+    <meta name="twitter:image" content="https://i.imgur.com/UkrjXEc.jpg">
+    
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/UkrjXEc.jpg">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@1&family=Lora:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <link rel="stylesheet" href="{% static 'css/public_site.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Church",
+        "name": "Ruwe Holy Ghost Church of East Africa",
+        "alternateName": "RHGCEA",
+        "url": "https://ruweholyghostchurch.org",
+        "logo": "https://i.imgur.com/UkrjXEc.jpg",
+        "image": "https://i.imgur.com/8ToqmB8.png",
+        "description": "An indigenous Roho (Holy Spirit) church based in Ruwe, Siaya, Kenya",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Ruwe, Siaya",
+            "addressCountry": "Kenya"
+        },
+        "telephone": "+254713049858",
+        "email": "info@ruweholyghostchurch.org",
+        "sameAs": [
+            "https://www.facebook.com/RuweHolyGhostChurchEA/",
+            "https://www.instagram.com/RuweHolyGhostChurchEA/",
+            "https://x.com/RuweChurch",
+            "https://www.youtube.com/@RuweHolyGhostChurch",
+            "https://www.linkedin.com/in/RuweHolyGhostChurch"
+        ]
+    }
+    </script>
+</head>
+<body>
+    {% include 'includes/header.html' %}
+    
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% include 'includes/footer.html' %}
+    
+    <a href="https://wa.me/254713049858" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    this.classList.toggle('active');
+                });
+            }
+            
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                });
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
