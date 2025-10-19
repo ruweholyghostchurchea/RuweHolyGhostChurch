@@ -369,8 +369,7 @@ img {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(220, 20, 60, 0.7) 100%), 
-                url('https://i.imgur.com/8ToqmB8.png') center/cover;
+    background: linear-gradient(to bottom left, var(--color-black) 0%, var(--color-red) 100%);
     color: var(--color-white);
     padding: 4rem 1rem;
     text-align: center;
