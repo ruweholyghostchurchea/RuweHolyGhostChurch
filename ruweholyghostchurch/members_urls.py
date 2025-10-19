@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     # Member authentication (separate from admin)
-    path('auth/', include('authentication.urls')),  # Reuse auth for member login
+    path('auth/', include('authentication.urls', namespace='authentication')),  # Reuse auth for member login
     
     # Member portal URLs
     path('', include('members_portal.urls')),

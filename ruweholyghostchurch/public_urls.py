@@ -9,6 +9,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     # Public website URLs
     path('', include('public_site.urls')),
+    # Authentication URLs for login/logout
+    path('auth/', include('authentication.urls', namespace='authentication')),
 ]
 
 # Serve media files during development
