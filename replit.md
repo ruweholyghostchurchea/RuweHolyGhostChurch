@@ -114,3 +114,14 @@ The system is architected for scalability with clear separation of concerns, mod
 - **Environment-Based ALLOWED_HOSTS**: Wildcard only enabled in DEBUG mode
 - **Session Configuration**: Updated for cross-subdomain session management
 - **Production Ready**: Settings configured for production deployment with proper security headers
+
+## Development Environment Routing (Latest Update)
+- **Homepage Routing**: Development environment now defaults to public site (public_urls.py)
+- **Login Flow**: Login redirects to Members Portal dashboard after successful authentication
+- **Cross-Portal Access**: 
+  - Public site includes Members Portal at /members/ path
+  - Public site includes Admin Dashboard at /dashboard/ path  
+  - Staff/admin users see Admin CMS link in Members Portal sidebar
+- **Member Profile Requirement**: Members Portal requires a linked Member profile (user.member_profile)
+  - Superuser needs a Member profile created to access Members Portal
+  - Use Admin CMS to create Member profile and link to user account

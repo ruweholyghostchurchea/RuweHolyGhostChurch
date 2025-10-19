@@ -18,7 +18,8 @@ from django.contrib.auth.decorators import login_required
 @csrf_protect
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard:index')
+        # Redirect to Members Portal dashboard
+        return redirect('members_portal:dashboard')
     
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -38,7 +39,8 @@ def login_view(request):
                     request.session.set_expiry(1209600)  # 2 weeks
                 
                 messages.success(request, f'Welcome back, {user.first_name or user.username}!')
-                return redirect('dashboard:index')
+                # Always redirect to Members Portal after login
+                return redirect('members_portal:dashboard')
             else:
                 messages.error(request, 'Your account has been deactivated. Contact the administrator.')
         else:

@@ -11,6 +11,10 @@ urlpatterns = [
     path('', include('public_site.urls')),
     # Authentication URLs for login/logout
     path('auth/', include('authentication.urls', namespace='authentication')),
+    # Members Portal (for development - in production this would be members.domain)
+    path('members/', include('members_portal.urls')),
+    # Admin Dashboard (for staff users - in production this would be cms.domain)
+    path('dashboard/', include('dashboard.urls')),
 ]
 
 # Serve media files during development
