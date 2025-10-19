@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    
+
     <nav class="main-nav">
         <div class="container">
             <div class="nav-wrapper">
@@ -24,23 +24,22 @@
                         <span class="logo-text">Ruwe Holy Ghost Church EA</span>
                     </a>
                 </div>
-                
+
                 <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
-                
+
                 <ul class="nav-menu">
                     <li><a href="{% url 'public_site:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
                     <li><a href="{% url 'public_site:about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
                     <li><a href="{% url 'public_site:history' %}" class="{% if request.resolver_match.url_name == 'history' %}active{% endif %}">Our History</a></li>
                     <li><a href="{% url 'public_site:services' %}" class="{% if request.resolver_match.url_name == 'services' %}active{% endif %}">Worship</a></li>
                     <li><a href="{% url 'public_site:events' %}" class="{% if request.resolver_match.url_name == 'events' %}active{% endif %}">Events</a></li>
-                    <li><a href="{% url 'public_site:contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
-                    <li><a href="{% url 'public_site:donation' %}" class="btn-donate">Donate</a></li>
-                </ul>
-            </div>
-        </div>
+                    <li><a href="{% url 'public_site:contact' %}">Contact</a></li>
+            <li><a href="{% url 'public_site:donation' %}" class="btn-donate">Donate</a></li>
+            <li><a href="{% url 'authentication:login' %}" class="login-icon" aria-label="Member Login"><i class="fas fa-user-circle"></i></a></li>
+        </ul>
     </nav>
 </header>

@@ -1,0 +1,33 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Profile Found - Ruwe Holy Ghost Church</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/members_portal.css' %}">
+</head>
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; background: var(--color-light-gray);">
+        <div class="material-card" style="max-width: 500px; text-align: center;">
+            <div class="card-icon" style="margin: 0 auto 1.5rem; width: 80px; height: 80px; font-size: 2.5rem;">
+                <i class="fas fa-user-slash"></i>
+            </div>
+            <h2 style="font-family: var(--font-secondary); color: var(--color-red); margin-bottom: 1rem;">No Member Profile Found</h2>
+            <p style="color: var(--color-medium-gray); margin-bottom: 1.5rem;">
+                Your user account is not linked to a member profile. Please contact the church administrator to complete your member registration.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="{% url 'authentication:logout' %}" class="btn btn-primary">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Go Home
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

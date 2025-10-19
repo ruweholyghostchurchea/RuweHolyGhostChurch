@@ -1,0 +1,82 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Giving - Ruwe Holy Ghost Church</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/members_portal.css' %}">
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/UkrjXEc.jpg">
+</head>
+<body>
+    <div class="portal-wrapper">
+        <aside class="portal-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.imgur.com/BUxE9oF.jpg" alt="Church Logo" class="sidebar-logo">
+                <div class="sidebar-title">Members Portal</div>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="{% url 'members_portal:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'members_portal:profile' %}"><i class="fas fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'members_portal:attendance' %}"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                    <li><a href="{% url 'members_portal:giving' %}" class="active"><i class="fas fa-hand-holding-usd"></i> Giving</a></li>
+                    {% if is_admin %}
+                    <li><a href="/dashboard/" style="background: rgba(220, 20, 60, 0.2);"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'authentication:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <div class="portal-main">
+            <nav class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                    <h1 class="topbar-title">My Giving</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-profile">
+                        {% if member.display_photo %}
+                        <img src="{{ member.display_photo }}" alt="Profile" class="user-avatar">
+                        {% else %}
+                        <img src="https://i.imgur.com/UkrjXEc.jpg" alt="Profile" class="user-avatar">
+                        {% endif %}
+                        <span class="user-name">{{ member.full_name }}</span>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="material-card text-center">
+                <div class="card-icon" style="margin: 0 auto 1rem;"><i class="fas fa-hand-holding-usd"></i></div>
+                <h2 style="color: var(--color-red); margin-bottom: 1rem;">Giving History</h2>
+                <p style="color: var(--color-medium-gray);">Your contribution and tithe records will be displayed here in a future update.</p>
+                <a href="{% url 'members_portal:dashboard' %}" class="btn btn-primary mt-3">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        });
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

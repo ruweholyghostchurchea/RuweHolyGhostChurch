@@ -1,0 +1,426 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard - Ruwe Holy Ghost Church</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/members_portal.css' %}">
+    
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/UkrjXEc.jpg">
+</head>
+<body>
+    <div class="portal-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="portal-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.imgur.com/BUxE9oF.jpg" alt="Church Logo" class="sidebar-logo">
+                <div class="sidebar-title">Members Portal</div>
+            </div>
+            
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="{% url 'members_portal:dashboard' %}" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'members_portal:profile' %}"><i class="fas fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'members_portal:attendance' %}"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                    <li><a href="{% url 'members_portal:giving' %}"><i class="fas fa-hand-holding-usd"></i> Giving</a></li>
+                    {% if is_admin %}
+                    <li><a href="/dashboard/" style="background: rgba(220, 20, 60, 0.2);"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'authentication:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Main Content -->
+        <div class="portal-main">
+            <!-- Top Navigation Bar -->
+            <nav class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="topbar-title">Dashboard</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-profile">
+                        {% if member.display_photo %}
+                        <img src="{{ member.display_photo }}" alt="Profile" class="user-avatar">
+                        {% else %}
+                        <img src="https://i.imgur.com/UkrjXEc.jpg" alt="Profile" class="user-avatar">
+                        {% endif %}
+                        <span class="user-name">{{ member.full_name }}</span>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Welcome Banner -->
+            <div class="section-header">
+                <h2 class="section-title">Welcome, {{ member.first_name }}!</h2>
+                <p class="section-subtitle">Here's your complete member information</p>
+            </div>
+            
+            <!-- Admin Access Banner (if applicable) -->
+            {% if is_admin %}
+            <div class="alert-banner admin">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>Admin Access Granted</strong>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">You have access to the Admin Dashboard. <a href="/dashboard/" style="color: white; text-decoration: underline;">Click here to access</a></p>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value">{{ member.membership_status }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-church"></i></div>
+                    <div class="stat-label">User Group</div>
+                    <div class="stat-value">{{ member.user_group }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="stat-label">Member Since</div>
+                    <div class="stat-value">{{ member.date_joined_religion|date:"Y" }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-birthday-cake"></i></div>
+                    <div class="stat-label">Age</div>
+                    <div class="stat-value">{% if age %}{{ age }} years{% else %}N/A{% endif %}</div>
+                </div>
+            </div>
+            
+            <!-- Personal Information Card -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-id-card"></i></div>
+                    <h3 class="card-title">Personal Information</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ member.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Baptismal Name</span>
+                            <span class="info-value">{{ member.baptismal_full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Username</span>
+                            <span class="info-value">{{ member.username }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Member Identifier</span>
+                            <span class="info-value">{{ member.identifier }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Gender</span>
+                            <span class="info-value">{{ member.get_gender_display }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Date of Birth</span>
+                            <span class="info-value">{{ member.date_of_birth|date:"F d, Y" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Marital Status</span>
+                            <span class="info-value">{{ member.get_marital_status_display }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Education Level</span>
+                            <span class="info-value">{{ member.get_education_level_display }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ member.location }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information Card -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-address-book"></i></div>
+                    <h3 class="card-title">Contact Information</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">{{ member.phone_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">{{ member.email_address|default:"Not provided" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Church Hierarchy Card -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-church"></i></div>
+                    <h3 class="card-title">Church Hierarchy</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Home Diocese</span>
+                            <span class="info-value">{{ member.user_home_diocese.name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Home Pastorate</span>
+                            <span class="info-value">{{ member.user_home_pastorate.name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Home Church</span>
+                            <span class="info-value">{{ member.user_home_church.name }}</span>
+                        </div>
+                        {% if member.user_town_church %}
+                        <div class="info-item">
+                            <span class="info-label">Town Diocese</span>
+                            <span class="info-value">{{ member.user_town_diocese.name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Town Pastorate</span>
+                            <span class="info-value">{{ member.user_town_pastorate.name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Town Church</span>
+                            <span class="info-value">{{ member.user_town_church.name }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Member Roles Card -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-user-tag"></i></div>
+                    <h3 class="card-title">Member Roles & Status</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Member Roles</span>
+                            <span class="info-value">{{ member.display_roles }}</span>
+                        </div>
+                        {% if member.is_clergy and member.display_clergy_roles %}
+                        <div class="info-item">
+                            <span class="info-label">Clergy Roles</span>
+                            <span class="info-value">{{ member.display_clergy_roles }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="info-item">
+                            <span class="info-label">Membership Status</span>
+                            <span class="info-value">
+                                <span class="badge {% if member.membership_status == 'Active' %}badge-active{% else %}badge-inactive{% endif %}">
+                                    {{ member.membership_status }}
+                                </span>
+                            </span>
+                        </div>
+                        {% if member.is_staff %}
+                        <div class="info-item">
+                            <span class="info-label">Staff Member</span>
+                            <span class="info-value"><span class="badge badge-clergy">Yes</span></span>
+                        </div>
+                        {% endif %}
+                        {% if member.is_ordained %}
+                        <div class="info-item">
+                            <span class="info-label">Ordained Member</span>
+                            <span class="info-value"><span class="badge badge-clergy">Yes</span></span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Baptismal Information Card -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-water"></i></div>
+                    <h3 class="card-title">Baptismal Information</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Date Baptized</span>
+                            <span class="info-value">{{ member.date_baptized|date:"F d, Y" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Date Joined Religion</span>
+                            <span class="info-value">{{ member.date_joined_religion|date:"F d, Y" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Date Joined App</span>
+                            <span class="info-value">{{ member.date_joined_app|date:"F d, Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Job/Occupation Card -->
+            {% if member.job_occupations %}
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-briefcase"></i></div>
+                    <h3 class="card-title">Job & Occupation</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-item mb-2">
+                        <span class="info-label">Occupations</span>
+                        <span class="info-value">{{ member.display_jobs }}</span>
+                    </div>
+                    {% if member.income_details %}
+                    <div class="info-item">
+                        <span class="info-label">Additional Details</span>
+                        <span class="info-value">{{ member.income_details }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Emergency Contacts Card -->
+            {% if member.emergency_contact_1_name or member.emergency_contact_2_name %}
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-phone-alt"></i></div>
+                    <h3 class="card-title">Emergency Contacts</h3>
+                </div>
+                <div class="card-content">
+                    {% if member.emergency_contact_1_name %}
+                    <div class="mb-3">
+                        <h4 style="color: var(--color-red); margin-bottom: 0.5rem;">Contact 1</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Name</span>
+                                <span class="info-value">{{ member.emergency_contact_1_name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Relationship</span>
+                                <span class="info-value">{{ member.emergency_contact_1_relationship }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value">{{ member.emergency_contact_1_phone }}</span>
+                            </div>
+                            {% if member.emergency_contact_1_email %}
+                            <div class="info-item">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">{{ member.emergency_contact_1_email }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if member.emergency_contact_2_name %}
+                    <div class="divider"></div>
+                    <div class="mt-3">
+                        <h4 style="color: var(--color-red); margin-bottom: 0.5rem;">Contact 2</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Name</span>
+                                <span class="info-value">{{ member.emergency_contact_2_name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Relationship</span>
+                                <span class="info-value">{{ member.emergency_contact_2_relationship }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value">{{ member.emergency_contact_2_phone }}</span>
+                            </div>
+                            {% if member.emergency_contact_2_email %}
+                            <div class="info-item">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">{{ member.emergency_contact_2_email }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Disability Information Card (if applicable) -->
+            {% if member.is_pwd %}
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-wheelchair"></i></div>
+                    <h3 class="card-title">Disability Information</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Type of Disability</span>
+                            <span class="info-value">{{ member.get_pwd_type_display }}</span>
+                        </div>
+                        {% if member.pwd_other_description %}
+                        <div class="info-item">
+                            <span class="info-label">Description</span>
+                            <span class="info-value">{{ member.pwd_other_description }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        // Mobile menu toggle functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        // Toggle sidebar on menu button click
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        });
+        
+        // Close sidebar when overlay is clicked
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+        
+        // Close sidebar when a link is clicked (mobile only)
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
