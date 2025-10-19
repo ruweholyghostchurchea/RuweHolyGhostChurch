@@ -304,14 +304,15 @@ img {
 }
 
 .footer-social a {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--color-dark-gray);
     border-radius: 50%;
     transition: all 0.3s;
+    font-size: 1.3rem;
 }
 
 .footer-social a:hover {
