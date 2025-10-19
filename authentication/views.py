@@ -22,22 +22,53 @@ def login_view(request):
     Redirects based on user role and subdomain:
     - Admins/Staff -> CMS Dashboard (dashboard:index)
     - Regular Members -> Members Portal (members_portal:dashboard)
+    - Public site visitors -> Show login page
     """
     if request.user.is_authenticated:
-        # Redirect authenticated users based on their role
+        # Determine available URL namespaces
+        from django.urls import resolve
+        from django.urls.exceptions import Resolver404
+        
+        # Check what's available in current URL config
+        has_dashboard = False
+        has_members_portal = False
+        has_public_site = False
+        
+        try:
+            from django.urls import reverse
+            reverse('dashboard:index')
+            has_dashboard = True
+        except:
+            pass
+            
+        try:
+            from django.urls import reverse
+            reverse('members_portal:dashboard')
+            has_members_portal = True
+        except:
+            pass
+            
+        try:
+            from django.urls import reverse
+            reverse('public_site:home')
+            has_public_site = True
+        except:
+            pass
+        
+        # Redirect based on user role and available namespaces
         if request.user.is_staff or request.user.is_superuser:
-            # Admin users go to CMS dashboard (only available on cms subdomain)
-            try:
+            if has_dashboard:
                 return redirect('dashboard:index')
-            except:
-                # If dashboard namespace not available, redirect to members portal
+            elif has_members_portal:
                 return redirect('members_portal:dashboard')
+            elif has_public_site:
+                return redirect('public_site:home')
         else:
-            # Regular members go to members portal
-            try:
+            if has_members_portal:
                 return redirect('members_portal:dashboard')
-            except:
-                # Fallback to home if members portal not available
+            elif has_dashboard:
+                return redirect('dashboard:index')
+            elif has_public_site:
                 return redirect('public_site:home')
     
     if request.method == 'POST':
@@ -59,20 +90,44 @@ def login_view(request):
                 
                 messages.success(request, f'Welcome back, {user.first_name or user.username}!')
                 
-                # Redirect based on user role
+                # Determine available URL namespaces
+                from django.urls import reverse
+                has_dashboard = False
+                has_members_portal = False
+                has_public_site = False
+                
+                try:
+                    reverse('dashboard:index')
+                    has_dashboard = True
+                except:
+                    pass
+                    
+                try:
+                    reverse('members_portal:dashboard')
+                    has_members_portal = True
+                except:
+                    pass
+                    
+                try:
+                    reverse('public_site:home')
+                    has_public_site = True
+                except:
+                    pass
+                
+                # Redirect based on user role and available namespaces
                 if user.is_staff or user.is_superuser:
-                    # Admin users go to CMS dashboard
-                    try:
+                    if has_dashboard:
                         return redirect('dashboard:index')
-                    except:
-                        # If dashboard not available, redirect to members portal
+                    elif has_members_portal:
                         return redirect('members_portal:dashboard')
+                    elif has_public_site:
+                        return redirect('public_site:home')
                 else:
-                    # Regular members go to members portal
-                    try:
+                    if has_members_portal:
                         return redirect('members_portal:dashboard')
-                    except:
-                        # Fallback to home if members portal not available
+                    elif has_dashboard:
+                        return redirect('dashboard:index')
+                    elif has_public_site:
                         return redirect('public_site:home')
             else:
                 messages.error(request, 'Your account has been deactivated. Contact the administrator.')
@@ -91,11 +146,12 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'You have been successfully logged out.')
     
-    # Redirect to public site home page
+    # Try to redirect to public site, fall back to login
+    from django.urls import reverse
     try:
+        reverse('public_site:home')
         return redirect('public_site:home')
     except:
-        # Fallback to login page if public site not available
         return redirect('authentication:login')
 
 
