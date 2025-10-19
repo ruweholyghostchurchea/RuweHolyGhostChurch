@@ -392,10 +392,10 @@ class Member(models.Model):
     date_joined_religion = models.DateField()
     date_joined_app = models.DateField(auto_now_add=True)
     
-    # Home Church Structure (Required)
-    user_home_diocese = models.ForeignKey(Diocese, on_delete=models.CASCADE, related_name='home_members')
-    user_home_pastorate = models.ForeignKey(Pastorate, on_delete=models.CASCADE, related_name='home_members')
-    user_home_church = models.ForeignKey(Church, on_delete=models.CASCADE, related_name='home_members')
+    # Home Church Structure (Optional for development)
+    user_home_diocese = models.ForeignKey(Diocese, on_delete=models.CASCADE, related_name='home_members', null=True, blank=True)
+    user_home_pastorate = models.ForeignKey(Pastorate, on_delete=models.CASCADE, related_name='home_members', null=True, blank=True)
+    user_home_church = models.ForeignKey(Church, on_delete=models.CASCADE, related_name='home_members', null=True, blank=True)
     
     # Town Church Structure (Optional - for work/education/treatment)
     user_town_diocese = models.ForeignKey(Diocese, on_delete=models.SET_NULL, null=True, blank=True, related_name='town_members')
