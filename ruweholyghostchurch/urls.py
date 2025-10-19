@@ -24,7 +24,7 @@ urlpatterns = [
     path('', redirect_to_dashboard, name='home'),
     path('auth/', include('authentication.urls', namespace='authentication')),
     path('dashboard/', include('dashboard.urls')),
-    path('church-structure/', include('church_structure.urls', namespace='church_structure')),
+    path('church-structure/', include('church_structure.urls')),
     path('ruwe-administration/', include('ruwe_administration.urls')),
     path('members/', include('members.urls')),
     path('visitors/', include('visitors.urls')),
