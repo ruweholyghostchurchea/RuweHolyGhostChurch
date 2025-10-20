@@ -45,6 +45,7 @@ Preferred communication style: Simple, everyday language.
 - **Member Management**: Comprehensive member profiles with family relationships
 - **Service Management**: Attendance tracking linked to services and members
 - **Financial Management**: Offerings, expenses with categorization
+- **Email System**: Email campaigns, templates, and logs with automated welcome emails
 - **Communication**: SMS templates and campaign management
 
 ## File Storage Strategy
@@ -59,6 +60,7 @@ Preferred communication style: Simple, everyday language.
 - **Session Security**: HTTP-only cookies with secure settings
 - **ALLOWED_HOSTS**: Wildcard only in DEBUG mode; production uses explicit domain list
 - **Subdomain Security**: Separate URL configurations and session handling per subdomain
+- **Staff-Only Features**: Email System restricted to staff/admin users with @staff_required decorator
 
 # External Dependencies
 
@@ -84,8 +86,13 @@ Preferred communication style: Simple, everyday language.
 - **django-cors-headers 4.7.0**: Cross-origin resource sharing
 
 ## Communication Services
+- **Email System**: Complete email campaign management with SMTP integration
+  - Professional HTML email templates with church branding
+  - Automated welcome emails with password reset links
+  - Campaign tracking and email logs
+  - Group-based sending (All Members, Youth, Adults, Elders, Clergy, Diocese/Pastorate/Church)
 - **Bulk SMS Integration**: Prepared for SMS service provider integration
-- **Email Backend**: Django's built-in email system for notifications
+- **Email Backend**: Django's built-in SMTP email system (Gmail in dev, custom domain in production)
 
 ## Development Tools
 - **Django Debug Toolbar**: Development debugging (implied)
@@ -132,3 +139,36 @@ The system is architected for scalability with clear separation of concerns, mod
   - Member Portal - Direct link to Member Portal dashboard
   - Django Admin - Direct link to Django's built-in admin interface
   - Logout - Redirects to public home page
+
+## Email System Implementation (October 2025)
+- **New Django App**: Created `email_system` app positioned between Finance and Bulk SMS in Admin CMS navigation
+- **Email Models**:
+  - `EmailCampaign`: Campaign management with subject, content, recipient filtering, scheduling, status tracking
+  - `EmailLog`: Individual email tracking with sent/failed status, error messages, timestamps
+  - `EmailTemplate`: Reusable email templates for common communications
+- **Professional Email Design**:
+  - HTML email templates with church logo header (https://i.imgur.com/8ToqmB8.png)
+  - Brand-consistent styling using primary colors (red #dc143c, black #000000, white #ffffff)
+  - Base template for consistent branding across all emails
+  - Welcome email template with password reset link and member portal login instructions
+- **Email Functionality**:
+  - Compose emails with rich text content
+  - Send to specific groups (All Members, Youth, Adults, Elders, Clergy)
+  - Filter by Diocese, Pastorate, or specific Church
+  - Preview recipient counts before sending
+  - Campaign management (draft, scheduled, sent status)
+  - Comprehensive email logs with success/failure tracking
+- **Automated Welcome Emails**:
+  - Signal-based automation triggers when new member is registered in Admin CMS
+  - Sends professional welcome email with church logo and branding
+  - Includes password reset link (/auth/forgot-password/) for first-time portal access
+  - Provides login instructions and member portal URL
+- **Email Configuration**:
+  - Development: Uses ruweholyghostchurchea@gmail.com with app password stored in EMAIL_HOST_PASSWORD secret
+  - Production: Configured for noreply@ruweholyghostchurch.org
+  - Reply-To headers: ruweholyghostchurchea@gmail.com and info@ruweholyghostchurch.org
+- **Security**:
+  - All email system views protected with @staff_required decorator
+  - Email System navigation link only visible to staff/admin users
+  - Non-staff users redirected to dashboard if attempting direct access
+  - Environment variable protection for email credentials
