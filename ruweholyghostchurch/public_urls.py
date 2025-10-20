@@ -14,7 +14,18 @@ urlpatterns = [
     # Members Portal (for development - in production this would be members.domain)
     path('members/', include('members_portal.urls')),
     # Admin Dashboard (for staff users - in production this would be cms.domain)
-    path('dashboard/', include('dashboard.urls')),
+    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    # Include all CMS URLs for development access
+    path('church-structure/', include('church_structure.urls', namespace='church_structure')),
+    path('ruwe-administration/', include('ruwe_administration.urls', namespace='ruwe_administration')),
+    path('members-admin/', include('members.urls', namespace='members')),
+    path('visitors/', include('visitors.urls', namespace='visitors')),
+    path('attendance/', include('attendance.urls', namespace='attendance')),
+    path('finance/', include('finance.urls', namespace='finance')),
+    path('bulk-sms/', include('bulk_sms.urls', namespace='bulk_sms')),
+    path('equipment/', include('equipment.urls', namespace='equipment')),
+    path('reports/', include('reports.urls', namespace='reports')),
+    path('church-settings/', include('church_settings.urls', namespace='church_settings')),
 ]
 
 # Serve media files during development
