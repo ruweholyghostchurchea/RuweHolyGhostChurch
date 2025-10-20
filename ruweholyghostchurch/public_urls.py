@@ -25,6 +25,7 @@ urlpatterns = [
     path('visitors/', include('visitors.urls', namespace='visitors')),
     path('attendance/', include('attendance.urls', namespace='attendance')),
     path('finance/', include('finance.urls', namespace='finance')),
+    path('email-system/', include('email_system.urls', namespace='email_system')),
     path('bulk-sms/', include('bulk_sms.urls', namespace='bulk_sms')),
     path('equipment/', include('equipment.urls', namespace='equipment')),
     path('reports/', include('reports.urls', namespace='reports')),
