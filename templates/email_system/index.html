@@ -5,7 +5,7 @@
 {% block page_title %}Email System{% endblock %}
 
 {% block content %}
-<div class="dashboard-stats">
+<div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-paper-plane"></i></div>
         <div class="stat-details">
@@ -85,7 +85,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" style="text-align: center;">No campaigns yet. <a href="{% url 'email_system:compose' %}">Create your first campaign</a></td>
+                    <td colspan="7" style="color: red; text-align: center;">No campaigns yet. <a style="color: red;" href="{% url 'email_system:compose' %}">Create your first campaign</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
