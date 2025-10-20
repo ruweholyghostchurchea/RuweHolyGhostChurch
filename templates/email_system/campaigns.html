@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -5,56 +6,127 @@
 {% block page_title %}Email Campaigns{% endblock %}
 
 {% block content %}
-<div class="action-buttons">
+<div class="action-buttons" style="margin-bottom: 2rem;">
     <a href="{% url 'email_system:compose' %}" class="btn btn-primary">
         <i class="fas fa-edit"></i> Compose New Email
+    </a>
+    <a href="{% url 'email_system:index' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
     </a>
 </div>
 
 <div class="content-section">
-    <form method="get" class="search-filters">
-        <input type="text" name="search" value="{{ search_query }}" placeholder="Search campaigns...">
-        <select name="status">
-            <option value="">All Statuses</option>
-            {% for value, label in status_choices %}
-            <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-secondary">Filter</button>
+    <div class="card-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+        <h2 style="margin: 0; color: #ffffff; display: flex; align-items: center;">
+            <i class="fas fa-paper-plane" style="color: #dc2626; margin-right: 10px;"></i>
+            All Email Campaigns
+        </h2>
+    </div>
+    
+    <form method="get" class="search-filters" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 15px; margin-bottom: 2rem; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+        <div>
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Search campaigns by name or subject..." style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #ffffff;">
+        </div>
+        <div>
+            <select name="status" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #ffffff;">
+                <option value="">All Statuses</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary" style="height: 100%; padding: 12px 30px;">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
     </form>
     
-    <div class="table-responsive">
-        <table class="data-table">
+    <div class="table-responsive" style="background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden;">
+        <table class="data-table" style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr>
-                    <th>Campaign Name</th>
-                    <th>Subject</th>
-                    <th>Recipient Type</th>
-                    <th>Total/Sent/Failed</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Actions</th>
+                <tr style="background: rgba(220,38,38,0.1); border-bottom: 2px solid #dc2626;">
+                    <th style="padding: 15px; text-align: left; color: #ffffff; font-weight: 600;">Campaign Name</th>
+                    <th style="padding: 15px; text-align: left; color: #ffffff; font-weight: 600;">Subject</th>
+                    <th style="padding: 15px; text-align: left; color: #ffffff; font-weight: 600;">Recipient Type</th>
+                    <th style="padding: 15px; text-align: center; color: #ffffff; font-weight: 600;">Total/Sent/Failed</th>
+                    <th style="padding: 15px; text-align: center; color: #ffffff; font-weight: 600;">Status</th>
+                    <th style="padding: 15px; text-align: left; color: #ffffff; font-weight: 600;">Created</th>
+                    <th style="padding: 15px; text-align: center; color: #ffffff; font-weight: 600;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for campaign in campaigns %}
-                <tr>
-                    <td><strong>{{ campaign.name }}</strong></td>
-                    <td>{{ campaign.subject|truncatewords:10 }}</td>
-                    <td>{{ campaign.get_recipient_type_display }}</td>
-                    <td>{{ campaign.total_recipients }}/{{ campaign.sent_count }}/{{ campaign.failed_count }}</td>
-                    <td><span class="badge badge-{{ campaign.status }}">{{ campaign.get_status_display }}</span></td>
-                    <td>{{ campaign.created_at|date:"M d, Y H:i" }}</td>
-                    <td>
-                        <a href="{% url 'email_system:campaign_detail' campaign.id %}" class="btn-sm">View</a>
-                        {% if campaign.status == 'draft' %}
-                        <a href="{% url 'email_system:send_campaign' campaign.id %}" class="btn-sm btn-success" onclick="return confirm('Send this campaign now?')">Send</a>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); transition: background 0.3s;" onmouseover="this.style.background='rgba(220,38,38,0.05)'" onmouseout="this.style.background='transparent'">
+                    <td style="padding: 15px;">
+                        <strong style="color: #ffffff; font-size: 1rem;">{{ campaign.name }}</strong>
+                    </td>
+                    <td style="padding: 15px; color: #e5e7eb;">{{ campaign.subject|truncatewords:8 }}</td>
+                    <td style="padding: 15px; color: #e5e7eb;">
+                        <i class="fas fa-users" style="color: #dc2626; margin-right: 5px;"></i>
+                        {{ campaign.get_recipient_type_display }}
+                    </td>
+                    <td style="padding: 15px; text-align: center;">
+                        <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+                            <span style="background: rgba(59,130,246,0.2); color: #60a5fa; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">
+                                <i class="fas fa-envelope"></i> {{ campaign.total_recipients }}
+                            </span>
+                            <span style="background: rgba(16,185,129,0.2); color: #34d399; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">
+                                <i class="fas fa-check"></i> {{ campaign.sent_count }}
+                            </span>
+                            <span style="background: rgba(239,68,68,0.2); color: #f87171; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">
+                                <i class="fas fa-times"></i> {{ campaign.failed_count }}
+                            </span>
+                        </div>
+                    </td>
+                    <td style="padding: 15px; text-align: center;">
+                        {% if campaign.status == 'sent' %}
+                        <span style="background: rgba(16,185,129,0.2); color: #34d399; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            <i class="fas fa-check-circle"></i> {{ campaign.get_status_display }}
+                        </span>
+                        {% elif campaign.status == 'draft' %}
+                        <span style="background: rgba(156,163,175,0.2); color: #9ca3af; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            <i class="fas fa-file-alt"></i> {{ campaign.get_status_display }}
+                        </span>
+                        {% elif campaign.status == 'sending' %}
+                        <span style="background: rgba(59,130,246,0.2); color: #60a5fa; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            <i class="fas fa-spinner fa-spin"></i> {{ campaign.get_status_display }}
+                        </span>
+                        {% elif campaign.status == 'failed' %}
+                        <span style="background: rgba(239,68,68,0.2); color: #f87171; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            <i class="fas fa-exclamation-circle"></i> {{ campaign.get_status_display }}
+                        </span>
+                        {% else %}
+                        <span style="background: rgba(251,191,36,0.2); color: #fbbf24; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            <i class="fas fa-clock"></i> {{ campaign.get_status_display }}
+                        </span>
                         {% endif %}
+                    </td>
+                    <td style="padding: 15px; color: #9ca3af; font-size: 0.9rem;">
+                        <i class="fas fa-calendar"></i> {{ campaign.created_at|date:"M d, Y H:i" }}
+                    </td>
+                    <td style="padding: 15px; text-align: center;">
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <a href="{% url 'email_system:campaign_detail' campaign.id %}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            {% if campaign.status == 'draft' %}
+                            <a href="{% url 'email_system:send_campaign' campaign.id %}" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem; background: #10b981; border-color: #10b981;" onclick="return confirm('Send this campaign now?')">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </a>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" style="text-align: center;">No campaigns found.</td>
+                    <td colspan="7" style="padding: 40px; text-align: center; color: #9ca3af;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; color: #dc2626; opacity: 0.3; display: block; margin-bottom: 15px;"></i>
+                        <p style="font-size: 1.1rem; margin: 0;">No campaigns found.</p>
+                        <a href="{% url 'email_system:compose' %}" style="color: #dc2626; text-decoration: none; margin-top: 10px; display: inline-block;">
+                            Create your first campaign <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -62,17 +134,27 @@
     </div>
     
     {% if campaigns.has_other_pages %}
-    <div class="pagination">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 2rem; padding: 20px;">
         {% if campaigns.has_previous %}
-        <a href="?page=1&search={{ search_query }}&status={{ status_filter }}">First</a>
-        <a href="?page={{ campaigns.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}">Previous</a>
+        <a href="?page=1&search={{ search_query }}&status={{ status_filter }}" class="btn btn-secondary" style="padding: 10px 20px;">
+            <i class="fas fa-angle-double-left"></i> First
+        </a>
+        <a href="?page={{ campaigns.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}" class="btn btn-secondary" style="padding: 10px 20px;">
+            <i class="fas fa-angle-left"></i> Previous
+        </a>
         {% endif %}
         
-        <span>Page {{ campaigns.number }} of {{ campaigns.paginator.num_pages }}</span>
+        <span style="color: #ffffff; padding: 10px 20px; background: rgba(220,38,38,0.2); border-radius: 6px; font-weight: 600;">
+            Page {{ campaigns.number }} of {{ campaigns.paginator.num_pages }}
+        </span>
         
         {% if campaigns.has_next %}
-        <a href="?page={{ campaigns.next_page_number }}&search={{ search_query }}&status={{ status_filter }}">Next</a>
-        <a href="?page={{ campaigns.paginator.num_pages }}&search={{ search_query }}&status={{ status_filter }}">Last</a>
+        <a href="?page={{ campaigns.next_page_number }}&search={{ search_query }}&status={{ status_filter }}" class="btn btn-secondary" style="padding: 10px 20px;">
+            Next <i class="fas fa-angle-right"></i>
+        </a>
+        <a href="?page={{ campaigns.paginator.num_pages }}&search={{ search_query }}&status={{ status_filter }}" class="btn btn-secondary" style="padding: 10px 20px;">
+            Last <i class="fas fa-angle-double-right"></i>
+        </a>
         {% endif %}
     </div>
     {% endif %}
