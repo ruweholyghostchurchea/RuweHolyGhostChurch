@@ -1,0 +1,132 @@
+
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/login.css' %}">
+    <style>
+        .login {
+            background: linear-gradient(135deg, #000000 0%, #1a0033 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login #container {
+            background: transparent;
+        }
+        
+        .login #content {
+            padding: 0;
+        }
+        
+        .login form {
+            position: relative;
+        }
+        
+        .login form::before {
+            content: '🏛️';
+            font-size: 64px;
+            display: block;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .login .form-row {
+            margin-bottom: 24px;
+        }
+        
+        .login .form-row label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--md-on-surface);
+            font-weight: 600;
+        }
+        
+        .login .submit-row {
+            text-align: center;
+            padding: 24px 0 0 0;
+            background: transparent;
+        }
+        
+        .login .submit-row input[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+        }
+        
+        .login .errornote {
+            margin-bottom: 24px;
+        }
+    </style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">
+    {% blocktranslate count counter=form.errors.items|length %}
+        Please correct the error below.
+    {% plural %}
+        Please correct the errors below.
+    {% endblocktranslate %}
+</p>
+{% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
+<div id="content-main">
+    <form action="{{ app_path }}" method="post" id="login-form">
+        {% csrf_token %}
+        <h1>Admin Portal</h1>
+        <p class="help" style="text-align: center; margin-bottom: 32px;">
+            Ruwe Holy Ghost Church Management System
+        </p>
+        
+        <div class="form-row">
+            {{ form.username.errors }}
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+        
+        <div class="form-row">
+            {{ form.password.errors }}
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            <input type="hidden" name="next" value="{{ next }}">
+        </div>
+        
+        {% url 'admin_password_reset' as password_reset_url %}
+        {% if password_reset_url %}
+        <div class="password-reset-link" style="text-align: center; margin-top: 16px;">
+            <a href="{{ password_reset_url }}" style="color: var(--md-secondary);">
+                {% translate 'Forgotten your password or username?' %}
+            </a>
+        </div>
+        {% endif %}
+        
+        <div class="submit-row">
+            <input type="submit" value="{% translate 'Log in' %}">
+        </div>
+    </form>
+</div>
+{% endblock %}
