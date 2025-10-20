@@ -2,11 +2,14 @@
 Public Website URL Configuration for ruweholyghostchurch.org
 Public-facing website (no authentication required)
 """
+from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    # Django Admin
+    path('admin/', admin.site.urls),
     # Public website URLs
     path('', include('public_site.urls')),
     # Authentication URLs for login/logout
