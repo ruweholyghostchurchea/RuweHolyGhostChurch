@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -5,91 +6,250 @@
 {% block page_title %}Compose Email{% endblock %}
 
 {% block content %}
-<form method="post" id="composeForm">
-    {% csrf_token %}
-    
-    <div class="form-grid">
-        <div class="form-group">
-            <label for="name">Campaign Name *</label>
-            <input type="text" id="name" name="name" required placeholder="e.g., December Newsletter">
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-edit"></i> New Email Campaign
+        </h2>
+        <p style="color: #9ca3af; margin: 10px 0 0 0; font-size: 0.9rem;">Create and send email campaigns to your church members</p>
+    </div>
+
+    <form method="post" id="composeForm" style="padding: 10px 0;">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
+            <div class="form-group">
+                <label for="name" class="form-label">
+                    <i class="fas fa-tag" style="color: #dc2626; margin-right: 8px;"></i>
+                    Campaign Name <span style="color: #dc2626;">*</span>
+                </label>
+                <input type="text" id="name" name="name" class="form-control" required placeholder="e.g., December Newsletter">
+            </div>
+            
+            <div class="form-group">
+                <label for="subject" class="form-label">
+                    <i class="fas fa-envelope" style="color: #dc2626; margin-right: 8px;"></i>
+                    Email Subject <span style="color: #dc2626;">*</span>
+                </label>
+                <input type="text" id="subject" name="subject" class="form-control" required placeholder="Enter email subject">
+            </div>
         </div>
         
-        <div class="form-group">
-            <label for="subject">Email Subject *</label>
-            <input type="text" id="subject" name="subject" required placeholder="Enter email subject">
+        <div class="form-group" style="margin-bottom: 25px;">
+            <label for="recipient_type" class="form-label">
+                <i class="fas fa-users" style="color: #dc2626; margin-right: 8px;"></i>
+                Send To <span style="color: #dc2626;">*</span>
+            </label>
+            <select id="recipient_type" name="recipient_type" class="form-control" required>
+                <option value="">-- Select Recipients --</option>
+                {% for value, label in recipient_types %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            <small style="color: #9ca3af; display: block; margin-top: 8px;">
+                <i class="fas fa-info-circle"></i> Choose who will receive this email campaign
+            </small>
         </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="recipient_type">Send To *</label>
-        <select id="recipient_type" name="recipient_type" required>
-            <option value="">-- Select Recipients --</option>
-            {% for value, label in recipient_types %}
-            <option value="{{ value }}">{{ label }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    
-    <div class="form-group" id="diocese_filter" style="display: none;">
-        <label for="diocese_id">Select Diocese</label>
-        <select id="diocese_id" name="diocese_id">
-            <option value="">-- Select Diocese --</option>
-            {% for diocese in dioceses %}
-            <option value="{{ diocese.id }}">{{ diocese.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    
-    <div class="form-group" id="pastorate_filter" style="display: none;">
-        <label for="pastorate_id">Select Pastorate</label>
-        <select id="pastorate_id" name="pastorate_id">
-            <option value="">-- Select Pastorate --</option>
-            {% for pastorate in pastorates %}
-            <option value="{{ pastorate.id }}">{{ pastorate.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    
-    <div class="form-group" id="church_filter" style="display: none;">
-        <label for="church_id">Select Church</label>
-        <select id="church_id" name="church_id">
-            <option value="">-- Select Church --</option>
-            {% for church in churches %}
-            <option value="{{ church.id }}">{{ church.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    
-    <div class="form-group">
-        <label for="html_content">Email Message *</label>
-        <textarea id="html_content" name="html_content" rows="15" required placeholder="Enter your email message here..."></textarea>
-        <small>You can use basic HTML tags for formatting. The message will be wrapped in a professional church-branded template.</small>
-    </div>
-    
-    <div class="form-group">
-        <label>
-            <input type="checkbox" name="send_now" id="send_now"> Send immediately (otherwise save as draft)
-        </label>
-    </div>
-    
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-paper-plane"></i> <span id="submitText">Save Campaign</span>
-        </button>
-        <a href="{% url 'email_system:index' %}" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
+        
+        <div class="form-group" id="diocese_filter" style="display: none; margin-bottom: 25px;">
+            <label for="diocese_id" class="form-label">
+                <i class="fas fa-map-marked-alt" style="color: #dc2626; margin-right: 8px;"></i>
+                Select Diocese
+            </label>
+            <select id="diocese_id" name="diocese_id" class="form-control">
+                <option value="">-- All Dioceses --</option>
+                {% for diocese in dioceses %}
+                <option value="{{ diocese.id }}">{{ diocese.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group" id="pastorate_filter" style="display: none; margin-bottom: 25px;">
+            <label for="pastorate_id" class="form-label">
+                <i class="fas fa-church" style="color: #dc2626; margin-right: 8px;"></i>
+                Select Pastorate
+            </label>
+            <select id="pastorate_id" name="pastorate_id" class="form-control">
+                <option value="">-- All Pastorates --</option>
+                {% for pastorate in pastorates %}
+                <option value="{{ pastorate.id }}">{{ pastorate.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group" id="church_filter" style="display: none; margin-bottom: 25px;">
+            <label for="church_id" class="form-label">
+                <i class="fas fa-home" style="color: #dc2626; margin-right: 8px;"></i>
+                Select Church
+            </label>
+            <select id="church_id" name="church_id" class="form-control">
+                <option value="">-- All Churches --</option>
+                {% for church in churches %}
+                <option value="{{ church.id }}">{{ church.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 25px;">
+            <label for="html_content" class="form-label">
+                <i class="fas fa-align-left" style="color: #dc2626; margin-right: 8px;"></i>
+                Email Message <span style="color: #dc2626;">*</span>
+            </label>
+            <textarea id="html_content" name="html_content" rows="15" class="form-control" required placeholder="Enter your email message here...
+
+Example:
+Dear Church Family,
+
+We are excited to announce...
+
+God bless you!"></textarea>
+            <small style="color: #9ca3af; display: block; margin-top: 8px;">
+                <i class="fas fa-lightbulb"></i> You can use basic HTML tags for formatting. The message will be wrapped in a professional church-branded template.
+            </small>
+        </div>
+        
+        <div style="background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 10px; padding: 20px; margin-bottom: 25px;">
+            <label style="display: flex; align-items: center; cursor: pointer; color: #ffffff; font-weight: 500;">
+                <input type="checkbox" name="send_now" id="send_now" style="width: 20px; height: 20px; margin-right: 12px; cursor: pointer; accent-color: #dc2626;">
+                <span>
+                    <i class="fas fa-paper-plane" style="color: #dc2626; margin-right: 8px;"></i>
+                    Send immediately (otherwise save as draft)
+                </span>
+            </label>
+            <small style="color: #9ca3af; display: block; margin-top: 8px; margin-left: 32px;">
+                If unchecked, the campaign will be saved as a draft for review before sending
+            </small>
+        </div>
+        
+        <div style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <button type="submit" class="btn btn-primary" style="flex: 1; max-width: 250px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; padding: 15px 30px;">
+                <i class="fas fa-check-circle"></i>
+                <span id="submitText">Save Campaign</span>
+            </button>
+            <a href="{% url 'email_system:index' %}" class="btn btn-secondary" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 30px;">
+                <i class="fas fa-times-circle"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+.form-group {
+    animation: fadeInUp 0.3s ease-in;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#recipient_type:focus,
+#diocese_id:focus,
+#pastorate_id:focus,
+#church_id:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+textarea#html_content {
+    font-family: 'Courier New', monospace;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 200px;
+}
+
+textarea#html_content:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+select.form-control option {
+    background: #404040;
+    color: #ffffff;
+    padding: 10px;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+</style>
 
 <script>
 document.getElementById('recipient_type').addEventListener('change', function() {
     const value = this.value;
-    document.getElementById('diocese_filter').style.display = value === 'diocese' ? 'block' : 'none';
-    document.getElementById('pastorate_filter').style.display = value === 'pastorate' ? 'block' : 'none';
-    document.getElementById('church_filter').style.display = value === 'church' ? 'block' : 'none';
+    const dioceseFilter = document.getElementById('diocese_filter');
+    const pastorateFilter = document.getElementById('pastorate_filter');
+    const churchFilter = document.getElementById('church_filter');
+    
+    // Hide all filters first
+    dioceseFilter.style.display = 'none';
+    pastorateFilter.style.display = 'none';
+    churchFilter.style.display = 'none';
+    
+    // Show relevant filter with animation
+    if (value === 'diocese') {
+        dioceseFilter.style.display = 'block';
+        dioceseFilter.style.animation = 'fadeInUp 0.3s ease-in';
+    } else if (value === 'pastorate') {
+        pastorateFilter.style.display = 'block';
+        pastorateFilter.style.animation = 'fadeInUp 0.3s ease-in';
+    } else if (value === 'church') {
+        churchFilter.style.display = 'block';
+        churchFilter.style.animation = 'fadeInUp 0.3s ease-in';
+    }
 });
 
 document.getElementById('send_now').addEventListener('change', function() {
-    document.getElementById('submitText').textContent = this.checked ? 'Send Now' : 'Save Campaign';
+    const submitText = document.getElementById('submitText');
+    const submitBtn = submitText.parentElement;
+    
+    if (this.checked) {
+        submitText.innerHTML = '<i class="fas fa-paper-plane"></i> Send Now';
+        submitBtn.style.background = 'linear-gradient(90deg, #dc2626 0%, #b91c1c 100%)';
+    } else {
+        submitText.innerHTML = '<i class="fas fa-save"></i> Save Campaign';
+        submitBtn.style.background = 'linear-gradient(90deg, #dc2626 0%, #991b1b 100%)';
+    }
 });
+
+// Form validation feedback
+document.getElementById('composeForm').addEventListener('submit', function(e) {
+    const requiredFields = this.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            isValid = false;
+            field.style.borderColor = '#ef4444';
+            field.style.animation = 'shake 0.3s ease-in-out';
+        } else {
+            field.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Please fill in all required fields');
+    }
+});
+
+// Shake animation for validation errors
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+`;
+document.head.appendChild(style);
 </script>
 {% endblock %}
