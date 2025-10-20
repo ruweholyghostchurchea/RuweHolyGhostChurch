@@ -111,6 +111,7 @@ INSTALLED_APPS = [
     'visitors',
     'attendance',
     'finance',
+    'email_system',  # Email System between Finance and Bulk SMS
     'bulk_sms',
     'equipment',
     'reports',
@@ -248,14 +249,28 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email configuration for password reset
+# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''  # Set in production via environment variables
-EMAIL_HOST_PASSWORD = ''  # Set in production via environment variables
-DEFAULT_FROM_EMAIL = 'Ruwe Holy Ghost Church <noreply@ruweholyghostchurch.org>'
+
+# Development and Production email settings
+# Development: ruweholyghostchurchea@gmail.com
+# Production: noreply@ruweholyghostchurch.org (set via secrets)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'ruweholyghostchurchea@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+
+# Set DEFAULT_FROM_EMAIL based on environment
+if DEBUG:
+    DEFAULT_FROM_EMAIL = f'{os.environ.get("EMAIL_HOST_USER", "ruweholyghostchurchea@gmail.com")}'
+    SERVER_EMAIL = DEFAULT_FROM_EMAIL
+else:
+    DEFAULT_FROM_EMAIL = 'Ruwe Holy Ghost Church <noreply@ruweholyghostchurch.org>'
+    SERVER_EMAIL = 'Ruwe Holy Ghost Church <noreply@ruweholyghostchurch.org>'
+
+# Reply-to addresses
+EMAIL_REPLY_TO = ['ruweholyghostchurchea@gmail.com', 'info@ruweholyghostchurch.org']
 
 # Login/Logout URLs
 LOGIN_URL = '/auth/login/'
