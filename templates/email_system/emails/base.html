@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+    <style>
+        /* Email-safe CSS */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+            color: #333333;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .email-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            padding: 0;
+            text-align: center;
+        }
+        .email-header img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .church-logo {
+            padding: 20px;
+            text-align: center;
+            background-color: #000000;
+        }
+        .church-logo img {
+            width: 80px;
+            height: auto;
+        }
+        .church-name {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0 20px 0;
+            text-align: center;
+        }
+        .email-body {
+            padding: 30px 20px;
+            line-height: 1.7;
+            color: #333333;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+        .content {
+            font-size: 15px;
+            color: #333333;
+        }
+        .content p {
+            margin: 15px 0;
+        }
+        .content h2 {
+            color: #dc143c;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .content h3 {
+            color: #000000;
+            font-size: 17px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #dc143c 0%, #b01030 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        .btn-secondary {
+            background: #000000;
+        }
+        .highlight-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #dc143c;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+        .footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .footer a {
+            color: #dc143c;
+            text-decoration: none;
+        }
+        .footer-links {
+            margin: 15px 0;
+        }
+        .footer-links a {
+            color: #ffffff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            color: #ffffff;
+            margin: 0 8px;
+            font-size: 18px;
+            text-decoration: none;
+        }
+        .motto {
+            font-style: italic;
+            color: #dc143c;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        @media only screen and (max-width: 600px) {
+            .email-body {
+                padding: 20px 15px;
+            }
+            .btn {
+                display: block;
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table class="email-container" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <!-- Header with Logo -->
+        <tr>
+            <td class="email-header">
+                <img src="{{ logo_url }}" alt="Ruwe Holy Ghost Church EA" style="width: 100%; max-width: 600px; height: auto;">
+            </td>
+        </tr>
+        
+        <!-- Church Name -->
+        <tr>
+            <td style="background-color: #000000; padding: 10px 20px;">
+                <div class="church-name">RUWE HOLY GHOST CHURCH OF EAST AFRICA</div>
+            </td>
+        </tr>
+        
+        <!-- Email Body -->
+        <tr>
+            <td class="email-body">
+                {% if recipient_name %}
+                <div class="greeting">Dear {{ recipient_name }},</div>
+                {% endif %}
+                
+                <div class="content">
+                    {{ content|safe }}
+                </div>
+            </td>
+        </tr>
+        
+        <!-- Motto Section -->
+        <tr>
+            <td style="padding: 20px; background-color: #f9f9f9; text-align: center;">
+                <p class="motto">'Roho en Singruok, Roho ok en din'</p>
+                <p style="font-size: 13px; color: #666;">A Church of the Spirit, for the People with the Spirit</p>
+            </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+            <td class="footer">
+                <p style="margin: 0 0 15px 0; font-weight: bold;">RUWE HOLY GHOST CHURCH OF EAST AFRICA</p>
+                
+                <div class="footer-links">
+                    <a href="{{ site_url }}">Home</a> |
+                    <a href="{{ site_url }}/about/">About Us</a> |
+                    <a href="{{ site_url }}/contact/">Contact</a>
+                </div>
+                
+                <p style="margin: 15px 0;">
+                    <strong>Contact Us:</strong><br>
+                    Email: <a href="mailto:{{ contact_email }}">{{ contact_email }}</a><br>
+                    Phone: {{ phone }}
+                </p>
+                
+                <div class="social-links">
+                    <a href="#">📘</a>
+                    <a href="#">📷</a>
+                    <a href="#">✖️</a>
+                    <a href="#">📺</a>
+                </div>
+                
+                <p style="margin: 20px 0 0 0; font-size: 12px; color: #999;">
+                    © {{ current_year }} Ruwe Holy Ghost Church of East Africa. All rights reserved.
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

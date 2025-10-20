@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ campaign.name }} - RuweHolyGhostChurch{% endblock %}
+{% block page_title %}Campaign Details{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <h2>{{ campaign.name }}</h2>
+    <p><strong>Status:</strong> <span class="badge badge-{{ campaign.status }}">{{ campaign.get_status_display }}</span></p>
+    <p><strong>Subject:</strong> {{ campaign.subject }}</p>
+    <p><strong>Recipient Type:</strong> {{ campaign.get_recipient_type_display }}</p>
+    <p><strong>Total Recipients:</strong> {{ campaign.total_recipients }}</p>
+    <p><strong>Sent:</strong> {{ campaign.sent_count }} | <strong>Failed:</strong> {{ campaign.failed_count }}</p>
+    <p><strong>Created:</strong> {{ campaign.created_at|date:"M d, Y H:i" }}</p>
+    {% if campaign.sent_at %}<p><strong>Sent At:</strong> {{ campaign.sent_at|date:"M d, Y H:i" }}</p>{% endif %}
+    
+    {% if campaign.status == 'draft' %}
+    <a href="{% url 'email_system:send_campaign' campaign.id %}" class="btn btn-primary" onclick="return confirm('Send this campaign now?')">
+        <i class="fas fa-paper-plane"></i> Send Campaign
+    </a>
+    {% endif %}
+    <a href="{% url 'email_system:campaigns' %}" class="btn btn-secondary">Back to Campaigns</a>
+</div>
+
+<div class="content-section" style="margin-top: 2rem;">
+    <h3>Email Content Preview</h3>
+    <div style="border: 1px solid #ddd; padding: 20px; background: #f9f9f9;">
+        {{ campaign.html_content|safe }}
+    </div>
+</div>
+
+<div class="content-section" style="margin-top: 2rem;">
+    <h3>Email Logs ({{ email_logs.count }})</h3>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Recipient</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Sent At</th>
+                    <th>Error Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in email_logs %}
+                <tr>
+                    <td>{{ log.recipient_name }}</td>
+                    <td>{{ log.recipient_email }}</td>
+                    <td><span class="badge badge-{{ log.status }}">{{ log.get_status_display }}</span></td>
+                    <td>{{ log.sent_at|date:"M d, Y H:i"|default:"Not sent" }}</td>
+                    <td>{{ log.error_message|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center;">No emails sent yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

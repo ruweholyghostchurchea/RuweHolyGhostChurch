@@ -68,6 +68,14 @@
                             <span>Finance</span>
                         </a>
                     </li>
+                    {% if user.is_staff or user.is_superuser %}
+                    <li>
+                        <a href="{% url 'email_system:index' %}" class="{% if request.resolver_match.app_name == 'email_system' %}active{% endif %}">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email System</span>
+                        </a>
+                    </li>
+                    {% endif %}
                     <li>
                         <a href="{% url 'bulk_sms:index' %}" class="{% if request.resolver_match.app_name == 'bulk_sms' %}active{% endif %}">
                             <i class="fas fa-sms"></i>

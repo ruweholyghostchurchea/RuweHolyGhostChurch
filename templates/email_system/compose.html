@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Compose Email - RuweHolyGhostChurch{% endblock %}
+{% block page_title %}Compose Email{% endblock %}
+
+{% block content %}
+<form method="post" id="composeForm">
+    {% csrf_token %}
+    
+    <div class="form-grid">
+        <div class="form-group">
+            <label for="name">Campaign Name *</label>
+            <input type="text" id="name" name="name" required placeholder="e.g., December Newsletter">
+        </div>
+        
+        <div class="form-group">
+            <label for="subject">Email Subject *</label>
+            <input type="text" id="subject" name="subject" required placeholder="Enter email subject">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="recipient_type">Send To *</label>
+        <select id="recipient_type" name="recipient_type" required>
+            <option value="">-- Select Recipients --</option>
+            {% for value, label in recipient_types %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group" id="diocese_filter" style="display: none;">
+        <label for="diocese_id">Select Diocese</label>
+        <select id="diocese_id" name="diocese_id">
+            <option value="">-- Select Diocese --</option>
+            {% for diocese in dioceses %}
+            <option value="{{ diocese.id }}">{{ diocese.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group" id="pastorate_filter" style="display: none;">
+        <label for="pastorate_id">Select Pastorate</label>
+        <select id="pastorate_id" name="pastorate_id">
+            <option value="">-- Select Pastorate --</option>
+            {% for pastorate in pastorates %}
+            <option value="{{ pastorate.id }}">{{ pastorate.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group" id="church_filter" style="display: none;">
+        <label for="church_id">Select Church</label>
+        <select id="church_id" name="church_id">
+            <option value="">-- Select Church --</option>
+            {% for church in churches %}
+            <option value="{{ church.id }}">{{ church.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="html_content">Email Message *</label>
+        <textarea id="html_content" name="html_content" rows="15" required placeholder="Enter your email message here..."></textarea>
+        <small>You can use basic HTML tags for formatting. The message will be wrapped in a professional church-branded template.</small>
+    </div>
+    
+    <div class="form-group">
+        <label>
+            <input type="checkbox" name="send_now" id="send_now"> Send immediately (otherwise save as draft)
+        </label>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> <span id="submitText">Save Campaign</span>
+        </button>
+        <a href="{% url 'email_system:index' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+<script>
+document.getElementById('recipient_type').addEventListener('change', function() {
+    const value = this.value;
+    document.getElementById('diocese_filter').style.display = value === 'diocese' ? 'block' : 'none';
+    document.getElementById('pastorate_filter').style.display = value === 'pastorate' ? 'block' : 'none';
+    document.getElementById('church_filter').style.display = value === 'church' ? 'block' : 'none';
+});
+
+document.getElementById('send_now').addEventListener('change', function() {
+    document.getElementById('submitText').textContent = this.checked ? 'Send Now' : 'Save Campaign';
+});
+</script>
+{% endblock %}
