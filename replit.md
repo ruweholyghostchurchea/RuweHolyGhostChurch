@@ -126,3 +126,9 @@ The system is architected for scalability with clear separation of concerns, mod
 - **Member Profile Requirement**: Members Portal requires a linked Member profile (user.member_profile)
   - Superuser needs a Member profile created to access Members Portal
   - Use Admin CMS to create Member profile and link to user account
+
+## Navigation Updates (October 2025)
+- **Admin CMS User Dropdown Menu**: Added quick access links in the user dropdown (top-right corner):
+  - Member Portal - Direct link to Member Portal dashboard
+  - Django Admin - Direct link to Django's built-in admin interface
+  - Logout - Redirects to public home page
