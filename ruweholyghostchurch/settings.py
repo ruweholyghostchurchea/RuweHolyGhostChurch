@@ -260,4 +260,4 @@ DEFAULT_FROM_EMAIL = 'Ruwe Holy Ghost Church <noreply@ruweholyghostchurch.org>'
 # Login/Logout URLs
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
-LOGOUT_REDIRECT_URL = '/auth/login/'
+LOGOUT_REDIRECT_URL = '/'

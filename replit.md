@@ -118,6 +118,7 @@ The system is architected for scalability with clear separation of concerns, mod
 ## Development Environment Routing (Latest Update)
 - **Homepage Routing**: Development environment now defaults to public site (public_urls.py)
 - **Login Flow**: Login redirects to Members Portal dashboard after successful authentication
+- **Logout Flow**: All logout actions redirect to public home page (/) instead of login page
 - **Cross-Portal Access**: 
   - Public site includes Members Portal at /members/ path
   - Public site includes Admin Dashboard at /dashboard/ path  

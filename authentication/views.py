@@ -53,7 +53,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, 'You have been successfully logged out.')
-    return redirect('authentication:login')
+    return redirect('/')
 
 
 @csrf_protect
