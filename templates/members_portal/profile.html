@@ -25,6 +25,7 @@
                 <ul class="sidebar-nav">
                     <li><a href="{% url 'members_portal:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="{% url 'members_portal:profile' %}" class="active"><i class="fas fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'members_portal:my_church' %}"><i class="fas fa-church"></i> My Church</a></li>
                     <li><a href="{% url 'members_portal:attendance' %}"><i class="fas fa-calendar-check"></i> Attendance</a></li>
                     <li><a href="{% url 'members_portal:giving' %}"><i class="fas fa-hand-holding-usd"></i> Giving</a></li>
                     {% if is_admin %}

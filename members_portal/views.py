@@ -65,6 +65,78 @@ def profile(request):
 
 
 @login_required
+def my_church(request):
+    """
+    Member's church view - shows detailed information about member's home and town church
+    """
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return render(request, 'members_portal/no_profile.html', {
+            'user': request.user
+        })
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Headquarter Church
+    from church_structure.models import Church
+    headquarter_church = None
+    try:
+        headquarter_church = Church.objects.filter(
+            is_headquarter_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
+    # Get home church members
+    home_church_members = []
+    if member.user_home_church:
+        home_church_members = Member.objects.filter(
+            user_home_church=member.user_home_church,
+            membership_status='Active'
+        ).order_by('first_name', 'last_name')
+    
+    # Get town church members (if applicable)
+    town_church_members = []
+    if member.user_town_church:
+        town_church_members = Member.objects.filter(
+            user_home_church=member.user_town_church,
+            membership_status='Active'
+        ).order_by('first_name', 'last_name')
+    
+    context = {
+        'member': member,
+        'is_admin': request.user.is_staff or request.user.is_superuser,
+        'archbishop': archbishop,
+        'king': king,
+        'headquarter_church': headquarter_church,
+        'home_church_members': home_church_members,
+        'town_church_members': town_church_members,
+    }
+    
+    return render(request, 'members_portal/my_church.html', context)
+
+
+@login_required
 def attendance(request):
     """
     Member attendance history view
