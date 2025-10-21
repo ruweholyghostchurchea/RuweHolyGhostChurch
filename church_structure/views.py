@@ -327,52 +327,6 @@ def pastorate_detail(request, pastorate_slug):
     return render(request, 'church_structure/pastorate_detail.html', context)
 
 @login_required
-def edit_pastorate(request, pastorate_slug):
-    """Edit pastorate"""
-    pastorate = get_object_or_404(Pastorate, slug=pastorate_slug)
-
-    if request.method == 'POST':
-        form = PastorateForm(request.POST, instance=pastorate)
-        if form.is_valid():
-            pastorate = form.save()
-            messages.success(request, f'Pastorate "{pastorate.name}" updated successfully!')
-            return redirect('church_structure:pastorate_detail', pastorate_slug=pastorate.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = PastorateForm(instance=pastorate)
-
-    context = {
-        'page_title': f'Edit {pastorate.name} Pastorate',
-        'form': form,
-        'pastorate': pastorate,
-    }
-    return render(request, 'church_structure/edit_pastorate.html', context)
-
-@login_required
-def edit_church(request, church_slug):
-    """Edit church"""
-    church = get_object_or_404(Church, slug=church_slug)
-
-    if request.method == 'POST':
-        form = ChurchForm(request.POST, instance=church)
-        if form.is_valid():
-            church = form.save()
-            messages.success(request, f'Church "{church.name}" updated successfully!')
-            return redirect('church_structure:church_detail', church_slug=church.slug)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = ChurchForm(instance=church)
-
-    context = {
-        'page_title': f'Edit {church.name} Church',
-        'form': form,
-        'church': church,
-    }
-    return render(request, 'church_structure/edit_church.html', context)
-
-@login_required
 def get_pastorates(request, diocese_id):
     """Get pastorates for a specific diocese"""
     pastorates = Pastorate.objects.filter(
@@ -487,10 +441,14 @@ def edit_pastorate(request, pastorate_slug):
     else:
         form = PastorateForm(instance=pastorate)
 
+    # Get all dioceses for the dropdown
+    dioceses = Diocese.objects.filter(is_active=True).order_by('country', 'name')
+
     context = {
         'page_title': f'Edit {pastorate.name} Pastorate',
         'form': form,
         'pastorate': pastorate,
+        'dioceses': dioceses,
     }
     return render(request, 'church_structure/edit_pastorate.html', context)
 
