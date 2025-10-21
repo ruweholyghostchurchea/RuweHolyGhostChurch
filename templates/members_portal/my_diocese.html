@@ -1,0 +1,285 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Diocese - Ruwe Holy Ghost Church</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/members_portal.css' %}">
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/UkrjXEc.jpg">
+</head>
+<body>
+    <div class="portal-wrapper">
+        <!-- Sidebar -->
+        <aside class="portal-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.imgur.com/BUxE9oF.jpg" alt="Church Logo" class="sidebar-logo">
+                <div class="sidebar-title">Members Portal</div>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="{% url 'members_portal:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'members_portal:profile' %}"><i class="fas fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'members_portal:my_church' %}"><i class="fas fa-church"></i> My Church</a></li>
+                    <li><a href="{% url 'members_portal:my_pastorate' %}"><i class="fas fa-map-marked-alt"></i> My Pastorate</a></li>
+                    <li><a href="{% url 'members_portal:my_diocese' %}" class="active"><i class="fas fa-globe-africa"></i> My Diocese</a></li>
+                    <li><a href="{% url 'members_portal:attendance' %}"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                    <li><a href="{% url 'members_portal:giving' %}"><i class="fas fa-hand-holding-usd"></i> Giving</a></li>
+                    {% if is_admin %}
+                    <li><a href="/dashboard/" style="background: rgba(220, 20, 60, 0.2);"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'authentication:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Main Content -->
+        <div class="portal-main">
+            <nav class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                    <h1 class="topbar-title">My Diocese</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-profile">
+                        {% if member.display_photo %}
+                        <img src="{{ member.display_photo }}" alt="Profile" class="user-avatar">
+                        {% else %}
+                        <img src="https://i.imgur.com/UkrjXEc.jpg" alt="Profile" class="user-avatar">
+                        {% endif %}
+                        <span class="user-name">{{ member.full_name }}</span>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Page Header -->
+            <div class="section-header">
+                <h2 class="section-title">My Diocese Information</h2>
+                <p class="section-subtitle">Complete details about your diocese and leadership</p>
+            </div>
+            
+            {% if not diocese %}
+            <div class="material-card">
+                <div class="card-content">
+                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
+                        <i class="fas fa-info-circle"></i> No diocese assigned to your profile
+                    </p>
+                </div>
+            </div>
+            {% else %}
+            
+            <!-- Diocese Information -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-globe-africa"></i></div>
+                    <h3 class="card-title">Diocese Details</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Diocese Name</span>
+                            <span class="info-value">{{ diocese.name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Identifier</span>
+                            <span class="info-value" style="color: red;">{{ diocese.identifier }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Country</span>
+                            <span class="info-value">{{ diocese.country }}</span>
+                        </div>
+                        {% if diocese.established_date %}
+                        <div class="info-item">
+                            <span class="info-label">Established Date</span>
+                            <span class="info-value">{{ diocese.established_date|date:"F d, Y" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if diocese.description %}
+                    <div class="divider"></div>
+                    <div class="info-item mb-2">
+                        <span class="info-label">Description</span>
+                        <span class="info-value">{{ diocese.description }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Bishop Information -->
+            {% if bishop %}
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-crown"></i></div>
+                    <h3 class="card-title">Bishop</h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ bishop.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Baptismal Name</span>
+                            <span class="info-value">{{ bishop.baptismal_full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">{{ bishop.phone_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">{{ bishop.email_address|default:"Not provided" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ bishop.location }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">User Group</span>
+                            <span class="info-value">
+                                <span class="badge {% if bishop.user_group == 'Youth' %}badge-active{% elif bishop.user_group == 'Elder' %}badge-clergy{% else %}badge-inactive{% endif %}">
+                                    {{ bishop.user_group }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Clergy Roles</span>
+                            <span class="info-value">{{ bishop.display_clergy_roles|default:"N/A" }}</span>
+                        </div>
+                    </div>
+                    
+                    {% if bishop_wife %}
+                    <div class="divider"></div>
+                    <h4 style="color: var(--color-red); margin-bottom: 15px; font-size: 1.05rem;">
+                        <i class="fas fa-female"></i> Bishop's Wife
+                    </h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ bishop_wife.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Baptismal Name</span>
+                            <span class="info-value">{{ bishop_wife.baptismal_full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">{{ bishop_wife.phone_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">{{ bishop_wife.email_address|default:"Not provided" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ bishop_wife.location }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Clergy Roles</span>
+                            <span class="info-value">{{ bishop_wife.display_clergy_roles|default:"N/A" }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Pastorates in Diocese -->
+            {% if pastorates %}
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3 class="card-title">Pastorates in {{ diocese.name }} ({{ pastorates.count }})</h3>
+                </div>
+                <div class="card-content">
+                    {% for pastorate in pastorates %}
+                    <div style="margin-bottom: 25px; padding: 20px; background: var(--color-light-gray); border-radius: var(--radius-md); {% if not forloop.last %}border-bottom: 2px solid var(--color-white);{% endif %}">
+                        <h4 style="color: var(--color-red); margin-bottom: 15px; font-size: 1.1rem;">
+                            <i class="fas fa-map-marked-alt"></i> {{ pastorate.name }}
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Identifier</span>
+                                <span class="info-value" style="color: red;">{{ pastorate.identifier }}</span>
+                            </div>
+                            {% if pastorate.established_date %}
+                            <div class="info-item">
+                                <span class="info-label">Established Date</span>
+                                <span class="info-value">{{ pastorate.established_date|date:"F d, Y" }}</span>
+                            </div>
+                            {% endif %}
+                            {% if pastorate.description %}
+                            <div class="info-item">
+                                <span class="info-label">Description</span>
+                                <span class="info-value">{{ pastorate.description|truncatewords:20 }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if pastorate.pastor %}
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
+                            <h5 style="color: var(--color-medium-gray); margin-bottom: 10px; font-size: 0.95rem;">
+                                <i class="fas fa-user-tie"></i> Pastor
+                            </h5>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Name</span>
+                                    <span class="info-value">{{ pastorate.pastor.full_name }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Phone</span>
+                                    <span class="info-value">{{ pastorate.pastor.phone_number }}</span>
+                                </div>
+                                {% if pastorate.pastor.email_address %}
+                                <div class="info-item">
+                                    <span class="info-label">Email</span>
+                                    <span class="info-value">{{ pastorate.pastor.email_address }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% endif %}
+        </div>
+    </div>
+    
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        });
+        
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+        
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

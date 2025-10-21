@@ -146,6 +146,200 @@ def my_church(request):
 
 
 @login_required
+def my_pastorate(request):
+    """
+    Member's pastorate view - shows detailed information about member's pastorate
+    """
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return render(request, 'members_portal/no_profile.html', {
+            'user': request.user
+        })
+    
+    # Get Pastorate
+    pastorate = member.user_home_pastorate
+    
+    if not pastorate:
+        context = {
+            'member': member,
+            'is_admin': request.user.is_staff or request.user.is_superuser,
+            'pastorate': None,
+        }
+        return render(request, 'members_portal/my_pastorate.html', context)
+    
+    # Get Pastor (member with pastorate_pastor role in this pastorate)
+    pastor = None
+    try:
+        pastor = Member.objects.filter(
+            church_clergy_roles__contains=['pastorate_pastor'],
+            user_home_pastorate=pastorate,
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Pastor's Wife (if pastor exists)
+    pastor_wife = None
+    if pastor and pastor.marital_status == 'married':
+        try:
+            pastor_wife = Member.objects.filter(
+                church_clergy_roles__contains=['pastorate_pastor_wife'],
+                user_home_pastorate=pastorate,
+                membership_status='Active',
+                last_name=pastor.last_name
+            ).first()
+        except:
+            pass
+    
+    # Get Pastorate leaders
+    woman_leader = Member.objects.filter(
+        church_clergy_roles__contains=['pastorate_woman_leader'],
+        user_home_pastorate=pastorate,
+        membership_status='Active'
+    ).first()
+    
+    woman_leader_husband = None
+    if woman_leader and woman_leader.marital_status == 'married':
+        woman_leader_husband = Member.objects.filter(
+            church_clergy_roles__contains=['pastorate_woman_leader_husband'],
+            user_home_pastorate=pastorate,
+            membership_status='Active',
+            last_name=woman_leader.last_name
+        ).first()
+    
+    division = Member.objects.filter(
+        church_clergy_roles__contains=['pastorate_division'],
+        user_home_pastorate=pastorate,
+        membership_status='Active'
+    ).first()
+    
+    division_wife = None
+    division_husband = None
+    if division:
+        if division.gender == 'M' and division.marital_status == 'married':
+            division_wife = Member.objects.filter(
+                church_clergy_roles__contains=['pastorate_division_wife'],
+                user_home_pastorate=pastorate,
+                membership_status='Active',
+                last_name=division.last_name
+            ).first()
+        elif division.gender == 'F' and division.marital_status == 'married':
+            division_husband = Member.objects.filter(
+                church_clergy_roles__contains=['pastorate_division_husband'],
+                user_home_pastorate=pastorate,
+                membership_status='Active',
+                last_name=division.last_name
+            ).first()
+    
+    lay_reader = Member.objects.filter(
+        church_clergy_roles__contains=['pastorate_lay_reader'],
+        user_home_pastorate=pastorate,
+        membership_status='Active'
+    ).first()
+    
+    lay_reader_wife = None
+    if lay_reader and lay_reader.marital_status == 'married':
+        lay_reader_wife = Member.objects.filter(
+            church_clergy_roles__contains=['pastorate_lay_reader_wife'],
+            user_home_pastorate=pastorate,
+            membership_status='Active',
+            last_name=lay_reader.last_name
+        ).first()
+    
+    # Get all churches in this pastorate
+    from church_structure.models import Church
+    churches = Church.objects.filter(
+        pastorate=pastorate,
+        is_active=True
+    ).order_by('name')
+    
+    context = {
+        'member': member,
+        'is_admin': request.user.is_staff or request.user.is_superuser,
+        'pastorate': pastorate,
+        'pastor': pastor,
+        'pastor_wife': pastor_wife,
+        'woman_leader': woman_leader,
+        'woman_leader_husband': woman_leader_husband,
+        'division': division,
+        'division_wife': division_wife,
+        'division_husband': division_husband,
+        'lay_reader': lay_reader,
+        'lay_reader_wife': lay_reader_wife,
+        'churches': churches,
+    }
+    
+    return render(request, 'members_portal/my_pastorate.html', context)
+
+
+@login_required
+def my_diocese(request):
+    """
+    Member's diocese view - shows detailed information about member's diocese
+    """
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return render(request, 'members_portal/no_profile.html', {
+            'user': request.user
+        })
+    
+    # Get Diocese
+    diocese = member.user_home_diocese
+    
+    if not diocese:
+        context = {
+            'member': member,
+            'is_admin': request.user.is_staff or request.user.is_superuser,
+            'diocese': None,
+        }
+        return render(request, 'members_portal/my_diocese.html', context)
+    
+    # Get Bishop (member with diocese_bishop role in this diocese)
+    bishop = None
+    try:
+        bishop = Member.objects.filter(
+            church_clergy_roles__contains=['diocese_bishop'],
+            user_home_diocese=diocese,
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Bishop's Wife (if bishop exists)
+    bishop_wife = None
+    if bishop and bishop.marital_status == 'married':
+        try:
+            bishop_wife = Member.objects.filter(
+                church_clergy_roles__contains=['diocese_bishop_wife'],
+                user_home_diocese=diocese,
+                membership_status='Active',
+                last_name=bishop.last_name
+            ).first()
+        except:
+            pass
+    
+    # Get all pastorates in this diocese
+    from church_structure.models import Pastorate
+    pastorates = Pastorate.objects.filter(
+        diocese=diocese,
+        is_active=True
+    ).order_by('name')
+    
+    context = {
+        'member': member,
+        'is_admin': request.user.is_staff or request.user.is_superuser,
+        'diocese': diocese,
+        'bishop': bishop,
+        'bishop_wife': bishop_wife,
+        'pastorates': pastorates,
+    }
+    
+    return render(request, 'members_portal/my_diocese.html', context)
+
+
+@login_required
 def attendance(request):
     """
     Member attendance history view
