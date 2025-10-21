@@ -107,6 +107,13 @@ def my_church(request):
     except:
         pass
     
+    # Get home church teachers
+    home_church_head_teacher = None
+    home_church_assistant_teachers = []
+    if member.user_home_church:
+        home_church_head_teacher = member.user_home_church.head_teacher
+        home_church_assistant_teachers = list(member.user_home_church.teachers.filter(membership_status='Active'))
+    
     # Get home church members
     home_church_members = []
     if member.user_home_church:
@@ -129,6 +136,8 @@ def my_church(request):
         'archbishop': archbishop,
         'king': king,
         'headquarter_church': headquarter_church,
+        'home_church_head_teacher': home_church_head_teacher,
+        'home_church_assistant_teachers': home_church_assistant_teachers,
         'home_church_members': home_church_members,
         'town_church_members': town_church_members,
     }

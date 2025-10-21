@@ -297,6 +297,275 @@
                 </div>
             </div>
             
+            <!-- Home Church Teachers -->
+            {% if home_church_head_teacher or home_church_assistant_teachers %}
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3 class="card-title">Home Church Teachers</h3>
+                </div>
+                <div class="card-content">
+                    {% if home_church_head_teacher %}
+                    <!-- Head Teacher -->
+                    <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--color-light-gray);">
+                        <h4 style="color: var(--color-red); margin-bottom: 15px; font-size: 1.1rem;">
+                            <i class="fas fa-user-tie"></i> Head Teacher
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Full Name</span>
+                                <span class="info-value">{{ home_church_head_teacher.full_name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Baptismal Name</span>
+                                <span class="info-value">{{ home_church_head_teacher.baptismal_full_name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone Number</span>
+                                <span class="info-value">{{ home_church_head_teacher.phone_number }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email Address</span>
+                                <span class="info-value">{{ home_church_head_teacher.email_address|default:"Not provided" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Location</span>
+                                <span class="info-value">{{ home_church_head_teacher.location }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">User Group</span>
+                                <span class="info-value">
+                                    <span class="badge {% if home_church_head_teacher.user_group == 'Youth' %}badge-active{% elif home_church_head_teacher.user_group == 'Elder' %}badge-clergy{% else %}badge-inactive{% endif %}">
+                                        {{ home_church_head_teacher.user_group }}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Gender</span>
+                                <span class="info-value">{{ home_church_head_teacher.get_gender_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Marital Status</span>
+                                <span class="info-value">{{ home_church_head_teacher.get_marital_status_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Clergy Roles</span>
+                                <span class="info-value">{{ home_church_head_teacher.display_clergy_roles|default:"N/A" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Member Roles</span>
+                                <span class="info-value">{{ home_church_head_teacher.display_roles }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Head Teacher's Spouse -->
+                        {% if home_church_head_teacher.gender == 'M' %}
+                            {% for potential_spouse in home_church_members %}
+                                {% if potential_spouse.gender == 'F' and potential_spouse.marital_status == 'married' and potential_spouse.last_name == home_church_head_teacher.last_name and 'church_teacher_wife' in potential_spouse.church_clergy_roles %}
+                                <div class="divider"></div>
+                                <h5 style="color: var(--color-medium-gray); margin: 15px 0 10px 0; font-size: 1rem;">
+                                    <i class="fas fa-female"></i> Spouse (Teacher's Wife)
+                                </h5>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Full Name</span>
+                                        <span class="info-value">{{ potential_spouse.full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Baptismal Name</span>
+                                        <span class="info-value">{{ potential_spouse.baptismal_full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone Number</span>
+                                        <span class="info-value">{{ potential_spouse.phone_number }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Email Address</span>
+                                        <span class="info-value">{{ potential_spouse.email_address|default:"Not provided" }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Location</span>
+                                        <span class="info-value">{{ potential_spouse.location }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Clergy Roles</span>
+                                        <span class="info-value">{{ potential_spouse.display_clergy_roles|default:"N/A" }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif home_church_head_teacher.gender == 'F' %}
+                            {% for potential_spouse in home_church_members %}
+                                {% if potential_spouse.gender == 'M' and potential_spouse.marital_status == 'married' and potential_spouse.last_name == home_church_head_teacher.last_name and 'church_teacher_husband' in potential_spouse.church_clergy_roles %}
+                                <div class="divider"></div>
+                                <h5 style="color: var(--color-medium-gray); margin: 15px 0 10px 0; font-size: 1rem;">
+                                    <i class="fas fa-male"></i> Spouse (Teacher's Husband)
+                                </h5>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Full Name</span>
+                                        <span class="info-value">{{ potential_spouse.full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Baptismal Name</span>
+                                        <span class="info-value">{{ potential_spouse.baptismal_full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone Number</span>
+                                        <span class="info-value">{{ potential_spouse.phone_number }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Email Address</span>
+                                        <span class="info-value">{{ potential_spouse.email_address|default:"Not provided" }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Location</span>
+                                        <span class="info-value">{{ potential_spouse.location }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Clergy Roles</span>
+                                        <span class="info-value">{{ potential_spouse.display_clergy_roles|default:"N/A" }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Assistant Teachers -->
+                    {% if home_church_assistant_teachers %}
+                    {% for teacher in home_church_assistant_teachers %}
+                    <div style="margin-bottom: 30px; padding-bottom: 20px; {% if not forloop.last %}border-bottom: 1px solid var(--color-light-gray);{% endif %}">
+                        <h4 style="color: var(--color-black); margin-bottom: 15px; font-size: 1rem;">
+                            <i class="fas fa-user"></i> Assistant Teacher {{ forloop.counter }}
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Full Name</span>
+                                <span class="info-value">{{ teacher.full_name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Baptismal Name</span>
+                                <span class="info-value">{{ teacher.baptismal_full_name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone Number</span>
+                                <span class="info-value">{{ teacher.phone_number }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email Address</span>
+                                <span class="info-value">{{ teacher.email_address|default:"Not provided" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Location</span>
+                                <span class="info-value">{{ teacher.location }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">User Group</span>
+                                <span class="info-value">
+                                    <span class="badge {% if teacher.user_group == 'Youth' %}badge-active{% elif teacher.user_group == 'Elder' %}badge-clergy{% else %}badge-inactive{% endif %}">
+                                        {{ teacher.user_group }}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Gender</span>
+                                <span class="info-value">{{ teacher.get_gender_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Marital Status</span>
+                                <span class="info-value">{{ teacher.get_marital_status_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Clergy Roles</span>
+                                <span class="info-value">{{ teacher.display_clergy_roles|default:"N/A" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Member Roles</span>
+                                <span class="info-value">{{ teacher.display_roles }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Assistant Teacher's Spouse -->
+                        {% if teacher.gender == 'M' %}
+                            {% for potential_spouse in home_church_members %}
+                                {% if potential_spouse.gender == 'F' and potential_spouse.marital_status == 'married' and potential_spouse.last_name == teacher.last_name and 'church_teacher_wife' in potential_spouse.church_clergy_roles %}
+                                <div class="divider"></div>
+                                <h5 style="color: var(--color-medium-gray); margin: 15px 0 10px 0; font-size: 0.95rem;">
+                                    <i class="fas fa-female"></i> Spouse (Teacher's Wife)
+                                </h5>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Full Name</span>
+                                        <span class="info-value">{{ potential_spouse.full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Baptismal Name</span>
+                                        <span class="info-value">{{ potential_spouse.baptismal_full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone Number</span>
+                                        <span class="info-value">{{ potential_spouse.phone_number }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Email Address</span>
+                                        <span class="info-value">{{ potential_spouse.email_address|default:"Not provided" }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Location</span>
+                                        <span class="info-value">{{ potential_spouse.location }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Clergy Roles</span>
+                                        <span class="info-value">{{ potential_spouse.display_clergy_roles|default:"N/A" }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif teacher.gender == 'F' %}
+                            {% for potential_spouse in home_church_members %}
+                                {% if potential_spouse.gender == 'M' and potential_spouse.marital_status == 'married' and potential_spouse.last_name == teacher.last_name and 'church_teacher_husband' in potential_spouse.church_clergy_roles %}
+                                <div class="divider"></div>
+                                <h5 style="color: var(--color-medium-gray); margin: 15px 0 10px 0; font-size: 0.95rem;">
+                                    <i class="fas fa-male"></i> Spouse (Teacher's Husband)
+                                </h5>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Full Name</span>
+                                        <span class="info-value">{{ potential_spouse.full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Baptismal Name</span>
+                                        <span class="info-value">{{ potential_spouse.baptismal_full_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone Number</span>
+                                        <span class="info-value">{{ potential_spouse.phone_number }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Email Address</span>
+                                        <span class="info-value">{{ potential_spouse.email_address|default:"Not provided" }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Location</span>
+                                        <span class="info-value">{{ potential_spouse.location }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Clergy Roles</span>
+                                        <span class="info-value">{{ potential_spouse.display_clergy_roles|default:"N/A" }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
             <!-- Home Church Members -->
             {% if home_church_members %}
             <div class="material-card">
