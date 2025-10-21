@@ -267,7 +267,7 @@ function initMemberSearchMultiple(selectElement) {
 }
 
 function loadMembers(query, targetSelect) {
-    fetch(`/church-structure/api/search-members/?q=${encodeURIComponent(query)}`)
+    fetch(`{% url 'church_structure:search_members' %}?q=${encodeURIComponent(query)}`)
         .then(response => response.json())
         .then(data => {
             if (targetSelect.multiple) {

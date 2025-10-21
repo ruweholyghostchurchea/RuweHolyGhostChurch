@@ -1054,7 +1054,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show loading state
                 homePastorateSelect.innerHTML = '<option value="">Loading...</option>';
                 
-                fetch(`/members/api/pastorates/${dioceseId}/`)
+                fetch(`{% url 'members:get_pastorates_by_diocese' 999 %}`.replace('999', dioceseId))
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -1106,7 +1106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show loading state
                 homeChurchSelect.innerHTML = '<option value="">Loading...</option>';
                 
-                fetch(`/members/api/churches/${pastorateId}/`)
+                fetch(`{% url 'members:get_churches_by_pastorate' 999 %}`.replace('999', pastorateId))
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -1151,7 +1151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show loading state
                 townPastorateSelect.innerHTML = '<option value="">Loading...</option>';
                 
-                fetch(`/members/api/pastorates/${dioceseId}/`)
+                fetch(`{% url 'members:get_pastorates_by_diocese' 999 %}`.replace('999', dioceseId))
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -1203,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show loading state
                 townChurchSelect.innerHTML = '<option value="">Loading...</option>';
                 
-                fetch(`/members/api/churches/${pastorateId}/`)
+                fetch(`{% url 'members:get_churches_by_pastorate' 999 %}`.replace('999', pastorateId))
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');

@@ -159,7 +159,7 @@ function initMemberSearch(selectElement, onSelectCallback) {
     });
     
     function loadMembers(query) {
-        fetch(`/church-structure/api/search-members/?q=${encodeURIComponent(query)}`)
+        fetch(`{% url 'church_structure:search_members' %}?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
                 const currentValue = selectElement.value;
