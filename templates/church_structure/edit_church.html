@@ -26,16 +26,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="pastorate" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
-                                    <select name="pastorate" id="pastorate" required
-                                            class="form-control"
-                                            style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
-                                        {% for pastorate in form.pastorate.queryset %}
-                                        <option value="{{ pastorate.id }}" {% if pastorate.id == church.pastorate.id %}selected{% endif %}>
-                                            {{ pastorate.name }} ({{ pastorate.diocese.name }})
-                                        </option>
-                                        {% endfor %}
-                                    </select>
+                                    <label for="{{ form.pastorate.id_for_label }}" style="color: #ffffff; margin-bottom: 5px;">Pastorate *</label>
+                                    {{ form.pastorate }}
+                                    {% if form.pastorate.errors %}
+                                        <div class="text-danger">{{ form.pastorate.errors.0 }}</div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
