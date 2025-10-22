@@ -110,6 +110,70 @@
                         <span class="info-value">{{ pastorate.description }}</span>
                     </div>
                     {% endif %}
+                    
+                    <!-- Mission Church Information -->
+                    <div class="divider"></div>
+                    <h4 style="color: var(--color-red); margin-bottom: 15px; font-size: 1.05rem;">
+                        <i class="fas fa-church"></i> Mission Church
+                    </h4>
+                    {% if mission_church %}
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Church Name</span>
+                            <span class="info-value">{{ mission_church.name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Identifier</span>
+                            <span class="info-value" style="color: red;">{{ mission_church.identifier }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ mission_church.location }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Service Times</span>
+                            <span class="info-value">{{ mission_church.service_times }}</span>
+                        </div>
+                        {% if mission_church.phone %}
+                        <div class="info-item">
+                            <span class="info-label">Phone</span>
+                            <span class="info-value">{{ mission_church.phone }}</span>
+                        </div>
+                        {% endif %}
+                        {% if mission_church.email %}
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">{{ mission_church.email }}</span>
+                        </div>
+                        {% endif %}
+                        {% if mission_church.map_link %}
+                        <div class="info-item">
+                            <span class="info-label">Map Location</span>
+                            <span class="info-value">
+                                <a href="{{ mission_church.map_link }}" target="_blank" rel="noopener noreferrer" style="color: var(--color-red); text-decoration: underline;">
+                                    <i class="fas fa-map-marker-alt"></i> View on Map
+                                </a>
+                            </span>
+                        </div>
+                        {% endif %}
+                        {% if mission_church.established_date %}
+                        <div class="info-item">
+                            <span class="info-label">Established Date</span>
+                            <span class="info-value">{{ mission_church.established_date|date:"F d, Y" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if mission_church.description %}
+                    <div style="margin-top: 15px;">
+                        <span class="info-label">Description</span>
+                        <p style="color: var(--color-medium-gray); margin-top: 5px;">{{ mission_church.description }}</p>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <p style="color: var(--color-medium-gray); font-style: italic;">
+                        <i class="fas fa-info-circle"></i> Mission Church not assigned
+                    </p>
+                    {% endif %}
                 </div>
             </div>
             

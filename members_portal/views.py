@@ -247,8 +247,19 @@ def my_pastorate(request):
             last_name=lay_reader.last_name
         ).first()
     
-    # Get all churches in this pastorate
+    # Get Mission Church for this pastorate
     from church_structure.models import Church
+    mission_church = None
+    try:
+        mission_church = Church.objects.filter(
+            pastorate=pastorate,
+            is_mission_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
+    # Get all churches in this pastorate
     churches = Church.objects.filter(
         pastorate=pastorate,
         is_active=True
@@ -267,6 +278,7 @@ def my_pastorate(request):
         'division_husband': division_husband,
         'lay_reader': lay_reader,
         'lay_reader_wife': lay_reader_wife,
+        'mission_church': mission_church,
         'churches': churches,
     }
     
@@ -320,6 +332,18 @@ def my_diocese(request):
         except:
             pass
     
+    # Get Diocesan Church for this diocese
+    from church_structure.models import Church
+    diocesan_church = None
+    try:
+        diocesan_church = Church.objects.filter(
+            pastorate__diocese=diocese,
+            is_diocesan_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
     # Get all pastorates in this diocese
     from church_structure.models import Pastorate
     pastorates = Pastorate.objects.filter(
@@ -333,6 +357,7 @@ def my_diocese(request):
         'diocese': diocese,
         'bishop': bishop,
         'bishop_wife': bishop_wife,
+        'diocesan_church': diocesan_church,
         'pastorates': pastorates,
     }
     
