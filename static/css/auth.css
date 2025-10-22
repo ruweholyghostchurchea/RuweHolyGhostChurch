@@ -272,6 +272,29 @@ body {
     font-size: 12px;
 }
 
+.error-message {
+    margin-top: 8px;
+    color: #dc2626;
+    font-size: 13px;
+}
+
+.error-message small {
+    display: block;
+    margin-top: 4px;
+}
+
+.form-text {
+    display: block;
+    margin-top: 6px;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
 /* Responsive Design */
 @media (max-width: 480px) {
     .auth-card {
