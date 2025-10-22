@@ -28,6 +28,7 @@
                     <li><a href="{% url 'members_portal:my_church' %}" class="active"><i class="fas fa-church"></i> My Church</a></li>
                     <li><a href="{% url 'members_portal:my_pastorate' %}"><i class="fas fa-map-marked-alt"></i> My Pastorate</a></li>
                     <li><a href="{% url 'members_portal:my_diocese' %}"><i class="fas fa-globe-africa"></i> My Diocese</a></li>
+                    <li><a href="{% url 'members_portal:my_headquarters' %}"><i class="fas fa-landmark"></i> My Headquarters</a></li>
                     <li><a href="{% url 'members_portal:attendance' %}"><i class="fas fa-calendar-check"></i> Attendance</a></li>
                     <li><a href="{% url 'members_portal:giving' %}"><i class="fas fa-hand-holding-usd"></i> Giving</a></li>
                     {% if is_admin %}
@@ -63,138 +64,6 @@
             <div class="section-header">
                 <h2 class="section-title">My Church Information</h2>
                 <p class="section-subtitle">Complete details about your church and leadership</p>
-            </div>
-            
-            <!-- Archbishop Information -->
-            <div class="material-card">
-                <div class="card-header">
-                    <div class="card-icon"><i class="fas fa-crown"></i></div>
-                    <h3 class="card-title">Archbishop Information</h3>
-                </div>
-                <div class="card-content">
-                    {% if archbishop %}
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Full Name</span>
-                            <span class="info-value">{{ archbishop.full_name }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Baptismal Name</span>
-                            <span class="info-value">{{ archbishop.baptismal_full_name }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Phone Number</span>
-                            <span class="info-value">{{ archbishop.phone_number }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Email Address</span>
-                            <span class="info-value">{{ archbishop.email_address|default:"Not provided" }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Location</span>
-                            <span class="info-value">{{ archbishop.location }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Clergy Roles</span>
-                            <span class="info-value">{{ archbishop.display_clergy_roles }}</span>
-                        </div>
-                    </div>
-                    {% else %}
-                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
-                        <i class="fas fa-info-circle"></i> Archbishop information not available
-                    </p>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Headquarters Church Information -->
-            <div class="material-card">
-                <div class="card-header">
-                    <div class="card-icon"><i class="fas fa-landmark"></i></div>
-                    <h3 class="card-title">Headquarters Church</h3>
-                </div>
-                <div class="card-content">
-                    {% if headquarter_church %}
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Church Name</span>
-                            <span class="info-value">{{ headquarter_church.name }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Location</span>
-                            <span class="info-value">{{ headquarter_church.location }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Diocese</span>
-                            <span class="info-value">{{ headquarter_church.pastorate.diocese.name }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Pastorate</span>
-                            <span class="info-value">{{ headquarter_church.pastorate.name }}</span>
-                        </div>
-                        {% if headquarter_church.map_link %}
-                        <div class="info-item">
-                            <span class="info-label">Map Location</span>
-                            <span class="info-value">
-                                <a href="{{ headquarter_church.map_link }}" target="_blank" rel="noopener noreferrer" style="color: var(--color-red); text-decoration: underline;">
-                                    <i class="fas fa-map-marker-alt"></i> View on Map
-                                </a>
-                            </span>
-                        </div>
-                        {% endif %}
-                        <div class="info-item">
-                            <span class="info-label">Service Times</span>
-                            <span class="info-value">{{ headquarter_church.service_times }}</span>
-                        </div>
-                    </div>
-                    {% else %}
-                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
-                        <i class="fas fa-info-circle"></i> Headquarters church information not available
-                    </p>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- King Information -->
-            <div class="material-card">
-                <div class="card-header">
-                    <div class="card-icon"><i class="fas fa-chess-king"></i></div>
-                    <h3 class="card-title">King Information</h3>
-                </div>
-                <div class="card-content">
-                    {% if king %}
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Full Name</span>
-                            <span class="info-value">{{ king.full_name }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Baptismal Name</span>
-                            <span class="info-value">{{ king.baptismal_full_name }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Phone Number</span>
-                            <span class="info-value">{{ king.phone_number }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Email Address</span>
-                            <span class="info-value">{{ king.email_address|default:"Not provided" }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Location</span>
-                            <span class="info-value">{{ king.location }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Clergy Roles</span>
-                            <span class="info-value">{{ king.display_clergy_roles }}</span>
-                        </div>
-                    </div>
-                    {% else %}
-                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
-                        <i class="fas fa-info-circle"></i> King information not available
-                    </p>
-                    {% endif %}
-                </div>
             </div>
             
             <!-- Home Church Information -->

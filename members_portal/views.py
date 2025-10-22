@@ -76,37 +76,6 @@ def my_church(request):
             'user': request.user
         })
     
-    # Get Archbishop (member with dean_archbishop role)
-    archbishop = None
-    try:
-        archbishop = Member.objects.filter(
-            church_clergy_roles__contains=['dean_archbishop'],
-            membership_status='Active'
-        ).first()
-    except:
-        pass
-    
-    # Get King (member with dean_king role)
-    king = None
-    try:
-        king = Member.objects.filter(
-            special_clergy_roles__contains=['dean_king'],
-            membership_status='Active'
-        ).first()
-    except:
-        pass
-    
-    # Get Headquarter Church
-    from church_structure.models import Church
-    headquarter_church = None
-    try:
-        headquarter_church = Church.objects.filter(
-            is_headquarter_church=True,
-            is_active=True
-        ).first()
-    except:
-        pass
-    
     # Get home church teachers
     home_church_head_teacher = None
     home_church_assistant_teachers = []
@@ -133,9 +102,6 @@ def my_church(request):
     context = {
         'member': member,
         'is_admin': request.user.is_staff or request.user.is_superuser,
-        'archbishop': archbishop,
-        'king': king,
-        'headquarter_church': headquarter_church,
         'home_church_head_teacher': home_church_head_teacher,
         'home_church_assistant_teachers': home_church_assistant_teachers,
         'home_church_members': home_church_members,
@@ -362,6 +328,71 @@ def my_diocese(request):
     }
     
     return render(request, 'members_portal/my_diocese.html', context)
+
+
+@login_required
+def my_headquarters(request):
+    """
+    Member's headquarters view - shows Archbishop, Headquarters Church, King, and King's Pillar information
+    """
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return render(request, 'members_portal/no_profile.html', {
+            'user': request.user
+        })
+    
+    # Get Archbishop (member with dean_archbishop role)
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get King (member with dean_king role)
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Headquarter Church
+    from church_structure.models import Church
+    headquarter_church = None
+    try:
+        headquarter_church = Church.objects.filter(
+            is_headquarter_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+    
+    # Get King's Pillar (member with dean_kings_pillar role)
+    kings_pillar = None
+    try:
+        kings_pillar = Member.objects.filter(
+            special_clergy_roles__contains=['dean_kings_pillar'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    context = {
+        'member': member,
+        'is_admin': request.user.is_staff or request.user.is_superuser,
+        'archbishop': archbishop,
+        'king': king,
+        'headquarter_church': headquarter_church,
+        'kings_pillar': kings_pillar,
+    }
+    
+    return render(request, 'members_portal/my_headquarters.html', context)
 
 
 @login_required

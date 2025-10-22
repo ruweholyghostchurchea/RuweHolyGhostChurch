@@ -16,6 +16,32 @@
 </head>
 <body>
     <div class="portal-wrapper">
+        <!-- Sidebar -->
+        <aside class="portal-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.imgur.com/BUxE9oF.jpg" alt="Church Logo" class="sidebar-logo">
+                <div class="sidebar-title">Members Portal</div>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="{% url 'members_portal:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'members_portal:profile' %}"><i class="fas fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'members_portal:my_church' %}"><i class="fas fa-church"></i> My Church</a></li>
+                    <li><a href="{% url 'members_portal:my_pastorate' %}"><i class="fas fa-map-marked-alt"></i> My Pastorate</a></li>
+                    <li><a href="{% url 'members_portal:my_diocese' %}"><i class="fas fa-globe-africa"></i> My Diocese</a></li>
+                    <li><a href="{% url 'members_portal:my_headquarters' %}"><i class="fas fa-landmark"></i> My Headquarters</a></li>
+                    <li><a href="{% url 'members_portal:attendance' %}"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                    <li><a href="{% url 'members_portal:giving' %}" class="active"><i class="fas fa-hand-holding-usd"></i> Giving</a></li>
+                    {% if is_admin %}
+                    <li><a href="/dashboard/" style="background: rgba(220, 20, 60, 0.2);"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'authentication:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+</body>
+<body>
+    <div class="portal-wrapper">
         <aside class="portal-sidebar" id="sidebar">
             <div class="sidebar-header">
                 <img src="https://i.imgur.com/BUxE9oF.jpg" alt="Church Logo" class="sidebar-logo">
