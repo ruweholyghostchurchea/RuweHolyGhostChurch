@@ -383,13 +383,63 @@ def my_headquarters(request):
     except:
         pass
     
+    # Get Archdeacon (member with dean_archdeacon role)
+    archdeacon = None
+    try:
+        archdeacon = Member.objects.filter(
+            special_clergy_roles__contains=['dean_archdeacon'],
+            membership_status='Active'
+        ).first()
+    except:
+        pass
+    
+    # Get Archdeacon's Wife (if archdeacon exists)
+    archdeacon_wife = None
+    if archdeacon and archdeacon.marital_status == 'married':
+        try:
+            archdeacon_wife = Member.objects.filter(
+                special_clergy_roles__contains=['dean_archdeacon_wife'],
+                membership_status='Active',
+                last_name=archdeacon.last_name
+            ).first()
+        except:
+            pass
+    
+    # Get Archbishop's Wife (if archbishop exists)
+    archbishop_wife = None
+    if archbishop and archbishop.marital_status == 'married':
+        try:
+            archbishop_wife = Member.objects.filter(
+                church_clergy_roles__contains=['dean_archbishop_wife'],
+                membership_status='Active',
+                last_name=archbishop.last_name
+            ).first()
+        except:
+            pass
+    
+    # Get King's Wife (if king exists)
+    king_wife = None
+    if king and king.marital_status == 'married':
+        try:
+            king_wife = Member.objects.filter(
+                special_clergy_roles__contains=['dean_king_wife'],
+                membership_status='Active',
+                last_name=king.last_name
+            ).first()
+        except:
+            pass
+    
     context = {
         'member': member,
         'is_admin': request.user.is_staff or request.user.is_superuser,
         'archbishop': archbishop,
+        'archbishop_wife': archbishop_wife,
         'king': king,
+        'king_wife': king_wife,
         'headquarter_church': headquarter_church,
         'kings_pillar': kings_pillar,
+        'archdeacon': archdeacon,
+        'archdeacon_wife': archdeacon_wife,
     }
     
     return render(request, 'members_portal/my_headquarters.html', context)

@@ -108,6 +108,48 @@
                 </div>
             </div>
             
+            <!-- Archbishop's Wife Information -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-female"></i></div>
+                    <h3 class="card-title">Archbishop's Wife Information</h3>
+                </div>
+                <div class="card-content">
+                    {% if archbishop_wife %}
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ archbishop_wife.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Baptismal Name</span>
+                            <span class="info-value">{{ archbishop_wife.baptismal_full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">{{ archbishop_wife.phone_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">{{ archbishop_wife.email_address|default:"Not provided" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ archbishop_wife.location }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Clergy Roles</span>
+                            <span class="info-value">{{ archbishop_wife.display_clergy_roles }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
+                        <i class="fas fa-info-circle"></i> Archbishop's wife information not available
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
             <!-- Headquarters Church Information -->
             <div class="material-card">
                 <div class="card-header">
@@ -234,6 +276,48 @@
                 </div>
             </div>
             
+            <!-- King's Wife Information -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-chess-queen"></i></div>
+                    <h3 class="card-title">King's Wife Information</h3>
+                </div>
+                <div class="card-content">
+                    {% if king_wife %}
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ king_wife.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Baptismal Name</span>
+                            <span class="info-value">{{ king_wife.baptismal_full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">{{ king_wife.phone_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">{{ king_wife.email_address|default:"Not provided" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ king_wife.location }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Clergy Roles</span>
+                            <span class="info-value">{{ king_wife.display_clergy_roles }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
+                        <i class="fas fa-info-circle"></i> King's wife information not available
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
             <!-- King's Pillar Information -->
             <div class="material-card">
                 <div class="card-header">
@@ -271,6 +355,90 @@
                     {% else %}
                     <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
                         <i class="fas fa-info-circle"></i> King's Pillar information not available
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Archdeacon Information -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+                    <h3 class="card-title">Archdeacon Information</h3>
+                </div>
+                <div class="card-content">
+                    {% if archdeacon %}
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ archdeacon.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Baptismal Name</span>
+                            <span class="info-value">{{ archdeacon.baptismal_full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">{{ archdeacon.phone_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">{{ archdeacon.email_address|default:"Not provided" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ archdeacon.location }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Clergy Roles</span>
+                            <span class="info-value">{{ archdeacon.display_clergy_roles }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
+                        <i class="fas fa-info-circle"></i> Archdeacon information not available
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Archdeacon's Wife Information -->
+            <div class="material-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-female"></i></div>
+                    <h3 class="card-title">Archdeacon's Wife Information</h3>
+                </div>
+                <div class="card-content">
+                    {% if archdeacon_wife %}
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ archdeacon_wife.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Baptismal Name</span>
+                            <span class="info-value">{{ archdeacon_wife.baptismal_full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">{{ archdeacon_wife.phone_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">{{ archdeacon_wife.email_address|default:"Not provided" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ archdeacon_wife.location }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Clergy Roles</span>
+                            <span class="info-value">{{ archdeacon_wife.display_clergy_roles }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p style="color: var(--color-medium-gray); text-align: center; padding: 20px;">
+                        <i class="fas fa-info-circle"></i> Archdeacon's wife information not available
                     </p>
                     {% endif %}
                 </div>
