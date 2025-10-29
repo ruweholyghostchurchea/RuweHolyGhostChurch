@@ -34,7 +34,7 @@
                 <ul class="nav-menu">
                     <li><a href="{% url 'public_site:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
                     <li><a href="{% url 'public_site:about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
-                    <li><a href="{% url 'public_site:history' %}" class="{% if request.resolver_match.url_name == 'history' %}active{% endif %}">Our History</a></li>
+                    <li><a href="{% url 'public_site:history' %}" class="{% if request.resolver_match.url_name == 'history' %}active{% endif %}">History</a></li>
                     <li><a href="{% url 'public_site:services' %}" class="{% if request.resolver_match.url_name == 'services' %}active{% endif %}">Worship</a></li>
                     <li><a href="{% url 'public_site:events' %}" class="{% if request.resolver_match.url_name == 'events' %}active{% endif %}">Events</a></li>
                     <li><a href="{% url 'public_site:contact' %}">Contact</a></li>
