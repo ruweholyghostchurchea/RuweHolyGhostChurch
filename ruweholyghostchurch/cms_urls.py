@@ -19,6 +19,7 @@ urlpatterns = [
     path('church-structure/', include('church_structure.urls', namespace='church_structure')),
     path('ruwe-administration/', include('ruwe_administration.urls', namespace='ruwe_administration')),
     path('members/', include('members.urls', namespace='members')),
+    path('members-admin/', include('members.urls')),  # Alternative path for admin access
     path('visitors/', include('visitors.urls', namespace='visitors')),
     path('attendance/', include('attendance.urls', namespace='attendance')),
     path('finance/', include('finance.urls', namespace='finance')),
