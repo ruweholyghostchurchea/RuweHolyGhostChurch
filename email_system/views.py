@@ -4,11 +4,14 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.http import JsonResponse, HttpResponseForbidden
-from .models import EmailCampaign, EmailLog, EmailTemplate
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from .models import EmailCampaign, EmailLog, EmailTemplate, EmailCampaignAttachment
 from members.models import Member
 from church_structure.models import Diocese, Pastorate, Church
 from .utils import send_campaign_emails, get_campaign_recipients
 from datetime import datetime
+import mimetypes
 
 
 def staff_required(view_func):
@@ -86,6 +89,23 @@ def compose(request):
             elif recipient_type == 'church':
                 recipient_filter['church_id'] = request.POST.get('church_id')
             
+            # Parse custom email addresses
+            custom_emails = []
+            if recipient_type == 'custom_emails':
+                custom_emails_raw = request.POST.get('custom_emails', '')
+                emails_list = [email.strip() for email in custom_emails_raw.split(',') if email.strip()]
+                
+                for email in emails_list:
+                    try:
+                        validate_email(email)
+                        custom_emails.append(email)
+                    except ValidationError:
+                        messages.warning(request, f'Invalid email address skipped: {email}')
+                
+                if not custom_emails:
+                    messages.error(request, 'No valid email addresses provided for custom recipients.')
+                    return redirect('email_system:compose')
+            
             # Create campaign
             campaign = EmailCampaign.objects.create(
                 name=name,
@@ -93,9 +113,25 @@ def compose(request):
                 html_content=html_content,
                 recipient_type=recipient_type,
                 recipient_filter=recipient_filter,
+                custom_emails=custom_emails,
                 status='draft',
                 created_by=request.user
             )
+            
+            # Handle file attachments
+            uploaded_files = request.FILES.getlist('attachments')
+            for uploaded_file in uploaded_files:
+                content_type, _ = mimetypes.guess_type(uploaded_file.name)
+                if content_type is None:
+                    content_type = 'application/octet-stream'
+                
+                EmailCampaignAttachment.objects.create(
+                    campaign=campaign,
+                    file=uploaded_file,
+                    filename=uploaded_file.name,
+                    file_size=uploaded_file.size,
+                    content_type=content_type
+                )
             
             if send_now:
                 # Send immediately

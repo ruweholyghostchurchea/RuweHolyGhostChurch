@@ -53,6 +53,7 @@ class EmailCampaign(models.Model):
         ('pastorate', 'Specific Pastorate'),
         ('church', 'Specific Church'),
         ('custom', 'Custom Filter'),
+        ('custom_emails', 'Custom Email Addresses'),
     ]
     
     name = models.CharField(max_length=200, help_text="Campaign name for internal reference")
@@ -60,6 +61,7 @@ class EmailCampaign(models.Model):
     html_content = models.TextField(help_text="HTML email content")
     recipient_type = models.CharField(max_length=50, choices=RECIPIENT_TYPE_CHOICES, default='all')
     recipient_filter = models.JSONField(default=dict, blank=True, help_text="Additional filters for recipients")
+    custom_emails = models.JSONField(default=list, blank=True, help_text="Custom email addresses for sending")
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     scheduled_at = models.DateTimeField(null=True, blank=True)
@@ -78,6 +80,22 @@ class EmailCampaign(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+
+
+class EmailCampaignAttachment(models.Model):
+    """Attachments for email campaigns"""
+    campaign = models.ForeignKey(EmailCampaign, on_delete=models.CASCADE, related_name='attachments')
+    file = models.FileField(upload_to='email_attachments/%Y/%m/', help_text="Document or photo attachment")
+    filename = models.CharField(max_length=255, help_text="Original filename")
+    file_size = models.IntegerField(help_text="File size in bytes")
+    content_type = models.CharField(max_length=100, help_text="MIME content type")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.filename} ({self.campaign.name})"
+    
+    class Meta:
+        ordering = ['created_at']
 
 
 class EmailLog(models.Model):
