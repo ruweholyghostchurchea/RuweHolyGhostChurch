@@ -6,7 +6,6 @@
 {% block page_title %}Compose Email{% endblock %}
 
 {% block content %}
-<!-- CKEditor 5 Classic Editor - Rich text editor for email composition -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 <div class="card">
     <div class="card-header">
@@ -108,7 +107,6 @@
                 <i class="fas fa-align-left" style="color: #dc2626; margin-right: 8px;"></i>
                 Email Message <span style="color: #dc2626;">*</span>
             </label>
-            <!-- CKEditor 5 will replace this textarea with a rich text editor -->
             <textarea id="html_content" name="html_content" rows="15" class="form-control" required placeholder="Enter your email message here...
 
 Example:
@@ -118,7 +116,7 @@ We are excited to announce...
 
 God bless you!"></textarea>
             <small style="color: #9ca3af; display: block; margin-top: 8px;">
-                <i class="fas fa-lightbulb"></i> Use CKEditor 5 rich text editor for formatting (bold, italic, links, tables, etc.). The message will be wrapped in a professional church-branded template.
+                <i class="fas fa-lightbulb"></i> You can use HTML tags for rich formatting (bold, italic, links, etc.). The message will be wrapped in a professional church-branded template.
             </small>
         </div>
         
@@ -208,13 +206,10 @@ input[type="checkbox"]:checked {
 </style>
 
 <script>
-// CKEditor 5 initialization for email content editor
 let editor;
 
-// Initialize CKEditor 5 Classic Editor on the html_content textarea
 ClassicEditor
     .create(document.querySelector('#html_content'), {
-        // Configure toolbar with essential formatting options for email composition
         toolbar: {
             items: [
                 'heading', '|',
@@ -226,11 +221,10 @@ ClassicEditor
         language: 'en'
     })
     .then(newEditor => {
-        // Store editor instance for later use
         editor = newEditor;
     })
     .catch(error => {
-        console.error('Error initializing CKEditor 5:', error);
+        console.error('Error initializing CKEditor:', error);
     });
 
 document.getElementById('recipient_type').addEventListener('change', function() {

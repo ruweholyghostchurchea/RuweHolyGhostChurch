@@ -1,14 +1,6 @@
 
-/**
- * Custom Rich Text Editor Implementation
- * 
- * This is a lightweight custom rich text editor for specific use cases.
- * For email composition and advanced editing, the system uses CKEditor 5 (loaded via CDN).
- * This custom editor provides basic formatting for description fields throughout the application.
- */
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize custom rich text editors for elements with .rich-editor class
+    // Initialize rich text editors
     const richEditors = document.querySelectorAll('.rich-editor');
     
     richEditors.forEach(function(editor) {
