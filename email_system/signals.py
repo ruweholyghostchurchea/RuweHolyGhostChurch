@@ -14,15 +14,13 @@ def track_member_changes(sender, instance, **kwargs):
     """
     if instance.pk:
         try:
+            from django.forms.models import model_to_dict
             old_instance = Member.objects.get(pk=instance.pk)
-            instance._data_changed = (
-                old_instance.first_name != instance.first_name or
-                old_instance.last_name != instance.last_name or
-                old_instance.email_address != instance.email_address or
-                old_instance.phone_number != instance.phone_number or
-                old_instance.user_home_church_id != instance.user_home_church_id or
-                old_instance.member_roles != instance.member_roles
-            )
+            
+            old_data = model_to_dict(old_instance, exclude=['created_at', 'updated_at', 'profile_photo'])
+            new_data = model_to_dict(instance, exclude=['created_at', 'updated_at', 'profile_photo'])
+            
+            instance._data_changed = old_data != new_data
         except Member.DoesNotExist:
             instance._data_changed = False
     else:

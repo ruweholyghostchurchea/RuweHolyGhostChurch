@@ -118,12 +118,37 @@ def compose(request):
                 created_by=request.user
             )
             
-            # Handle file attachments
+            # Handle file attachments with validation
             uploaded_files = request.FILES.getlist('attachments')
+            MAX_FILE_SIZE = 10 * 1024 * 1024
+            ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.txt', '.xlsx', '.xls']
+            ALLOWED_MIME_TYPES = [
+                'application/pdf', 'application/msword', 
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'image/jpeg', 'image/png', 'image/gif', 'text/plain',
+                'application/vnd.ms-excel', 
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ]
+            
             for uploaded_file in uploaded_files:
+                import os
+                file_ext = os.path.splitext(uploaded_file.name)[1].lower()
+                
+                if uploaded_file.size > MAX_FILE_SIZE:
+                    messages.warning(request, f'File {uploaded_file.name} is too large (max 10MB). Skipped.')
+                    continue
+                
+                if file_ext not in ALLOWED_EXTENSIONS:
+                    messages.warning(request, f'File type {file_ext} not allowed for {uploaded_file.name}. Skipped.')
+                    continue
+                
                 content_type, _ = mimetypes.guess_type(uploaded_file.name)
                 if content_type is None:
                     content_type = 'application/octet-stream'
+                
+                if content_type not in ALLOWED_MIME_TYPES and content_type != 'application/octet-stream':
+                    messages.warning(request, f'MIME type not allowed for {uploaded_file.name}. Skipped.')
+                    continue
                 
                 EmailCampaignAttachment.objects.create(
                     campaign=campaign,

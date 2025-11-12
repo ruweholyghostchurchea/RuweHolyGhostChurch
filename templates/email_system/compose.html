@@ -6,6 +6,7 @@
 {% block page_title %}Compose Email{% endblock %}
 
 {% block content %}
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 <div class="card">
     <div class="card-header">
         <h2 class="card-title">
@@ -14,7 +15,7 @@
         <p style="color: #9ca3af; margin: 10px 0 0 0; font-size: 0.9rem;">Create and send email campaigns to your church members</p>
     </div>
 
-    <form method="post" id="composeForm" style="padding: 10px 0;">
+    <form method="post" id="composeForm" enctype="multipart/form-data" style="padding: 10px 0;">
         {% csrf_token %}
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
@@ -90,6 +91,17 @@
             </select>
         </div>
         
+        <div class="form-group" id="custom_emails_filter" style="display: none; margin-bottom: 25px;">
+            <label for="custom_emails" class="form-label">
+                <i class="fas fa-at" style="color: #dc2626; margin-right: 8px;"></i>
+                Custom Email Addresses <span style="color: #dc2626;">*</span>
+            </label>
+            <textarea id="custom_emails" name="custom_emails" rows="4" class="form-control" placeholder="Enter email addresses separated by commas&#10;Example: john@example.com, jane@example.com, admin@church.org"></textarea>
+            <small style="color: #9ca3af; display: block; margin-top: 8px;">
+                <i class="fas fa-info-circle"></i> Enter email addresses separated by commas. Invalid email addresses will be skipped.
+            </small>
+        </div>
+        
         <div class="form-group" style="margin-bottom: 25px;">
             <label for="html_content" class="form-label">
                 <i class="fas fa-align-left" style="color: #dc2626; margin-right: 8px;"></i>
@@ -104,7 +116,18 @@ We are excited to announce...
 
 God bless you!"></textarea>
             <small style="color: #9ca3af; display: block; margin-top: 8px;">
-                <i class="fas fa-lightbulb"></i> You can use basic HTML tags for formatting. The message will be wrapped in a professional church-branded template.
+                <i class="fas fa-lightbulb"></i> You can use HTML tags for rich formatting (bold, italic, links, etc.). The message will be wrapped in a professional church-branded template.
+            </small>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 25px;">
+            <label for="attachments" class="form-label">
+                <i class="fas fa-paperclip" style="color: #dc2626; margin-right: 8px;"></i>
+                Attachments (Optional)
+            </label>
+            <input type="file" id="attachments" name="attachments" class="form-control" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif">
+            <small style="color: #9ca3af; display: block; margin-top: 8px;">
+                <i class="fas fa-info-circle"></i> You can attach documents (PDF, Word) and images (JPG, PNG, GIF). Select multiple files by holding Ctrl/Cmd.
             </small>
         </div>
         
@@ -183,16 +206,43 @@ input[type="checkbox"]:checked {
 </style>
 
 <script>
+let editor;
+
+ClassicEditor
+    .create(document.querySelector('#html_content'), {
+        toolbar: {
+            items: [
+                'heading', '|',
+                'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                'outdent', 'indent', '|',
+                'blockQuote', 'insertTable', 'undo', 'redo'
+            ]
+        },
+        language: 'en'
+    })
+    .then(newEditor => {
+        editor = newEditor;
+    })
+    .catch(error => {
+        console.error('Error initializing CKEditor:', error);
+    });
+
 document.getElementById('recipient_type').addEventListener('change', function() {
     const value = this.value;
     const dioceseFilter = document.getElementById('diocese_filter');
     const pastorateFilter = document.getElementById('pastorate_filter');
     const churchFilter = document.getElementById('church_filter');
+    const customEmailsFilter = document.getElementById('custom_emails_filter');
+    const customEmailsField = document.getElementById('custom_emails');
     
     // Hide all filters first
     dioceseFilter.style.display = 'none';
     pastorateFilter.style.display = 'none';
     churchFilter.style.display = 'none';
+    customEmailsFilter.style.display = 'none';
+    
+    // Remove required attribute from custom_emails by default
+    customEmailsField.removeAttribute('required');
     
     // Show relevant filter with animation
     if (value === 'diocese') {
@@ -204,6 +254,10 @@ document.getElementById('recipient_type').addEventListener('change', function() 
     } else if (value === 'church') {
         churchFilter.style.display = 'block';
         churchFilter.style.animation = 'fadeInUp 0.3s ease-in';
+    } else if (value === 'custom_emails') {
+        customEmailsFilter.style.display = 'block';
+        customEmailsFilter.style.animation = 'fadeInUp 0.3s ease-in';
+        customEmailsField.setAttribute('required', 'required');
     }
 });
 
