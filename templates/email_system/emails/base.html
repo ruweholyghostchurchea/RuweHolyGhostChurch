@@ -114,12 +114,27 @@
         }
         .social-links {
             margin: 20px 0;
+            display: block;
+            text-align: center;
         }
         .social-links a {
             color: #ffffff;
-            margin: 0 8px;
-            font-size: 18px;
+            margin: 5px 10px;
+            font-size: 24px;
             text-decoration: none;
+            display: inline-block;
+            min-width: 40px;
+            min-height: 40px;
+            line-height: 1.5;
+        }
+        /* Mobile-optimized touch targets for email clients */
+        @media only screen and (max-width: 600px) {
+            .social-links a {
+                font-size: 28px;
+                margin: 8px 12px;
+                min-width: 44px;
+                min-height: 44px;
+            }
         }
         .motto {
             font-style: italic;
@@ -200,10 +215,13 @@
                 </p>
                 
                 <div class="social-links">
-                    <a href="#">📘</a>
-                    <a href="#">📷</a>
-                    <a href="#">✖️</a>
-                    <a href="#">📺</a>
+                    <a href="https://www.facebook.com/RuweHolyGhostChurchEA/" target="_blank" rel="noopener noreferrer" title="Facebook">📘</a>
+                    <a href="https://www.instagram.com/RuweHolyGhostChurchEA/" target="_blank" rel="noopener noreferrer" title="Instagram">📷</a>
+                    <a href="https://x.com/RuweChurch" target="_blank" rel="noopener noreferrer" title="X (Twitter)">✖️</a>
+                    <a href="https://www.youtube.com/@RuweHolyGhostChurch" target="_blank" rel="noopener noreferrer" title="YouTube">📺</a>
+                    <a href="https://whatsapp.com/channel/0029Va9GBX32ZjCgSPgYfm1k" target="_blank" rel="noopener noreferrer" title="WhatsApp">💬</a>
+                    <a href="https://t.me/RuweHolyGhostChurch" target="_blank" rel="noopener noreferrer" title="Telegram">✈️</a>
+                    <a href="https://www.linkedin.com/in/RuweHolyGhostChurch" target="_blank" rel="noopener noreferrer" title="LinkedIn">🔗</a>
                 </div>
                 
                 <p style="margin: 20px 0 0 0; font-size: 12px; color: #999;">
