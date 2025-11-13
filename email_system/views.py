@@ -334,6 +334,12 @@ def resend_failed_email(request, log_id):
         )
         
         if new_log.status == 'sent':
+            # Mark the original failed log as resent (update to sent status)
+            email_log.status = 'sent'
+            email_log.sent_at = new_log.sent_at
+            email_log.error_message = 'Resent successfully'
+            email_log.save()
+            
             # Update campaign counts if this was part of a campaign
             if email_log.campaign:
                 campaign = email_log.campaign
