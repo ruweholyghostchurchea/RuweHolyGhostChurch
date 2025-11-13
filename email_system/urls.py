@@ -10,5 +10,6 @@ urlpatterns = [
     path('campaigns/<int:campaign_id>/', views.campaign_detail, name='campaign_detail'),
     path('campaigns/<int:campaign_id>/send/', views.send_campaign, name='send_campaign'),
     path('logs/', views.email_logs, name='logs'),
+    path('logs/<int:log_id>/resend/', views.resend_failed_email, name='resend_failed_email'),
     path('preview-recipients/', views.preview_recipients, name='preview_recipients'),
 ]

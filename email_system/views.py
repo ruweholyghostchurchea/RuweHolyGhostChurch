@@ -302,3 +302,50 @@ def preview_recipients(request):
             for m in recipients[:50]  # Limit preview to 50
         ]
     })
+
+
+@staff_required
+def resend_failed_email(request, log_id):
+    """Resend a failed email"""
+    from .utils import send_html_email
+    
+    email_log = get_object_or_404(EmailLog, id=log_id)
+    
+    # Only allow resending failed or bounced emails
+    if email_log.status not in ['failed', 'bounced']:
+        messages.error(request, 'Only failed or bounced emails can be resent.')
+        return redirect('email_system:logs')
+    
+    try:
+        # Get campaign attachments if this was part of a campaign
+        attachments = []
+        if email_log.campaign:
+            attachments = list(email_log.campaign.attachments.all())
+        
+        # Resend the email using the same content
+        new_log = send_html_email(
+            subject=email_log.subject,
+            html_content=email_log.html_content,
+            recipient_email=email_log.recipient_email,
+            recipient_name=email_log.recipient_name,
+            campaign=email_log.campaign,
+            context={},
+            attachments=attachments
+        )
+        
+        if new_log.status == 'sent':
+            # Update campaign counts if this was part of a campaign
+            if email_log.campaign:
+                campaign = email_log.campaign
+                campaign.sent_count += 1
+                campaign.failed_count = max(0, campaign.failed_count - 1)
+                campaign.save()
+            
+            messages.success(request, f'Email successfully resent to {email_log.recipient_email}')
+        else:
+            messages.error(request, f'Failed to resend email: {new_log.error_message}')
+    
+    except Exception as e:
+        messages.error(request, f'Error resending email: {str(e)}')
+    
+    return redirect('email_system:logs')
