@@ -179,12 +179,14 @@ def add_member(request):
             father_is_members = request.POST.getlist('father_is_member[]')
             father_identifiers = request.POST.getlist('father_identifier[]')
             father_phones = request.POST.getlist('father_phone[]')
+            father_alives = request.POST.getlist('father_alive[]')
 
             for i, name in enumerate(father_names):
                 if name.strip():
                     fathers.append({
                         'name': name.strip(),
                         'relationship_type': father_types[i] if i < len(father_types) else 'biological',
+                        'alive': father_alives[i] == 'yes' if i < len(father_alives) else True,
                         'is_member': father_is_members[i] == 'yes' if i < len(father_is_members) else False,
                         'member_identifier': father_identifiers[i].strip() if i < len(father_identifiers) and father_is_members[i] == 'yes' else '',
                         'phone': father_phones[i].strip() if i < len(father_phones) else ''
@@ -196,12 +198,14 @@ def add_member(request):
             mother_is_members = request.POST.getlist('mother_is_member[]')
             mother_identifiers = request.POST.getlist('mother_identifier[]')
             mother_phones = request.POST.getlist('mother_phone[]')
+            mother_alives = request.POST.getlist('mother_alive[]')
 
             for i, name in enumerate(mother_names):
                 if name.strip():
                     mothers.append({
                         'name': name.strip(),
                         'relationship_type': mother_types[i] if i < len(mother_types) else 'biological',
+                        'alive': mother_alives[i] == 'yes' if i < len(mother_alives) else True,
                         'is_member': mother_is_members[i] == 'yes' if i < len(mother_is_members) else False,
                         'member_identifier': mother_identifiers[i].strip() if i < len(mother_identifiers) and mother_is_members[i] == 'yes' else '',
                         'phone': mother_phones[i].strip() if i < len(mother_phones) else ''
@@ -212,10 +216,12 @@ def add_member(request):
             spouse_is_members = request.POST.getlist('spouse_is_member[]')
             spouse_identifiers = request.POST.getlist('spouse_identifier[]')
             spouse_phones = request.POST.getlist('spouse_phone[]')
+            spouse_alives = request.POST.getlist('spouse_alive[]')
 
             if spouse_names and spouse_names[0].strip():
                 spouse = {
                     'name': spouse_names[0].strip(),
+                    'alive': spouse_alives[0] == 'yes' if spouse_alives else True,
                     'is_member': spouse_is_members[0] == 'yes' if spouse_is_members else False,
                     'member_identifier': spouse_identifiers[0].strip() if spouse_identifiers and spouse_is_members and spouse_is_members[0] == 'yes' else '',
                     'phone': spouse_phones[0].strip() if spouse_phones else ''
@@ -617,12 +623,14 @@ def edit_member(request, username):
             father_is_members = request.POST.getlist('father_is_member[]')
             father_identifiers = request.POST.getlist('father_identifier[]')
             father_phones = request.POST.getlist('father_phone[]')
+            father_alives = request.POST.getlist('father_alive[]')
 
             for i, name in enumerate(father_names):
                 if name.strip():
                     fathers.append({
                         'name': name.strip(),
                         'relationship_type': father_types[i] if i < len(father_types) else 'biological',
+                        'alive': father_alives[i] == 'yes' if i < len(father_alives) else True,
                         'is_member': father_is_members[i] == 'yes' if i < len(father_is_members) else False,
                         'member_identifier': father_identifiers[i].strip() if i < len(father_identifiers) and father_is_members[i] == 'yes' else '',
                         'phone': father_phones[i].strip() if i < len(father_phones) else ''
@@ -634,12 +642,14 @@ def edit_member(request, username):
             mother_is_members = request.POST.getlist('mother_is_member[]')
             mother_identifiers = request.POST.getlist('mother_identifier[]')
             mother_phones = request.POST.getlist('mother_phone[]')
+            mother_alives = request.POST.getlist('mother_alive[]')
 
             for i, name in enumerate(mother_names):
                 if name.strip():
                     mothers.append({
                         'name': name.strip(),
                         'relationship_type': mother_types[i] if i < len(mother_types) else 'biological',
+                        'alive': mother_alives[i] == 'yes' if i < len(mother_alives) else True,
                         'is_member': mother_is_members[i] == 'yes' if i < len(mother_is_members) else False,
                         'member_identifier': mother_identifiers[i].strip() if i < len(mother_identifiers) and mother_is_members[i] == 'yes' else '',
                         'phone': mother_phones[i].strip() if i < len(mother_phones) else ''
@@ -650,10 +660,12 @@ def edit_member(request, username):
             spouse_is_members = request.POST.getlist('spouse_is_member[]')
             spouse_identifiers = request.POST.getlist('spouse_identifier[]')
             spouse_phones = request.POST.getlist('spouse_phone[]')
+            spouse_alives = request.POST.getlist('spouse_alive[]')
 
             if spouse_names and spouse_names[0].strip():
                 spouse = {
                     'name': spouse_names[0].strip(),
+                    'alive': spouse_alives[0] == 'yes' if spouse_alives else True,
                     'is_member': spouse_is_members[0] == 'yes' if spouse_is_members else False,
                     'member_identifier': spouse_identifiers[0].strip() if spouse_identifiers and spouse_is_members and spouse_is_members[0] == 'yes' else '',
                     'phone': spouse_phones[0].strip() if spouse_phones else ''

@@ -414,7 +414,7 @@ class Member(models.Model):
     emergency_contact_2_email = models.EmailField(blank=True)
     
     # Family Details (Optional - JSON fields with text data and optional member links)
-    # Format: [{"name": "John Doe", "relationship_type": "biological", "is_member": true, "member_identifier": "RUWE-1234-5678-9012", "phone": "+254712345678"}]
+    # Format: [{"name": "John Doe", "relationship_type": "biological", "alive": true, "is_member": true, "member_identifier": "RUWE-1234-5678-9012", "phone": "+254712345678"}]
     fathers = models.JSONField(default=list, blank=True, help_text="List of fathers (biological, baptismal, hand ordination)")
     mothers = models.JSONField(default=list, blank=True, help_text="List of mothers (biological, baptismal, hand ordination)")
     spouse = models.JSONField(default=dict, blank=True, help_text="Spouse information (husband/wife)")
