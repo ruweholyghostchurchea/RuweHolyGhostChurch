@@ -299,7 +299,7 @@
                                     <option value="yes" {% if father.is_member %}selected{% endif %}>Yes</option>
                                 </select>
                             </div>
-                            <div class="col-md-1 identifier-field" style="{% if not father.is_member %}display: none;{% endif %}">
+                            <div class="col-md-2 identifier-field" style="{% if not father.is_member %}display: none;{% endif %}">
                                 <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
                                 <input type="text" name="father_identifier[]" class="form-control" value="{{ father.member_identifier }}" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                             </div>
@@ -389,7 +389,7 @@
                                     <option value="yes" {% if mother.is_member %}selected{% endif %}>Yes</option>
                                 </select>
                             </div>
-                            <div class="col-md-1 identifier-field" style="{% if not mother.is_member %}display: none;{% endif %}">
+                            <div class="col-md-2 identifier-field" style="{% if not mother.is_member %}display: none;{% endif %}">
                                 <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
                                 <input type="text" name="mother_identifier[]" class="form-control" value="{{ mother.member_identifier }}" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                             </div>
@@ -1960,5 +1960,230 @@ document.addEventListener('DOMContentLoaded', function() {
         new LocationAutocomplete(locationInput, locationSuggestions);
     }
 });
+
+// Toggle identifier field visibility
+function toggleIdentifierField(selectElement) {
+    const row = selectElement.closest('.family-member-row');
+    const identifierField = row.querySelector('.identifier-field');
+    
+    if (selectElement.value === 'yes') {
+        identifierField.style.display = 'block';
+    } else {
+        identifierField.style.display = 'none';
+        const identifierInput = identifierField.querySelector('input');
+        if (identifierInput) {
+            identifierInput.value = '';
+        }
+    }
+}
+
+// Family member counters and add functions
+let fatherCount = {{ member.fathers|length|default:1 }};
+let motherCount = {{ member.mothers|length|default:1 }};
+
+function addFather() {
+    if (fatherCount >= 3) {
+        alert('Maximum 3 fathers allowed (Biological, Baptismal, Hand Ordination)');
+        return;
+    }
+    
+    const container = document.getElementById('fathers-container');
+    const newRow = document.createElement('div');
+    newRow.className = 'family-member-row';
+    newRow.style.cssText = 'background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;';
+    newRow.innerHTML = `
+        <div class="row">
+            <div class="col-md-3">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Type</label>
+                <select name="father_type[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    <option value="biological">Biological</option>
+                    <option value="baptismal">Baptismal</option>
+                    <option value="hand_ordination">Hand Ordination</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                <input type="text" name="father_name[]" class="form-control" placeholder="e.g., John Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-2">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                <input type="tel" name="father_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-2">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                <select name="father_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div class="col-md-2 identifier-field" style="display: none;">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                <input type="text" name="father_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-1">
+                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                <button type="button" onclick="this.closest('.family-member-row').remove(); fatherCount--;" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    container.appendChild(newRow);
+    fatherCount++;
+}
+
+function addMother() {
+    if (motherCount >= 3) {
+        alert('Maximum 3 mothers allowed (Biological, Baptismal, Hand Ordination)');
+        return;
+    }
+    
+    const container = document.getElementById('mothers-container');
+    const newRow = document.createElement('div');
+    newRow.className = 'family-member-row';
+    newRow.style.cssText = 'background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;';
+    newRow.innerHTML = `
+        <div class="row">
+            <div class="col-md-3">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Type</label>
+                <select name="mother_type[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    <option value="biological">Biological</option>
+                    <option value="baptismal">Baptismal</option>
+                    <option value="hand_ordination">Hand Ordination</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                <input type="text" name="mother_name[]" class="form-control" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-2">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                <input type="tel" name="mother_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-2">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                <select name="mother_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div class="col-md-2 identifier-field" style="display: none;">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                <input type="text" name="mother_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-1">
+                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                <button type="button" onclick="this.closest('.family-member-row').remove(); motherCount--;" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    container.appendChild(newRow);
+    motherCount++;
+}
+
+function addSpouse() {
+    const container = document.getElementById('spouses-container');
+    if (container.children.length >= 1) {
+        alert('Only one spouse allowed');
+        return;
+    }
+    
+    const newRow = document.createElement('div');
+    newRow.className = 'family-member-row';
+    newRow.style.cssText = 'background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;';
+    newRow.innerHTML = `
+        <div class="row">
+            <div class="col-md-4">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                <input type="text" name="spouse_name[]" class="form-control" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-3">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                <input type="tel" name="spouse_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-2">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                <select name="spouse_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div class="col-md-2 identifier-field" style="display: none;">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                <input type="text" name="spouse_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-1">
+                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    container.appendChild(newRow);
+}
+
+function addGuardian() {
+    addFamilyMember('guardians', 'guardian');
+}
+
+function addBrother() {
+    addFamilyMember('brothers', 'brother');
+}
+
+function addSister() {
+    addFamilyMember('sisters', 'sister');
+}
+
+function addUncle() {
+    addFamilyMember('uncles', 'uncle');
+}
+
+function addAunt() {
+    addFamilyMember('aunts', 'aunt');
+}
+
+function addFriend() {
+    addFamilyMember('friends', 'friend');
+}
+
+function addFamilyMember(containerName, memberType) {
+    const container = document.getElementById(`${containerName}-container`);
+    const newRow = document.createElement('div');
+    newRow.className = 'family-member-row';
+    newRow.style.cssText = 'background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;';
+    newRow.innerHTML = `
+        <div class="row">
+            <div class="col-md-4">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                <input type="text" name="${memberType}_name[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-3">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                <input type="tel" name="${memberType}_phone[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-2">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                <select name="${memberType}_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div class="col-md-2 identifier-field" style="display: none;">
+                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                <input type="text" name="${memberType}_identifier[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+            </div>
+            <div class="col-md-1">
+                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    container.appendChild(newRow);
+}
 </script>
 {% endblock %}
