@@ -413,15 +413,17 @@ class Member(models.Model):
     emergency_contact_2_phone = models.CharField(max_length=20, blank=True)
     emergency_contact_2_email = models.EmailField(blank=True)
     
-    # Family Details (Optional - searchable relationships)
-    father = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children_as_father')
-    mother = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children_as_mother')
-    guardian = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children_as_guardian')
-    brother = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='siblings_as_brother')
-    sister = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='siblings_as_sister')
-    uncle = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='nephews_nieces_as_uncle')
-    aunt = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='nephews_nieces_as_aunt')
-    friend = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='friends')
+    # Family Details (Optional - JSON fields with text data and optional member links)
+    # Format: [{"name": "John Doe", "relationship_type": "biological", "is_member": true, "member_identifier": "RUWE-1234-5678-9012", "phone": "+254712345678"}]
+    fathers = models.JSONField(default=list, blank=True, help_text="List of fathers (biological, baptismal, hand ordination)")
+    mothers = models.JSONField(default=list, blank=True, help_text="List of mothers (biological, baptismal, hand ordination)")
+    spouse = models.JSONField(default=dict, blank=True, help_text="Spouse information (husband/wife)")
+    guardians = models.JSONField(default=list, blank=True, help_text="List of guardians")
+    brothers = models.JSONField(default=list, blank=True, help_text="List of brothers")
+    sisters = models.JSONField(default=list, blank=True, help_text="List of sisters")
+    uncles = models.JSONField(default=list, blank=True, help_text="List of uncles")
+    aunts = models.JSONField(default=list, blank=True, help_text="List of aunts")
+    friends = models.JSONField(default=list, blank=True, help_text="List of friends")
     
     # Membership Status
     membership_status = models.CharField(max_length=20, choices=MEMBERSHIP_STATUS_CHOICES, default='Active')
