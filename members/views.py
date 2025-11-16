@@ -18,7 +18,7 @@ def index(request):
 
     members = Member.objects.exclude(membership_status__in=['Left/Quit', 'Dead']).select_related(
         'user_home_diocese', 'user_home_pastorate', 'user_home_church',
-        'user_town_diocese', 'user_town_pastorate', 'user_town_church',
+        'user_town_diocese', 'user_town_pastorate', 'user_home_church',
         'father', 'mother', 'guardian', 'brother', 'sister', 'uncle', 'aunt', 'friend'
     )
 
@@ -128,7 +128,7 @@ def add_member(request):
             baptismal_last_name = request.POST.get('baptismal_last_name')
             date_baptized_str = request.POST.get('date_baptized')
             date_joined_religion_str = request.POST.get('date_joined_religion')
-            
+
             # Convert baptismal date strings to date objects
             try:
                 date_baptized = datetime.strptime(date_baptized_str, '%Y-%m-%d').date() if date_baptized_str else None
@@ -180,7 +180,7 @@ def add_member(request):
             father_is_members = request.POST.getlist('father_is_member[]')
             father_identifiers = request.POST.getlist('father_identifier[]')
             father_phones = request.POST.getlist('father_phone[]')
-            
+
             for i, name in enumerate(father_names):
                 if name.strip():
                     fathers.append({
@@ -190,14 +190,14 @@ def add_member(request):
                         'member_identifier': father_identifiers[i].strip() if i < len(father_identifiers) and father_is_members[i] == 'yes' else '',
                         'phone': father_phones[i].strip() if i < len(father_phones) else ''
                     })
-            
+
             mothers = []
             mother_names = request.POST.getlist('mother_name[]')
             mother_types = request.POST.getlist('mother_type[]')
             mother_is_members = request.POST.getlist('mother_is_member[]')
             mother_identifiers = request.POST.getlist('mother_identifier[]')
             mother_phones = request.POST.getlist('mother_phone[]')
-            
+
             for i, name in enumerate(mother_names):
                 if name.strip():
                     mothers.append({
@@ -207,23 +207,27 @@ def add_member(request):
                         'member_identifier': mother_identifiers[i].strip() if i < len(mother_identifiers) and mother_is_members[i] == 'yes' else '',
                         'phone': mother_phones[i].strip() if i < len(mother_phones) else ''
                     })
-            
+
             spouse = {}
-            spouse_name = request.POST.get('spouse_name', '').strip()
-            if spouse_name:
+            spouse_names = request.POST.getlist('spouse_name[]')
+            spouse_is_members = request.POST.getlist('spouse_is_member[]')
+            spouse_identifiers = request.POST.getlist('spouse_identifier[]')
+            spouse_phones = request.POST.getlist('spouse_phone[]')
+
+            if spouse_names and spouse_names[0].strip():
                 spouse = {
-                    'name': spouse_name,
-                    'is_member': request.POST.get('spouse_is_member') == 'yes',
-                    'member_identifier': request.POST.get('spouse_identifier', '').strip() if request.POST.get('spouse_is_member') == 'yes' else '',
-                    'phone': request.POST.get('spouse_phone', '').strip()
+                    'name': spouse_names[0].strip(),
+                    'is_member': spouse_is_members[0] == 'yes' if spouse_is_members else False,
+                    'member_identifier': spouse_identifiers[0].strip() if spouse_identifiers and spouse_is_members and spouse_is_members[0] == 'yes' else '',
+                    'phone': spouse_phones[0].strip() if spouse_phones else ''
                 }
-            
+
             guardians = []
             guardian_names = request.POST.getlist('guardian_name[]')
             guardian_is_members = request.POST.getlist('guardian_is_member[]')
             guardian_identifiers = request.POST.getlist('guardian_identifier[]')
             guardian_phones = request.POST.getlist('guardian_phone[]')
-            
+
             for i, name in enumerate(guardian_names):
                 if name.strip():
                     guardians.append({
@@ -232,13 +236,13 @@ def add_member(request):
                         'member_identifier': guardian_identifiers[i].strip() if i < len(guardian_identifiers) and guardian_is_members[i] == 'yes' else '',
                         'phone': guardian_phones[i].strip() if i < len(guardian_phones) else ''
                     })
-            
+
             brothers = []
             brother_names = request.POST.getlist('brother_name[]')
             brother_is_members = request.POST.getlist('brother_is_member[]')
             brother_identifiers = request.POST.getlist('brother_identifier[]')
             brother_phones = request.POST.getlist('brother_phone[]')
-            
+
             for i, name in enumerate(brother_names):
                 if name.strip():
                     brothers.append({
@@ -247,13 +251,13 @@ def add_member(request):
                         'member_identifier': brother_identifiers[i].strip() if i < len(brother_identifiers) and brother_is_members[i] == 'yes' else '',
                         'phone': brother_phones[i].strip() if i < len(brother_phones) else ''
                     })
-            
+
             sisters = []
             sister_names = request.POST.getlist('sister_name[]')
             sister_is_members = request.POST.getlist('sister_is_member[]')
             sister_identifiers = request.POST.getlist('sister_identifier[]')
             sister_phones = request.POST.getlist('sister_phone[]')
-            
+
             for i, name in enumerate(sister_names):
                 if name.strip():
                     sisters.append({
@@ -262,13 +266,13 @@ def add_member(request):
                         'member_identifier': sister_identifiers[i].strip() if i < len(sister_identifiers) and sister_is_members[i] == 'yes' else '',
                         'phone': sister_phones[i].strip() if i < len(sister_phones) else ''
                     })
-            
+
             uncles = []
             uncle_names = request.POST.getlist('uncle_name[]')
             uncle_is_members = request.POST.getlist('uncle_is_member[]')
             uncle_identifiers = request.POST.getlist('uncle_identifier[]')
             uncle_phones = request.POST.getlist('uncle_phone[]')
-            
+
             for i, name in enumerate(uncle_names):
                 if name.strip():
                     uncles.append({
@@ -277,13 +281,13 @@ def add_member(request):
                         'member_identifier': uncle_identifiers[i].strip() if i < len(uncle_identifiers) and uncle_is_members[i] == 'yes' else '',
                         'phone': uncle_phones[i].strip() if i < len(uncle_phones) else ''
                     })
-            
+
             aunts = []
             aunt_names = request.POST.getlist('aunt_name[]')
             aunt_is_members = request.POST.getlist('aunt_is_member[]')
             aunt_identifiers = request.POST.getlist('aunt_identifier[]')
             aunt_phones = request.POST.getlist('aunt_phone[]')
-            
+
             for i, name in enumerate(aunt_names):
                 if name.strip():
                     aunts.append({
@@ -292,13 +296,13 @@ def add_member(request):
                         'member_identifier': aunt_identifiers[i].strip() if i < len(aunt_identifiers) and aunt_is_members[i] == 'yes' else '',
                         'phone': aunt_phones[i].strip() if i < len(aunt_phones) else ''
                     })
-            
+
             friends = []
             friend_names = request.POST.getlist('friend_name[]')
             friend_is_members = request.POST.getlist('friend_is_member[]')
             friend_identifiers = request.POST.getlist('friend_identifier[]')
             friend_phones = request.POST.getlist('friend_phone[]')
-            
+
             for i, name in enumerate(friend_names):
                 if name.strip():
                     friends.append({
@@ -332,12 +336,12 @@ def add_member(request):
             if Member.objects.filter(username=username).exists():
                 messages.error(request, 'Username already exists. Please choose a different username.')
                 return redirect('members:add_member')
-            
+
             # Check phone number uniqueness
             if Member.objects.filter(phone_number=phone_number).exists():
                 messages.error(request, 'Phone number already exists. Please use a different phone number.')
                 return redirect('members:add_member')
-            
+
             # Check email uniqueness if provided
             if email_address and Member.objects.filter(email_address=email_address).exists():
                 messages.error(request, 'Email address already exists. Please use a different email address.')
@@ -474,7 +478,7 @@ def member_detail(request, username):
 def edit_member(request, username):
     """Edit existing member view"""
     member = get_object_or_404(Member, username=username)
-    
+
     if request.method == 'GET':
         dioceses = Diocese.objects.filter(is_active=True).order_by('country', 'name')
         context = {
@@ -556,7 +560,7 @@ def edit_member(request, username):
             member.baptismal_last_name = request.POST.get('baptismal_last_name')
             date_baptized_str = request.POST.get('date_baptized')
             date_joined_religion_str = request.POST.get('date_joined_religion')
-            
+
             # Convert baptismal date strings to date objects
             try:
                 member.date_baptized = datetime.strptime(date_baptized_str, '%Y-%m-%d').date() if date_baptized_str else None
@@ -584,7 +588,7 @@ def edit_member(request, username):
             # Profile Photo
             profile_photo = request.FILES.get('profile_photo')
             profile_photo_url = request.POST.get('profile_photo_url', '').strip()
-            
+
             if profile_photo:
                 member.profile_photo = profile_photo
             if profile_photo_url:
@@ -614,7 +618,7 @@ def edit_member(request, username):
             father_is_members = request.POST.getlist('father_is_member[]')
             father_identifiers = request.POST.getlist('father_identifier[]')
             father_phones = request.POST.getlist('father_phone[]')
-            
+
             for i, name in enumerate(father_names):
                 if name.strip():
                     fathers.append({
@@ -624,14 +628,14 @@ def edit_member(request, username):
                         'member_identifier': father_identifiers[i].strip() if i < len(father_identifiers) and father_is_members[i] == 'yes' else '',
                         'phone': father_phones[i].strip() if i < len(father_phones) else ''
                     })
-            
+
             mothers = []
             mother_names = request.POST.getlist('mother_name[]')
             mother_types = request.POST.getlist('mother_type[]')
             mother_is_members = request.POST.getlist('mother_is_member[]')
             mother_identifiers = request.POST.getlist('mother_identifier[]')
             mother_phones = request.POST.getlist('mother_phone[]')
-            
+
             for i, name in enumerate(mother_names):
                 if name.strip():
                     mothers.append({
@@ -641,23 +645,27 @@ def edit_member(request, username):
                         'member_identifier': mother_identifiers[i].strip() if i < len(mother_identifiers) and mother_is_members[i] == 'yes' else '',
                         'phone': mother_phones[i].strip() if i < len(mother_phones) else ''
                     })
-            
+
             spouse = {}
-            spouse_name = request.POST.get('spouse_name', '').strip()
-            if spouse_name:
+            spouse_names = request.POST.getlist('spouse_name[]')
+            spouse_is_members = request.POST.getlist('spouse_is_member[]')
+            spouse_identifiers = request.POST.getlist('spouse_identifier[]')
+            spouse_phones = request.POST.getlist('spouse_phone[]')
+
+            if spouse_names and spouse_names[0].strip():
                 spouse = {
-                    'name': spouse_name,
-                    'is_member': request.POST.get('spouse_is_member') == 'yes',
-                    'member_identifier': request.POST.get('spouse_identifier', '').strip() if request.POST.get('spouse_is_member') == 'yes' else '',
-                    'phone': request.POST.get('spouse_phone', '').strip()
+                    'name': spouse_names[0].strip(),
+                    'is_member': spouse_is_members[0] == 'yes' if spouse_is_members else False,
+                    'member_identifier': spouse_identifiers[0].strip() if spouse_identifiers and spouse_is_members and spouse_is_members[0] == 'yes' else '',
+                    'phone': spouse_phones[0].strip() if spouse_phones else ''
                 }
-            
+
             guardians = []
             guardian_names = request.POST.getlist('guardian_name[]')
             guardian_is_members = request.POST.getlist('guardian_is_member[]')
             guardian_identifiers = request.POST.getlist('guardian_identifier[]')
             guardian_phones = request.POST.getlist('guardian_phone[]')
-            
+
             for i, name in enumerate(guardian_names):
                 if name.strip():
                     guardians.append({
@@ -666,13 +674,13 @@ def edit_member(request, username):
                         'member_identifier': guardian_identifiers[i].strip() if i < len(guardian_identifiers) and guardian_is_members[i] == 'yes' else '',
                         'phone': guardian_phones[i].strip() if i < len(guardian_phones) else ''
                     })
-            
+
             brothers = []
             brother_names = request.POST.getlist('brother_name[]')
             brother_is_members = request.POST.getlist('brother_is_member[]')
             brother_identifiers = request.POST.getlist('brother_identifier[]')
             brother_phones = request.POST.getlist('brother_phone[]')
-            
+
             for i, name in enumerate(brother_names):
                 if name.strip():
                     brothers.append({
@@ -681,13 +689,13 @@ def edit_member(request, username):
                         'member_identifier': brother_identifiers[i].strip() if i < len(brother_identifiers) and brother_is_members[i] == 'yes' else '',
                         'phone': brother_phones[i].strip() if i < len(brother_phones) else ''
                     })
-            
+
             sisters = []
             sister_names = request.POST.getlist('sister_name[]')
             sister_is_members = request.POST.getlist('sister_is_member[]')
             sister_identifiers = request.POST.getlist('sister_identifier[]')
             sister_phones = request.POST.getlist('sister_phone[]')
-            
+
             for i, name in enumerate(sister_names):
                 if name.strip():
                     sisters.append({
@@ -696,13 +704,13 @@ def edit_member(request, username):
                         'member_identifier': sister_identifiers[i].strip() if i < len(sister_identifiers) and sister_is_members[i] == 'yes' else '',
                         'phone': sister_phones[i].strip() if i < len(sister_phones) else ''
                     })
-            
+
             uncles = []
             uncle_names = request.POST.getlist('uncle_name[]')
             uncle_is_members = request.POST.getlist('uncle_is_member[]')
             uncle_identifiers = request.POST.getlist('uncle_identifier[]')
             uncle_phones = request.POST.getlist('uncle_phone[]')
-            
+
             for i, name in enumerate(uncle_names):
                 if name.strip():
                     uncles.append({
@@ -711,13 +719,13 @@ def edit_member(request, username):
                         'member_identifier': uncle_identifiers[i].strip() if i < len(uncle_identifiers) and uncle_is_members[i] == 'yes' else '',
                         'phone': uncle_phones[i].strip() if i < len(uncle_phones) else ''
                     })
-            
+
             aunts = []
             aunt_names = request.POST.getlist('aunt_name[]')
             aunt_is_members = request.POST.getlist('aunt_is_member[]')
             aunt_identifiers = request.POST.getlist('aunt_identifier[]')
             aunt_phones = request.POST.getlist('aunt_phone[]')
-            
+
             for i, name in enumerate(aunt_names):
                 if name.strip():
                     aunts.append({
@@ -726,13 +734,13 @@ def edit_member(request, username):
                         'member_identifier': aunt_identifiers[i].strip() if i < len(aunt_identifiers) and aunt_is_members[i] == 'yes' else '',
                         'phone': aunt_phones[i].strip() if i < len(aunt_phones) else ''
                     })
-            
+
             friends = []
             friend_names = request.POST.getlist('friend_name[]')
             friend_is_members = request.POST.getlist('friend_is_member[]')
             friend_identifiers = request.POST.getlist('friend_identifier[]')
             friend_phones = request.POST.getlist('friend_phone[]')
-            
+
             for i, name in enumerate(friend_names):
                 if name.strip():
                     friends.append({
@@ -741,7 +749,7 @@ def edit_member(request, username):
                         'member_identifier': friend_identifiers[i].strip() if i < len(friend_identifiers) and friend_is_members[i] == 'yes' else '',
                         'phone': friend_phones[i].strip() if i < len(friend_phones) else ''
                     })
-            
+
             member.fathers = fathers
             member.mothers = mothers
             member.spouse = spouse

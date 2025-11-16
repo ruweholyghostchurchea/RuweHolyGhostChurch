@@ -360,7 +360,7 @@
             <div class="mb-3">
                 <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
                     Spouse (Husband/Wife - Max 1)
-                    <button type="button" onclick="addFamilyMember('Spouse', 'spouses-container', 'spouse_name', 'spouse_is_member', 'spouse_identifier', 'spouse_phone');" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                    <button type="button" onclick="addSpouse()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
                         <i class="fas fa-plus"></i> Add Spouse
                     </button>
                 </label>
@@ -971,30 +971,34 @@
             container.insertAdjacentHTML('beforeend', newRow);
         }
 
-        // Generic function to add family members (Guardian, Brother, Sister, Uncle, Aunt, Friend)
-        function addFamilyMember(type, containerID, nameFieldName, isMemberFieldName, identifierFieldName, phoneFieldName) {
-            const container = document.getElementById(containerID);
+        // Add Spouse
+        function addSpouse() {
+            const container = document.getElementById('spouses-container');
+            if (container.children.length >= 1) {
+                alert('You can only add one spouse');
+                return;
+            }
             const newRow = `
                 <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
                     <div class="row">
                         <div class="col-md-4">
                             <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
-                            <input type="text" name="${nameFieldName}[]" class="form-control" placeholder="e.g., Full Name" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            <input type="text" name="spouse_name[]" class="form-control" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                         </div>
                         <div class="col-md-3">
                             <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
-                            <input type="tel" name="${phoneFieldName}[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            <input type="tel" name="spouse_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                         </div>
                         <div class="col-md-2">
                             <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
-                            <select name="${isMemberFieldName}[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            <select name="spouse_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                                 <option value="no">No</option>
                                 <option value="yes">Yes</option>
                             </select>
                         </div>
                         <div class="col-md-2 identifier-field" style="display: none;">
                             <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
-                            <input type="text" name="${identifierFieldName}[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            <input type="text" name="spouse_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
                         </div>
                         <div class="col-md-1">
                             <label style="color: transparent; font-size: 0.9rem;">.</label>
@@ -1008,692 +1012,226 @@
             container.insertAdjacentHTML('beforeend', newRow);
         }
 
-        function addGuardian() { addFamilyMember('Guardian', 'guardians-container', 'guardian_name', 'guardian_is_member', 'guardian_identifier', 'guardian_phone'); }
-        function addBrother() { addFamilyMember('Brother', 'brothers-container', 'brother_name', 'brother_is_member', 'brother_identifier', 'brother_phone'); }
-        function addSister() { addFamilyMember('Sister', 'sisters-container', 'sister_name', 'sister_is_member', 'sister_identifier', 'sister_phone'); }
-        function addUncle() { addFamilyMember('Uncle', 'uncles-container', 'uncle_name', 'uncle_is_member', 'uncle_identifier', 'uncle_phone'); }
-        function addAunt() { addFamilyMember('Aunt', 'aunts-container', 'aunt_name', 'aunt_is_member', 'aunt_identifier', 'aunt_phone'); }
-        function addFriend() { addFamilyMember('Friend', 'friends-container', 'friend_name', 'friend_is_member', 'friend_identifier', 'friend_phone'); }
-
-        // PWD Fields Toggle
-        function togglePwdFields() {
-            const isPwd = document.getElementById('is_pwd').value === 'Yes';
-            const pwdTypeField = document.getElementById('pwd_type_field');
-            const pwdOtherField = document.getElementById('pwd_other_field');
-
-            if (isPwd) {
-                pwdTypeField.style.display = 'block';
-                document.getElementById('pwd_type').addEventListener('change', function() {
-                    pwdOtherField.style.display = this.value === 'other' ? 'block' : 'none';
-                });
-            } else {
-                pwdTypeField.style.display = 'none';
-                pwdOtherField.style.display = 'none';
-                document.getElementById('pwd_type').value = '';
-                document.getElementById('pwd_other_description').value = '';
-            }
-        }
-
-        // Member Roles Toggle
-        function toggleClergyRoles() {
-            const isClergy = document.getElementById('role_clergy').checked;
-            const churchClergySection = document.getElementById('church_clergy_section');
-            const specialClergySection = document.getElementById('special_clergy_section');
-
-            if (isClergy) {
-                churchClergySection.style.display = 'block';
-                specialClergySection.style.display = 'block';
-            } else {
-                churchClergySection.style.display = 'none';
-                specialClergySection.style.display = 'none';
-                // Uncheck all clergy roles when the main clergy checkbox is unchecked
-                const clergyCheckboxes = document.querySelectorAll('input[name="church_clergy_roles"], input[name="special_clergy_roles"]');
-                clergyCheckboxes.forEach(checkbox => checkbox.checked = false);
-            }
-        }
-
-        // Single selection enforcement for Church Clergy Roles
-        function enforceSingleChurchClergy(selectedCheckbox) {
-            const churchClergyCheckboxes = document.querySelectorAll('input[name="church_clergy_roles"]');
-            if (selectedCheckbox.checked) {
-                churchClergyCheckboxes.forEach(checkbox => {
-                    if (checkbox !== selectedCheckbox) {
-                        checkbox.checked = false;
-                    }
-                });
-            }
-        }
-
-        // Single selection enforcement for Special Clergy Roles with validation
-        function enforceSingleSpecialClergy(selectedCheckbox) {
-            const specialClergyCheckboxes = document.querySelectorAll('input[name="special_clergy_roles"]');
-
-            if (selectedCheckbox.checked) {
-                const selectedRole = selectedCheckbox.value;
-
-                // Check if trying to select a special clergy role
-                if (['dean_king', 'dean_king_wife', 'dean_archdeacon', 'dean_archdeacon_wife'].includes(selectedRole)) {
-                    // Show warning about uniqueness
-                    const confirmMsg = `Warning: Only one ${selectedCheckbox.nextElementSibling.textContent} can exist in the entire church system. If you proceed, any existing ${selectedCheckbox.nextElementSibling.textContent} will need to be updated. Are you sure you want to assign this role?`;
-
-                    if (!confirm(confirmMsg)) {
-                        selectedCheckbox.checked = false;
-                        return;
-                    }
-                }
-
-                // Uncheck other special clergy roles
-                specialClergyCheckboxes.forEach(checkbox => {
-                    if (checkbox !== selectedCheckbox) {
-                        checkbox.checked = false;
-                    }
-                });
-            }
-        }
-
-
-        // Member Search Functionality
-        class MemberSearchSelect {
-            constructor(selectElement) {
-                this.selectElement = selectElement;
-                this.searchInput = null;
-                this.init();
-            }
-
-            init() {
-                this.createSearchInput();
-                this.bindEvents();
-            }
-
-            createSearchInput() {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'member-search-wrapper';
-                wrapper.style.cssText = 'position: relative;';
-
-                this.searchInput = document.createElement('input');
-                this.searchInput.type = 'text';
-                this.searchInput.className = 'form-control';
-                this.searchInput.placeholder = 'Type to search members...';
-                this.searchInput.style.cssText = 'margin-bottom: 5px;';
-
-                this.selectElement.parentNode.insertBefore(wrapper, this.selectElement);
-                wrapper.appendChild(this.searchInput);
-                wrapper.appendChild(this.selectElement);
-
-                this.selectElement.style.display = 'none';
-            }
-
-            bindEvents() {
-                let timeout;
-                this.searchInput.addEventListener('input', (e) => {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
-                        this.searchMembers(e.target.value);
-                    }, 300);
-                });
-
-                this.searchInput.addEventListener('focus', () => {
-                    if (this.searchInput.value.length >= 2) {
-                        this.searchMembers(this.searchInput.value);
-                    }
-                });
-            }
-
-            searchMembers(query) {
-                if (query.length < 2) {
-                    this.clearResults();
-                    return;
-                }
-
-                fetch(`/members/api/search/?q=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        this.displayResults(data);
-                    })
-                    .catch(error => {
-                        console.error('Error searching members:', error);
-                    });
-            }
-
-            displayResults(members) {
-                this.clearResults();
-
-                if (members.length === 0) {
-                    const option = document.createElement('option');
-                    option.value = '';
-                    option.textContent = 'No members found';
-                    this.selectElement.appendChild(option);
-                    this.selectElement.style.display = 'block';
-                    return;
-                }
-
-                members.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.id;
-                    option.textContent = member.display;
-                    this.selectElement.appendChild(option);
-                });
-
-                this.selectElement.style.display = 'block';
-
-                this.selectElement.addEventListener('change', (e) => {
-                    if (e.target.value) {
-                        const selectedOption = e.target.options[e.target.selectedIndex];
-                        this.searchInput.value = selectedOption.textContent;
-                        this.selectElement.style.display = 'none';
-                    }
-                }, { once: true });
-            }
-
-            clearResults() {
-                this.selectElement.innerHTML = '<option value="">Select...</option>';
-                this.selectElement.style.display = 'none';
-            }
-        }
-
-        // Enhanced Cascading Dropdown Logic
-        document.addEventListener('DOMContentLoaded', function() {
-            const homeDioceseSelect = document.getElementById('home-diocese-select');
-            const homePastorateSelect = document.getElementById('home-pastorate-select');
-            const homeChurchSelect = document.getElementById('home-church-select');
-
-            const townDioceseSelect = document.getElementById('town-diocese-select');
-            const townPastorateSelect = document.getElementById('town-pastorate-select');
-            const townChurchSelect = document.getElementById('town-church-select');
-
-            // Initialize member search selects
-            const memberSelects = document.querySelectorAll('.member-select');
-            memberSelects.forEach(select => {
-                new MemberSearchSelect(select);
-            });
-
-            // Cascading dropdown functionality for Home Church Structure
-            if (homeDioceseSelect) {
-                homeDioceseSelect.addEventListener('change', function() {
-                    const dioceseId = this.value;
-                    homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                    homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
-
-                    if (dioceseId) {
-                        // Show loading state
-                        homePastorateSelect.innerHTML = '<option value="">Loading...</option>';
-
-                        fetch(`{% url 'members:get_pastorates_by_diocese' 999 %}`.replace('999',dioceseId))
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                homePastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                                if (Array.isArray(data) && data.length > 0) {
-                                    data.forEach(pastorate => {
-                                        const option = document.createElement('option');
-                                        option.value = pastorate.id;
-                                        option.textContent = pastorate.name;
-                                        homePastorateSelect.appendChild(option);
-                                    });
-                                } else {
-                                    homePastorateSelect.innerHTML = '<option value="">No pastorates found</option>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching pastorates:', error);
-                                homePastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
-                            });
-                    }
-                });
-            }
-
-            if (homePastorateSelect) {
-                homePastorateSelect.addEventListener('change', function() {
-                    const pastorateId = this.value;
-                    homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
-
-                    if (pastorateId) {
-                        // Show loading state
-                        homeChurchSelect.innerHTML = '<option value="">Loading...</option>';
-
-                        fetch(`{% url 'members:get_churches_by_pastorate' 999 %}`.replace('999', pastorateId))
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                homeChurchSelect.innerHTML = '<option value="">Select Church</option>';
-                                if (Array.isArray(data) && data.length > 0) {
-                                    data.forEach(church => {
-                                        const option = document.createElement('option');
-                                        option.value = church.id;
-                                        option.textContent = church.name;
-                                        homeChurchSelect.appendChild(option);
-                                    });
-                                } else {
-                                    homeChurchSelect.innerHTML = '<option value="">No churches found</option>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching churches:', error);
-                                homeChurchSelect.innerHTML = '<option value="">Error loading churches</option>';
-                            });
-                    }
-                });
-            }
-
-            // Cascading dropdown functionality for Town Church Structure
-            if (townDioceseSelect) {
-                townDioceseSelect.addEventListener('change', function() {
-                    const dioceseId = this.value;
-                    townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                    townChurchSelect.innerHTML = '<option value="">Select Church</option>';
-
-                    if (dioceseId) {
-                        // Show loading state
-                        townPastorateSelect.innerHTML = '<option value="">Loading...</option>';
-
-                        fetch(`{% url 'members:get_pastorates_by_diocese' 999 %}`.replace('999', dioceseId))
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                townPastorateSelect.innerHTML = '<option value="">Select Pastorate</option>';
-                                if (Array.isArray(data) && data.length > 0) {
-                                    data.forEach(pastorate => {
-                                        const option = document.createElement('option');
-                                        option.value = pastorate.id;
-                                        option.textContent = pastorate.name;
-                                        townPastorateSelect.appendChild(option);
-                                    });
-                                } else {
-                                    townPastorateSelect.innerHTML = '<option value="">No pastorates found</option>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching pastorates:', error);
-                                townPastorateSelect.innerHTML = '<option value="">Error loading pastorates</option>';
-                            });
-                    }
-                });
-            }
-
-            if (townPastorateSelect) {
-                townPastorateSelect.addEventListener('change', function() {
-                    const pastorateId = this.value;
-                    townChurchSelect.innerHTML = '<option value="">Select Church</option>';
-
-                    if (pastorateId) {
-                        // Show loading state
-                        townChurchSelect.innerHTML = '<option value="">Loading...</option>';
-
-                        fetch(`{% url 'members:get_churches_by_pastorate' 999 %}`.replace('999', pastorateId))
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                townChurchSelect.innerHTML = '<option value="">Select Church</option>';
-                                if (Array.isArray(data) && data.length > 0) {
-                                    data.forEach(church => {
-                                        const option = document.createElement('option');
-                                        option.value = church.id;
-                                        option.textContent = church.name;
-                                        townChurchSelect.appendChild(option);
-                                    });
-                                } else {
-                                    townChurchSelect.innerHTML = '<option value="">No churches found</option>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching churches:', error);
-                                townChurchSelect.innerHTML = '<option value="">Error loading churches</option>';
-                            });
-                    }
-                });
-            }
-        });
-
-// Custom Fields Management
-function addCustomField() {
-    const container = document.getElementById('custom-fields-container');
-    const newRow = document.createElement('div');
-    newRow.className = 'custom-field-row';
-    newRow.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 15px;';
-
-    newRow.innerHTML = `
-        <div>
-            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Name</label>
-            <input type="text" name="custom_field_names[]" placeholder="e.g., Marital Status, Education Level"
-                   style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-        </div>
-        <div>
-            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Field Value</label>
-            <input type="text" name="custom_field_values[]" placeholder="Enter value"
-                   style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-        </div>
-        <div style="display: flex; align-items: end;">
-            <button type="button" onclick="removeCustomField(this)"
-                    style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `;
-
-    container.appendChild(newRow);
-}
-
-function removeCustomField(button) {
-    button.closest('.custom-field-row').remove();
-}
-
-// Document Management
-function addDocument() {
-    const container = document.getElementById('documents-container');
-    const newRow = document.createElement('div');
-    newRow.className = 'document-row';
-    newRow.style.cssText = 'border: 1px solid #374151; padding: 15px; border-radius: 4px; margin-bottom: 15px; background: #1f2937;';
-
-    newRow.innerHTML = `
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-            <div>
-                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Document Type</label>
-                <select name="document_types[]"
-                        style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-                    <option value="">Select Document Type</option>
-                    <option value="baptism_certificate">Baptism Certificate</option>
-                    <option value="annual_tithe_card">Annual Tithe Card</option>
-                    <option value="id_document">ID Document</option>
-                    <option value="medical_record">Medical Record</option>
-                    <option value="membership_certificate">Membership Certificate</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-            <div>
-                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Document Title</label>
-                <input type="text" name="document_titles[]" placeholder="e.g., Baptism Certificate 2023"
-                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-            </div>
-        </div>
-        <div style="margin-bottom: 15px;">
-            <label style="color: #ffffff; margin-bottom: 5px; display: block;">Description (Optional)</label>
-            <textarea name="document_descriptions[]" rows="2" placeholder="Additional notes about this document"
-                      style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;"></textarea>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: end;">
-            <div>
-                <label style="color: #ffffff; margin-bottom: 5px; display: block;">Upload Document</label>
-                <input type="file" name="document_files[]"
-                       style="width: 100%; padding: 10px; border: 1px solid #374151; background: #1f2937; color: #ffffff; border-radius: 4px;">
-            </div>
-            <button type="button" onclick="removeDocument(this)"
-                    style="padding: 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `;
-
-    container.appendChild(newRow);
-}
-
-function removeDocument(button) {
-    button.closest('.document-row').remove();
-}
-
-// Job Selection Limit
-function checkJobSelectionLimit() {
-    const checkboxes = document.querySelectorAll('.job-checkbox:checked');
-    const limit = 5;
-    const messageElement = document.getElementById('job-selection-message');
-
-    if (checkboxes.length > limit) {
-        alert(`You can select a maximum of ${limit} jobs.`);
-        // Uncheck the last checked checkbox to enforce the limit
-        checkboxes[checkboxes.length - 1].checked = false;
-    }
-
-    // Optionally, display a message to the user
-    if (!messageElement) {
-        const parentDiv = document.querySelector('label[for="job_occupations"]'); // Assuming label for job occupations exists
-        const msgEl = document.createElement('span');
-        msgEl.id = 'job-selection-message';
-        msgEl.style.color = '#ffcc00'; // Yellow color for warning
-        msgEl.style.marginLeft = '10px';
-        msgEl.style.fontSize = '0.8em';
-        parentDiv.parentNode.insertBefore(msgEl, parentDiv.nextSibling);
-    }
-    document.getElementById('job-selection-message').textContent = `Selected: ${checkboxes.length}/${limit}`;
-}
-
-// Location Autocomplete Functionality
-class LocationAutocomplete {
-    constructor(inputElement, suggestionsElement) {
-        this.input = inputElement;
-        this.suggestions = suggestionsElement;
-        this.selectedIndex = -1;
-        this.searchTimeout = null;
-        this.init();
-    }
-
-    init() {
-        this.input.addEventListener('input', (e) => this.handleInput(e));
-        this.input.addEventListener('keydown', (e) => this.handleKeydown(e));
-        this.input.addEventListener('blur', (e) => this.handleBlur(e));
-        this.input.addEventListener('focus', (e) => this.handleFocus(e));
-    }
-
-    handleInput(e) {
-        const query = e.target.value.trim();
-
-        if (query.length < 3) {
-            this.hideSuggestions();
-            return;
-        }
-
-        // Clear previous timeout
-        if (this.searchTimeout) {
-            clearTimeout(this.searchTimeout);
-        }
-
-        // Debounce the search to avoid too many API calls
-        this.searchTimeout = setTimeout(() => {
-            this.searchLocations(query);
-        }, 300);
-    }
-
-    async searchLocations(query) {
-        try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1`);
-            const data = await response.json();
-            this.showSuggestions(data);
-        } catch (error) {
-            console.error('Error fetching location suggestions:', error);
-            this.hideSuggestions();
-        }
-    }
-
-    showSuggestions(locations) {
-        if (locations.length === 0) {
-            this.hideSuggestions();
-            return;
-        }
-
-        this.suggestions.innerHTML = '';
-        this.selectedIndex = -1;
-
-        locations.forEach((location, index) => {
-            const suggestionItem = document.createElement('div');
-            suggestionItem.className = 'location-suggestion-item';
-            suggestionItem.style.cssText = `
-                padding: 10px;
-                cursor: pointer;
-                border-bottom: 1px solid #374151;
-                color: #ffffff;
-                transition: background-color 0.2s;
+        // Add Guardian
+        function addGuardian() {
+            const container = document.getElementById('guardians-container');
+            const newRow = `
+                <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                            <input type="text" name="guardian_name[]" class="form-control" placeholder="e.g., John Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                            <input type="tel" name="guardian_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-2">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                            <select name="guardian_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 identifier-field" style="display: none;">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                            <input type="text" name="guardian_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-1">
+                            <label style="color: transparent; font-size: 0.9rem;">.</label>
+                            <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             `;
-
-            // Format the display name
-            const displayName = this.formatLocationName(location);
-            suggestionItem.textContent = displayName;
-            suggestionItem.dataset.fullName = displayName;
-            suggestionItem.dataset.index = index;
-
-            suggestionItem.addEventListener('mousedown', (e) => {
-                e.preventDefault(); // Prevent blur event
-                this.selectSuggestion(displayName);
-            });
-
-            suggestionItem.addEventListener('mouseenter', () => {
-                this.selectedIndex = index;
-                this.highlightSuggestion();
-            });
-
-            this.suggestions.appendChild(suggestionItem);
-        });
-
-        this.suggestions.style.display = 'block';
-    }
-
-    formatLocationName(location) {
-        const address = location.address || {};
-        const parts = [];
-
-        // Add city/town/village
-        if (address.city) parts.push(address.city);
-        else if (address.town) parts.push(address.town);
-        else if (address.village) parts.push(address.village);
-        else if (address.county) parts.push(address.county);
-
-        // Add state/region if different from city
-        if (address.state && !parts.includes(address.state)) {
-            parts.push(address.state);
+            container.insertAdjacentHTML('beforeend', newRow);
         }
 
-        // Add country
-        if (address.country) parts.push(address.country);
-
-        return parts.length > 0 ? parts.join(', ') : location.display_name;
-    }
-
-    hideSuggestions() {
-        this.suggestions.style.display = 'none';
-        this.selectedIndex = -1;
-    }
-
-    handleKeydown(e) {
-        const suggestionItems = this.suggestions.querySelectorAll('.location-suggestion-item');
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            this.selectedIndex = Math.min(this.selectedIndex + 1, suggestionItems.length - 1);
-            this.highlightSuggestion();
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
-            this.highlightSuggestion();
-        } else if (e.key === 'Enter' && this.selectedIndex >= 0) {
-            e.preventDefault();
-            const selectedItem = suggestionItems[this.selectedIndex];
-            if (selectedItem) {
-                this.selectSuggestion(selectedItem.dataset.fullName);
-            }
-        } else if (e.key === 'Escape') {
-            this.hideSuggestions();
-        }
-    }
-
-    highlightSuggestion() {
-        const suggestionItems = this.suggestions.querySelectorAll('.location-suggestion-item');
-        suggestionItems.forEach((item, index) => {
-            if (index === this.selectedIndex) {
-                item.style.backgroundColor = '#374151';
-            } else {
-                item.style.backgroundColor = 'transparent';
-            }
-        });
-    }
-
-    selectSuggestion(locationName) {
-        this.input.value = locationName;
-        this.hideSuggestions();
-        this.input.focus();
-    }
-
-    handleBlur(e) {
-        // Delay hiding suggestions to allow for click events
-        setTimeout(() => {
-            this.hideSuggestions();
-        }, 150);
-    }
-
-    handleFocus(e) {
-        if (this.input.value.length >= 3) {
-            this.searchLocations(this.input.value);
-        }
-    }
-}
-
-// Calculate user group based on date of birth
-function calculateUserGroup() {
-    const dateOfBirth = document.getElementById('date_of_birth').value;
-    const userGroupDisplay = document.getElementById('user_group_display');
-    const userGroupHidden = document.getElementById('user_group');
-
-    if (dateOfBirth) {
-        const birthYear = new Date(dateOfBirth).getFullYear();
-        const currentYear = new Date().getFullYear();
-        const age = currentYear - birthYear;
-
-        let userGroup = '';
-        let userGroupLabel = '';
-
-        if (age >= 18 && age <= 35) {
-            userGroup = 'Youth';
-            userGroupLabel = 'Youth (18-35 years)';
-        } else if (age >= 36 && age <= 60) {
-            userGroup = 'Adult';
-            userGroupLabel = 'Adult (36-60 years)';
-        } else if (age >= 61) {
-            userGroup = 'Elder';
-            userGroupLabel = 'Elder (61+ years)';
-        } else {
-            userGroup = '';
-            userGroupLabel = 'Age must be 18 or above';
+        // Add Brother
+        function addBrother() {
+            const container = document.getElementById('brothers-container');
+            const newRow = `
+                <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                            <input type="text" name="brother_name[]" class="form-control" placeholder="e.g., John Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                            <input type="tel" name="brother_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-2">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                            <select name="brother_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 identifier-field" style="display: none;">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                            <input type="text" name="brother_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-1">
+                            <label style="color: transparent; font-size: 0.9rem;">.</label>
+                            <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newRow);
         }
 
-        userGroupDisplay.value = userGroupLabel;
-        userGroupHidden.value = userGroup;
-
-        // Add visual feedback for invalid age
-        if (age < 18) {
-            userGroupDisplay.style.color = '#ef4444';
-            userGroupDisplay.style.borderColor = '#ef4444';
-        } else {
-            userGroupDisplay.style.color = '#22c55e';
-            userGroupDisplay.style.borderColor = '#22c55e';
+        // Add Sister
+        function addSister() {
+            const container = document.getElementById('sisters-container');
+            const newRow = `
+                <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                            <input type="text" name="sister_name[]" class="form-control" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                            <input type="tel" name="sister_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-2">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                            <select name="sister_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 identifier-field" style="display: none;">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                            <input type="text" name="sister_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-1">
+                            <label style="color: transparent; font-size: 0.9rem;">.</label>
+                            <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newRow);
         }
-    } else {
-        userGroupDisplay.value = '';
-        userGroupHidden.value = '';
-        userGroupDisplay.style.color = '#ffffff';
-        userGroupDisplay.style.borderColor = '#374151';
-    }
-}
 
-// Initialize location autocomplete when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    const locationInput = document.getElementById('location-input');
-    const locationSuggestions = document.getElementById('location-suggestions');
+        // Add Uncle
+        function addUncle() {
+            const container = document.getElementById('uncles-container');
+            const newRow = `
+                <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                            <input type="text" name="uncle_name[]" class="form-control" placeholder="e.g., John Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                            <input type="tel" name="uncle_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-2">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                            <select name="uncle_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 identifier-field" style="display: none;">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                            <input type="text" name="uncle_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-1">
+                            <label style="color: transparent; font-size: 0.9rem;">.</label>
+                            <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newRow);
+        }
 
-    if (locationInput && locationSuggestions) {
-        new LocationAutocomplete(locationInput, locationSuggestions);
-    }
-});
-</script>
+        // Add Aunt
+        function addAunt() {
+            const container = document.getElementById('aunts-container');
+            const newRow = `
+                <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                            <input type="text" name="aunt_name[]" class="form-control" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                            <input type="tel" name="aunt_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-2">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                            <select name="aunt_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 identifier-field" style="display: none;">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                            <input type="text" name="aunt_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-1">
+                            <label style="color: transparent; font-size: 0.9rem;">.</label>
+                            <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newRow);
+        }
+
+        // Add Friend
+        function addFriend() {
+            const container = document.getElementById('friends-container');
+            const newRow = `
+                <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                            <input type="text" name="friend_name[]" class="form-control" placeholder="e.g., John Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                            <input type="tel" name="friend_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-2">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                            <select name="friend_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 identifier-field" style="display: none;">
+                            <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                            <input type="text" name="friend_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                        </div>
+                        <div class="col-md-1">
+                            <label style="color: transparent; font-size: 0.9rem;">.</label>
+                            <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newRow);
+        }
+    </script>
 {% endblock %}
