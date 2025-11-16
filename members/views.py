@@ -18,8 +18,7 @@ def index(request):
 
     members = Member.objects.exclude(membership_status__in=['Left/Quit', 'Dead']).select_related(
         'user_home_diocese', 'user_home_pastorate', 'user_home_church',
-        'user_town_diocese', 'user_town_pastorate', 'user_home_church',
-        'father', 'mother', 'guardian', 'brother', 'sister', 'uncle', 'aunt', 'friend'
+        'user_town_diocese', 'user_town_pastorate', 'user_town_church'
     )
 
     # Apply filters
