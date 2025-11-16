@@ -228,65 +228,156 @@
                 <i class="fas fa-users" style="margin-right: 8px;"></i>
                 Family Details
             </h6>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                {% if member.father %}
-                <div>
-                    <strong style="color: #9ca3af;">Father:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.father.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.father.phone_number }}</small>
+            
+            {% if member.fathers or member.mothers or member.spouse.name or member.guardians or member.brothers or member.sisters or member.uncles or member.aunts or member.friends %}
+                <!-- Fathers -->
+                {% if member.fathers %}
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Fathers:</strong>
+                    {% for father in member.fathers %}
+                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="color: #ffffff; margin: 0; font-weight: bold;">{{ father.name }}</p>
+                                <small style="color: #9ca3af;">{{ father.relationship_type|title }} • {{ father.phone }}</small>
+                                {% if father.is_member and father.member_identifier %}
+                                <small style="color: #22c55e; display: block;">Member: {{ father.member_identifier }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
-                {% if member.mother %}
-                <div>
-                    <strong style="color: #9ca3af;">Mother:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.mother.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.mother.phone_number }}</small>
+
+                <!-- Mothers -->
+                {% if member.mothers %}
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Mothers:</strong>
+                    {% for mother in member.mothers %}
+                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="color: #ffffff; margin: 0; font-weight: bold;">{{ mother.name }}</p>
+                                <small style="color: #9ca3af;">{{ mother.relationship_type|title }} • {{ mother.phone }}</small>
+                                {% if mother.is_member and mother.member_identifier %}
+                                <small style="color: #22c55e; display: block;">Member: {{ mother.member_identifier }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
-                {% if member.guardian %}
-                <div>
-                    <strong style="color: #9ca3af;">Guardian:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.guardian.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.guardian.phone_number }}</small>
+
+                <!-- Spouse -->
+                {% if member.spouse.name %}
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Spouse:</strong>
+                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px;">
+                        <p style="color: #ffffff; margin: 0; font-weight: bold;">{{ member.spouse.name }}</p>
+                        <small style="color: #9ca3af;">{{ member.spouse.phone }}</small>
+                        {% if member.spouse.is_member and member.spouse.member_identifier %}
+                        <small style="color: #22c55e; display: block;">Member: {{ member.spouse.member_identifier }}</small>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endif %}
-                {% if member.brother %}
-                <div>
-                    <strong style="color: #9ca3af;">Brother:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.brother.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.brother.phone_number }}</small>
+
+                <!-- Guardians -->
+                {% if member.guardians %}
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Guardians:</strong>
+                    {% for guardian in member.guardians %}
+                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px;">
+                        <p style="color: #ffffff; margin: 0; font-weight: bold;">{{ guardian.name }}</p>
+                        <small style="color: #9ca3af;">{{ guardian.phone }}</small>
+                        {% if guardian.is_member and guardian.member_identifier %}
+                        <small style="color: #22c55e; display: block;">Member: {{ guardian.member_identifier }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
-                {% if member.sister %}
-                <div>
-                    <strong style="color: #9ca3af;">Sister:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.sister.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.sister.phone_number }}</small>
+
+                <!-- Brothers, Sisters, Uncles, Aunts, Friends -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    {% if member.brothers %}
+                    <div>
+                        <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Brothers:</strong>
+                        {% for brother in member.brothers %}
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="color: #ffffff; margin: 0; font-size: 0.9em;">{{ brother.name }}</p>
+                            <small style="color: #9ca3af; font-size: 0.8em;">{{ brother.phone }}</small>
+                            {% if brother.is_member and brother.member_identifier %}
+                            <small style="color: #22c55e; display: block; font-size: 0.8em;">Member: {{ brother.member_identifier }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if member.sisters %}
+                    <div>
+                        <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Sisters:</strong>
+                        {% for sister in member.sisters %}
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="color: #ffffff; margin: 0; font-size: 0.9em;">{{ sister.name }}</p>
+                            <small style="color: #9ca3af; font-size: 0.8em;">{{ sister.phone }}</small>
+                            {% if sister.is_member and sister.member_identifier %}
+                            <small style="color: #22c55e; display: block; font-size: 0.8em;">Member: {{ sister.member_identifier }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if member.uncles %}
+                    <div>
+                        <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Uncles:</strong>
+                        {% for uncle in member.uncles %}
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="color: #ffffff; margin: 0; font-size: 0.9em;">{{ uncle.name }}</p>
+                            <small style="color: #9ca3af; font-size: 0.8em;">{{ uncle.phone }}</small>
+                            {% if uncle.is_member and uncle.member_identifier %}
+                            <small style="color: #22c55e; display: block; font-size: 0.8em;">Member: {{ uncle.member_identifier }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if member.aunts %}
+                    <div>
+                        <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Aunts:</strong>
+                        {% for aunt in member.aunts %}
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="color: #ffffff; margin: 0; font-size: 0.9em;">{{ aunt.name }}</p>
+                            <small style="color: #9ca3af; font-size: 0.8em;">{{ aunt.phone }}</small>
+                            {% if aunt.is_member and aunt.member_identifier %}
+                            <small style="color: #22c55e; display: block; font-size: 0.8em;">Member: {{ aunt.member_identifier }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if member.friends %}
+                    <div>
+                        <strong style="color: #22c55e; display: block; margin-bottom: 10px;">Friends:</strong>
+                        {% for friend in member.friends %}
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; margin-bottom: 6px;">
+                            <p style="color: #ffffff; margin: 0; font-size: 0.9em;">{{ friend.name }}</p>
+                            <small style="color: #9ca3af; font-size: 0.8em;">{{ friend.phone }}</small>
+                            {% if friend.is_member and friend.member_identifier %}
+                            <small style="color: #22c55e; display: block; font-size: 0.8em;">Member: {{ friend.member_identifier }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-                {% if member.uncle %}
-                <div>
-                    <strong style="color: #9ca3af;">Uncle:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.uncle.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.uncle.phone_number }}</small>
-                </div>
-                {% endif %}
-                {% if member.aunt %}
-                <div>
-                    <strong style="color: #9ca3af;">Aunt:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.aunt.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.aunt.phone_number }}</small>
-                </div>
-                {% endif %}
-                {% if member.friend %}
-                <div>
-                    <strong style="color: #9ca3af;">Friend:</strong>
-                    <p style="color: #ffffff; margin: 0;">{{ member.friend.full_name }}</p>
-                    <small style="color: #9ca3af;">{{ member.friend.phone_number }}</small>
-                </div>
-                {% endif %}
-            </div>
-            {% if not member.father and not member.mother and not member.guardian and not member.brother and not member.sister and not member.uncle and not member.aunt and not member.friend %}
+            {% else %}
             <p style="color: #9ca3af; font-style: italic;">No family details provided</p>
             {% endif %}
         </div>

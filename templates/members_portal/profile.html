@@ -338,63 +338,99 @@
                 {% endif %}
 
                 <!-- Family Relationships -->
-                {% if member.father or member.mother or member.guardian or member.brother or member.sister or member.uncle or member.aunt or member.friend %}
+                {% if member.fathers or member.mothers or member.spouse.name or member.guardians or member.brothers or member.sisters or member.uncles or member.aunts or member.friends %}
                 <div class="material-card">
                     <div class="card-header">
                         <div class="card-icon"><i class="fas fa-users"></i></div>
                         <h3 class="card-title">Family Relationships</h3>
                     </div>
                     <div class="card-content">
-                        <div class="info-grid">
-                            {% if member.father %}
-                            <div class="info-item">
-                                <span class="info-label">Father</span>
-                                <span class="info-value">{{ member.father.full_name }}</span>
+                        {% if member.fathers %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Fathers</span>
+                            <div>
+                                {% for father in member.fathers %}
+                                <span class="info-value" style="display: block; margin-bottom: 4px;">
+                                    {{ father.name }} ({{ father.relationship_type|title }})
+                                    {% if father.is_member %}<small style="color: var(--color-red);"> • Member</small>{% endif %}
+                                </span>
+                                {% endfor %}
                             </div>
-                            {% endif %}
-                            {% if member.mother %}
-                            <div class="info-item">
-                                <span class="info-label">Mother</span>
-                                <span class="info-value">{{ member.mother.full_name }}</span>
-                            </div>
-                            {% endif %}
-                            {% if member.guardian %}
-                            <div class="info-item">
-                                <span class="info-label">Guardian</span>
-                                <span class="info-value">{{ member.guardian.full_name }}</span>
-                            </div>
-                            {% endif %}
-                            {% if member.brother %}
-                            <div class="info-item">
-                                <span class="info-label">Brother</span>
-                                <span class="info-value">{{ member.brother.full_name }}</span>
-                            </div>
-                            {% endif %}
-                            {% if member.sister %}
-                            <div class="info-item">
-                                <span class="info-label">Sister</span>
-                                <span class="info-value">{{ member.sister.full_name }}</span>
-                            </div>
-                            {% endif %}
-                            {% if member.uncle %}
-                            <div class="info-item">
-                                <span class="info-label">Uncle</span>
-                                <span class="info-value">{{ member.uncle.full_name }}</span>
-                            </div>
-                            {% endif %}
-                            {% if member.aunt %}
-                            <div class="info-item">
-                                <span class="info-label">Aunt</span>
-                                <span class="info-value">{{ member.aunt.full_name }}</span>
-                            </div>
-                            {% endif %}
-                            {% if member.friend %}
-                            <div class="info-item">
-                                <span class="info-label">Friend</span>
-                                <span class="info-value">{{ member.friend.full_name }}</span>
-                            </div>
-                            {% endif %}
                         </div>
+                        {% endif %}
+                        
+                        {% if member.mothers %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Mothers</span>
+                            <div>
+                                {% for mother in member.mothers %}
+                                <span class="info-value" style="display: block; margin-bottom: 4px;">
+                                    {{ mother.name }} ({{ mother.relationship_type|title }})
+                                    {% if mother.is_member %}<small style="color: var(--color-red);"> • Member</small>{% endif %}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if member.spouse.name %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Spouse</span>
+                            <span class="info-value">
+                                {{ member.spouse.name }}
+                                {% if member.spouse.is_member %}<small style="color: var(--color-red);"> • Member</small>{% endif %}
+                            </span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if member.guardians %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Guardians</span>
+                            <div>
+                                {% for guardian in member.guardians %}
+                                <span class="info-value" style="display: block; margin-bottom: 4px;">
+                                    {{ guardian.name }}
+                                    {% if guardian.is_member %}<small style="color: var(--color-red);"> • Member</small>{% endif %}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if member.brothers %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Brothers</span>
+                            <span class="info-value">{{ member.brothers|length }} brother{% if member.brothers|length > 1 %}s{% endif %}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if member.sisters %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Sisters</span>
+                            <span class="info-value">{{ member.sisters|length }} sister{% if member.sisters|length > 1 %}s{% endif %}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if member.uncles %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Uncles</span>
+                            <span class="info-value">{{ member.uncles|length }} uncle{% if member.uncles|length > 1 %}s{% endif %}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if member.aunts %}
+                        <div class="info-item mb-2">
+                            <span class="info-label">Aunts</span>
+                            <span class="info-value">{{ member.aunts|length }} aunt{% if member.aunts|length > 1 %}s{% endif %}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if member.friends %}
+                        <div class="info-item">
+                            <span class="info-label">Friends</span>
+                            <span class="info-value">{{ member.friends|length }} friend{% if member.friends|length > 1 %}s{% endif %}</span>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}

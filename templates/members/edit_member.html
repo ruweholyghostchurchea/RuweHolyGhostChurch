@@ -262,89 +262,511 @@
                 <i class="fas fa-users" style="margin-right: 10px; color: #dc2626;"></i>
                 Family Details (Optional)
             </h6>
-            <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">Search and select family members by username, email, or phone number</p>
+            <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">Provide details for family members. You can link them to Ruwe Holy Ghost Church if they are members.</p>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="father" class="form-label">Father</label>
-                    <select class="form-select member-select" id="father" name="father">
-                        <option value="">Select Father...</option>
-                        {% if member.father %}
-                        <option value="{{ member.father.id }}" selected>{{ member.father.full_name }} ({{ member.father.username }}) - {{ member.father.phone_number }}</option>
-                        {% endif %}
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="mother" class="form-label">Mother</label>
-                    <select class="form-select member-select" id="mother" name="mother">
-                        <option value="">Select Mother...</option>
-                        {% if member.mother %}
-                        <option value="{{ member.mother.id }}" selected>{{ member.mother.full_name }} ({{ member.mother.username }}) - {{ member.mother.phone_number }}</option>
-                        {% endif %}
-                    </select>
+            <!-- Fathers -->
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Father (Max 3: Biological, Baptismal, Hand Ordination)
+                    <button type="button" onclick="addFather()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Father
+                    </button>
+                </label>
+                <div id="fathers-container">
+                    {% for father in member.fathers %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Type</label>
+                                <select name="father_type[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="biological" {% if father.relationship_type == 'biological' %}selected{% endif %}>Biological</option>
+                                    <option value="baptismal" {% if father.relationship_type == 'baptismal' %}selected{% endif %}>Baptismal</option>
+                                    <option value="hand_ordination" {% if father.relationship_type == 'hand_ordination' %}selected{% endif %}>Hand Ordination</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="father_name[]" class="form-control" value="{{ father.name }}" placeholder="e.g., John Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="father_phone[]" class="form-control" value="{{ father.phone }}" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="father_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not father.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if father.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 identifier-field" style="{% if not father.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="father_identifier[]" class="form-control" value="{{ father.member_identifier }}" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove(); fatherCount--;" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if not member.fathers %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Type</label>
+                                <select name="father_type[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="biological">Biological</option>
+                                    <option value="baptismal">Baptismal</option>
+                                    <option value="hand_ordination">Hand Ordination</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="father_name[]" class="form-control" placeholder="e.g., John Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="father_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="father_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 identifier-field" style="display: none;">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="father_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove(); fatherCount--;" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="guardian" class="form-label">Guardian</label>
-                    <select class="form-select member-select" id="guardian" name="guardian">
-                        <option value="">Select Guardian...</option>
-                        {% if member.guardian %}
-                        <option value="{{ member.guardian.id }}" selected>{{ member.guardian.full_name }} ({{ member.guardian.username }}) - {{ member.guardian.phone_number }}</option>
-                        {% endif %}
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="brother" class="form-label">Brother</label>
-                    <select class="form-select member-select" id="brother" name="brother">
-                        <option value="">Select Brother...</option>
-                        {% if member.brother %}
-                        <option value="{{ member.brother.id }}" selected>{{ member.brother.full_name }} ({{ member.brother.username }}) - {{ member.brother.phone_number }}</option>
-                        {% endif %}
-                    </select>
+            <!-- Mothers -->
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Mother (Max 3: Biological, Baptismal, Hand Ordination)
+                    <button type="button" onclick="addMother()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Mother
+                    </button>
+                </label>
+                <div id="mothers-container">
+                    {% for mother in member.mothers %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Type</label>
+                                <select name="mother_type[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="biological" {% if mother.relationship_type == 'biological' %}selected{% endif %}>Biological</option>
+                                    <option value="baptismal" {% if mother.relationship_type == 'baptismal' %}selected{% endif %}>Baptismal</option>
+                                    <option value="hand_ordination" {% if mother.relationship_type == 'hand_ordination' %}selected{% endif %}>Hand Ordination</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="mother_name[]" class="form-control" value="{{ mother.name }}" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="mother_phone[]" class="form-control" value="{{ mother.phone }}" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="mother_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not mother.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if mother.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 identifier-field" style="{% if not mother.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="mother_identifier[]" class="form-control" value="{{ mother.member_identifier }}" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove(); motherCount--;" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if not member.mothers %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Type</label>
+                                <select name="mother_type[]" class="form-control" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="biological">Biological</option>
+                                    <option value="baptismal">Baptismal</option>
+                                    <option value="hand_ordination">Hand Ordination</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="mother_name[]" class="form-control" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="mother_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="mother_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 identifier-field" style="display: none;">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="mother_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove(); motherCount--;" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="sister" class="form-label">Sister</label>
-                    <select class="form-select member-select" id="sister" name="sister">
-                        <option value="">Select Sister...</option>
-                        {% if member.sister %}
-                        <option value="{{ member.sister.id }}" selected>{{ member.sister.full_name }} ({{ member.sister.username }}) - {{ member.sister.phone_number }}</option>
-                        {% endif %}
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="uncle" class="form-label">Uncle</label>
-                    <select class="form-select member-select" id="uncle" name="uncle">
-                        <option value="">Select Uncle...</option>
-                        {% if member.uncle %}
-                        <option value="{{ member.uncle.id }}" selected>{{ member.uncle.full_name }} ({{ member.uncle.username }}) - {{ member.uncle.phone_number }}</option>
-                        {% endif %}
-                    </select>
+            <!-- Spouse -->
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Spouse (Husband/Wife - Max 1)
+                    <button type="button" onclick="addSpouse()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Spouse
+                    </button>
+                </label>
+                <div id="spouses-container">
+                    {% if member.spouse.name %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="spouse_name[]" class="form-control" value="{{ member.spouse.name }}" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="spouse_phone[]" class="form-control" value="{{ member.spouse.phone }}" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="spouse_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not member.spouse.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if member.spouse.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="{% if not member.spouse.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="spouse_identifier[]" class="form-control" value="{{ member.spouse.member_identifier }}" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="spouse_name[]" class="form-control" placeholder="e.g., Jane Doe" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="spouse_phone[]" class="form-control" placeholder="+254..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="spouse_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="display: none;">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="spouse_identifier[]" class="form-control" placeholder="RUWE-..." style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="aunt" class="form-label">Aunt</label>
-                    <select class="form-select member-select" id="aunt" name="aunt">
-                        <option value="">Select Aunt...</option>
-                        {% if member.aunt %}
-                        <option value="{{ member.aunt.id }}" selected>{{ member.aunt.full_name }} ({{ member.aunt.username }}) - {{ member.aunt.phone_number }}</option>
-                        {% endif %}
-                    </select>
+            <!-- Guardian, Brother, Sister, Uncle, Aunt, Friend - similar pattern -->
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Guardian (Max: 1 or more)
+                    <button type="button" onclick="addGuardian()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Guardian
+                    </button>
+                </label>
+                <div id="guardians-container">
+                    {% for guardian in member.guardians %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="guardian_name[]" class="form-control" value="{{ guardian.name }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="guardian_phone[]" class="form-control" value="{{ guardian.phone }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="guardian_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not guardian.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if guardian.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="{% if not guardian.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="guardian_identifier[]" class="form-control" value="{{ guardian.member_identifier }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                <div class="col-md-6">
-                    <label for="friend" class="form-label">Friend</label>
-                    <select class="form-select member-select" id="friend" name="friend">
-                        <option value="">Select Friend...</option>
-                        {% if member.friend %}
-                        <option value="{{ member.friend.id }}" selected>{{ member.friend.full_name }} ({{ member.friend.username }}) - {{ member.friend.phone_number }}</option>
-                        {% endif %}
-                    </select>
+            </div>
+
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Brother (Max: 1 or more)
+                    <button type="button" onclick="addBrother()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Brother
+                    </button>
+                </label>
+                <div id="brothers-container">
+                    {% for brother in member.brothers %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="brother_name[]" class="form-control" value="{{ brother.name }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="brother_phone[]" class="form-control" value="{{ brother.phone }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="brother_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not brother.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if brother.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="{% if not brother.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="brother_identifier[]" class="form-control" value="{{ brother.member_identifier }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Sister (Max: 1 or more)
+                    <button type="button" onclick="addSister()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Sister
+                    </button>
+                </label>
+                <div id="sisters-container">
+                    {% for sister in member.sisters %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="sister_name[]" class="form-control" value="{{ sister.name }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="sister_phone[]" class="form-control" value="{{ sister.phone }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="sister_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not sister.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if sister.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="{% if not sister.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="sister_identifier[]" class="form-control" value="{{ sister.member_identifier }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Uncle (Max: 1 or more)
+                    <button type="button" onclick="addUncle()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Uncle
+                    </button>
+                </label>
+                <div id="uncles-container">
+                    {% for uncle in member.uncles %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="uncle_name[]" class="form-control" value="{{ uncle.name }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="uncle_phone[]" class="form-control" value="{{ uncle.phone }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="uncle_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not uncle.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if uncle.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="{% if not uncle.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="uncle_identifier[]" class="form-control" value="{{ uncle.member_identifier }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Aunt (Max: 1 or more)
+                    <button type="button" onclick="addAunt()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Aunt
+                    </button>
+                </label>
+                <div id="aunts-container">
+                    {% for aunt in member.aunts %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="aunt_name[]" class="form-control" value="{{ aunt.name }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="aunt_phone[]" class="form-control" value="{{ aunt.phone }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="aunt_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not aunt.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if aunt.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="{% if not aunt.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="aunt_identifier[]" class="form-control" value="{{ aunt.member_identifier }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label style="color: #ffffff; margin-bottom: 10px; display: block; font-weight: bold;">
+                    Friend (Max: 1 or more)
+                    <button type="button" onclick="addFriend()" class="btn btn-success btn-sm ml-2" style="font-size: 0.8rem; padding: 4px 8px;">
+                        <i class="fas fa-plus"></i> Add Friend
+                    </button>
+                </label>
+                <div id="friends-container">
+                    {% for friend in member.friends %}
+                    <div class="family-member-row" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Full Name</label>
+                                <input type="text" name="friend_name[]" class="form-control" value="{{ friend.name }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Phone</label>
+                                <input type="tel" name="friend_phone[]" class="form-control" value="{{ friend.phone }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-2">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Is Member?</label>
+                                <select name="friend_is_member[]" class="form-control is-member-select" onchange="toggleIdentifierField(this)" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                                    <option value="no" {% if not friend.is_member %}selected{% endif %}>No</option>
+                                    <option value="yes" {% if friend.is_member %}selected{% endif %}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 identifier-field" style="{% if not friend.is_member %}display: none;{% endif %}">
+                                <label style="color: #9ca3af; font-size: 0.9rem;">Identifier</label>
+                                <input type="text" name="friend_identifier[]" class="form-control" value="{{ friend.member_identifier }}" style="background: #1f2937; color: #ffffff; border: 1px solid #374151;">
+                            </div>
+                            <div class="col-md-1">
+                                <label style="color: transparent; font-size: 0.9rem;">.</label>
+                                <button type="button" onclick="this.closest('.family-member-row').remove();" class="btn btn-danger btn-sm" style="width: 100%;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
