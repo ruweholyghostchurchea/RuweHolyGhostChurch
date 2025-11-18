@@ -703,3 +703,47 @@ def church_description(request, church_slug):
         'mission_church': mission_church,
     }
     return render(request, 'church_structure/church_description.html', context)
+
+@login_required
+def dean_detail(request):
+    """Dean/Headquarters detail view listing all dioceses"""
+    dioceses = Diocese.objects.filter(is_active=True).order_by('established_date')
+    
+    archbishop = None
+    try:
+        archbishop = Member.objects.filter(
+            church_clergy_roles__contains=['dean_archbishop'],
+            membership_status='Active'
+        ).order_by('-updated_at', 'first_name').first()
+    except:
+        pass
+
+    king = None
+    try:
+        king = Member.objects.filter(
+            special_clergy_roles__contains=['dean_king'],
+            membership_status='Active'
+        ).order_by('-updated_at', 'first_name').first()
+    except:
+        pass
+
+    headquarter_church = None
+    try:
+        headquarter_church = Church.objects.filter(
+            is_headquarter_church=True,
+            is_active=True
+        ).first()
+    except:
+        pass
+
+    context = {
+        'page_title': 'Ruwe Holy Ghost Church - Headquarters (Dean)',
+        'dioceses': dioceses,
+        'archbishop': archbishop,
+        'king': king,
+        'headquarter_church': headquarter_church,
+        'total_dioceses': dioceses.count(),
+        'total_pastorates': Pastorate.objects.filter(is_active=True).count(),
+        'total_churches': Church.objects.filter(is_active=True).count(),
+    }
+    return render(request, 'church_structure/dean_detail.html', context)

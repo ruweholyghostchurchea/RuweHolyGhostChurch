@@ -6,6 +6,7 @@ app_name = 'church_structure'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('dean/', views.dean_detail, name='dean_detail'),
     path('add-diocese/', views.add_diocese, name='add_diocese'),
     path('add-pastorate/', views.add_pastorate, name='add_pastorate'),
     path('add-church/', views.add_church, name='add_church'),

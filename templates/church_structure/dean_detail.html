@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ruwe Holy Ghost Church - Headquarters (Dean){% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/church_structure.css' %}">
+{% endblock %}
+
+{% block page_title %}Headquarters (Dean){% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-header-title">
+        <i class="fas fa-crown"></i>
+        Ruwe Holy Ghost Church - Headquarters (Dean)
+    </h1>
+    <p class="page-header-subtitle">
+        <i class="fas fa-quote-left" style="margin-right: 8px;"></i>
+        "A Church of the Spirit, for the People with the Spirit"
+    </p>
+    <div class="page-header-actions">
+        <a href="{% url 'church_structure:index' %}" class="btn-material btn-material-outline">
+            <i class="fas fa-arrow-left"></i> Back to Structure
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-icon">
+            <i class="fas fa-globe-africa"></i>
+        </div>
+        <div class="stat-card-label">Total Dioceses</div>
+        <div class="stat-card-value">{{ total_dioceses }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-card-label">Total Pastorates</div>
+        <div class="stat-card-value">{{ total_pastorates }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <i class="fas fa-church"></i>
+        </div>
+        <div class="stat-card-label">Total Churches</div>
+        <div class="stat-card-value">{{ total_churches }}</div>
+    </div>
+</div>
+
+<!-- Leadership Information -->
+<div class="material-card">
+    <div class="material-card-header">
+        <div class="material-card-icon">
+            <i class="fas fa-sitemap"></i>
+        </div>
+        <h2 class="material-card-title">Church Leadership</h2>
+    </div>
+    <div class="material-card-body">
+        <div class="info-cards-grid">
+            <!-- Archbishop Card -->
+            <div class="info-card" style="border-left-color: #dc2626;">
+                <div class="info-card-header">
+                    <i class="fas fa-crown" style="color: #fbbf24;"></i>
+                    <h3 class="info-card-title">Archbishop</h3>
+                </div>
+                {% if archbishop %}
+                    <div class="info-card-value">{{ archbishop.full_name }}</div>
+                    {% if archbishop.phone_number %}
+                        <div class="info-card-meta">
+                            <i class="fas fa-phone"></i> {{ archbishop.phone_number }}
+                        </div>
+                    {% endif %}
+                    {% if archbishop.email_address %}
+                        <div class="info-card-meta">
+                            <i class="fas fa-envelope"></i> {{ archbishop.email_address }}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="info-card-meta" style="font-style: italic;">
+                        <i class="fas fa-info-circle"></i> Not assigned
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- King Card -->
+            <div class="info-card" style="border-left-color: #f59e0b;">
+                <div class="info-card-header">
+                    <i class="fas fa-chess-king" style="color: #f59e0b;"></i>
+                    <h3 class="info-card-title">King</h3>
+                </div>
+                {% if king %}
+                    <div class="info-card-value">{{ king.full_name }}</div>
+                    {% if king.phone_number %}
+                        <div class="info-card-meta">
+                            <i class="fas fa-phone"></i> {{ king.phone_number }}
+                        </div>
+                    {% endif %}
+                    {% if king.email_address %}
+                        <div class="info-card-meta">
+                            <i class="fas fa-envelope"></i> {{ king.email_address }}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="info-card-meta" style="font-style: italic;">
+                        <i class="fas fa-info-circle"></i> Not assigned
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Headquarters Church Card -->
+            <div class="info-card" style="border-left-color: #7c3aed;">
+                <div class="info-card-header">
+                    <i class="fas fa-landmark" style="color: #7c3aed;"></i>
+                    <h3 class="info-card-title">Headquarters</h3>
+                </div>
+                {% if headquarter_church %}
+                    <div class="info-card-value">{{ headquarter_church.name }}</div>
+                    <div class="info-card-meta">
+                        <i class="fas fa-map-marker-alt"></i> {{ headquarter_church.location }}
+                    </div>
+                    {% if headquarter_church.map_link %}
+                        <div class="info-card-meta" style="margin-top: 8px;">
+                            <a href="{{ headquarter_church.map_link }}" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                                <i class="fas fa-external-link-alt"></i> View on Google Maps
+                            </a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="info-card-value">Ruwe Archcathedral Church</div>
+                    <div class="info-card-meta">
+                        <i class="fas fa-map-marker-alt"></i> Ruwe Location
+                    </div>
+                    <div class="info-card-meta" style="margin-top: 8px;">
+                        <a href="https://maps.google.com/?q=Ruwe+Archcathedral+Church+Ruwe" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                            <i class="fas fa-external-link-alt"></i> View on Google Maps
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- King's Place Card -->
+            <div class="info-card" style="border-left-color: #059669;">
+                <div class="info-card-header">
+                    <i class="fas fa-monument" style="color: #059669;"></i>
+                    <h3 class="info-card-title">King's Place</h3>
+                </div>
+                <div class="info-card-value">The King's Pillar</div>
+                <div class="info-card-meta">
+                    <i class="fas fa-map-marker-alt"></i> Musanda Location
+                </div>
+                <div class="info-card-meta" style="margin-top: 8px;">
+                    <a href="https://maps.google.com/?q=The+King's+Pillar+Musanda" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                        <i class="fas fa-external-link-alt"></i> View on Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dioceses List -->
+<div class="material-card">
+    <div class="material-card-header">
+        <div class="material-card-icon">
+            <i class="fas fa-globe-africa"></i>
+        </div>
+        <h2 class="material-card-title">All Dioceses ({{ total_dioceses }})</h2>
+    </div>
+    <div class="material-card-body">
+        {% if dioceses %}
+            {% for diocese in dioceses %}
+                <div class="diocese-card">
+                    <div class="diocese-card-header">
+                        <h3 class="diocese-card-title">
+                            <i class="fas fa-church"></i>
+                            {{ diocese.name }} Diocese
+                        </h3>
+                        <div class="diocese-card-badge">
+                            {{ diocese.country }}
+                        </div>
+                    </div>
+                    <div class="diocese-card-body">
+                        <div class="diocese-card-info">
+                            <div class="diocese-card-info-item">
+                                <i class="fas fa-id-card diocese-card-info-icon"></i>
+                                <div class="diocese-card-info-content">
+                                    <div class="diocese-card-info-label">Identifier</div>
+                                    <div class="diocese-card-info-value" style="color: #22c55e;">{{ diocese.identifier }}</div>
+                                </div>
+                            </div>
+                            <div class="diocese-card-info-item">
+                                <i class="fas fa-mitre diocese-card-info-icon"></i>
+                                <div class="diocese-card-info-content">
+                                    <div class="diocese-card-info-label">Bishop</div>
+                                    <div class="diocese-card-info-value">{{ diocese.bishop_name }}</div>
+                                </div>
+                            </div>
+                            <div class="diocese-card-info-item">
+                                <i class="fas fa-calendar diocese-card-info-icon"></i>
+                                <div class="diocese-card-info-content">
+                                    <div class="diocese-card-info-label">Established</div>
+                                    <div class="diocese-card-info-value">
+                                        {% if diocese.established_date %}
+                                            {{ diocese.established_date|date:"F d, Y" }}
+                                        {% else %}
+                                            Not specified
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="diocese-card-info-item">
+                                <i class="fas fa-users diocese-card-info-icon"></i>
+                                <div class="diocese-card-info-content">
+                                    <div class="diocese-card-info-label">Pastorates</div>
+                                    <div class="diocese-card-info-value">{{ diocese.pastorates.count }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if diocese.description %}
+                            <div style="margin-top: var(--spacing-md); padding-top: var(--spacing-md); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                                <p style="color: var(--text-secondary); margin: 0;">{{ diocese.description|truncatewords:30 }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="diocese-card-footer">
+                        <a href="{% url 'church_structure:diocese_detail' diocese_slug=diocese.slug %}" 
+                           class="btn-material btn-material-primary">
+                            <i class="fas fa-eye"></i> View Diocese
+                        </a>
+                        <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
+                           class="btn-material btn-material-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; padding: var(--spacing-2xl); color: var(--text-muted);">
+                <i class="fas fa-info-circle" style="font-size: 3rem; margin-bottom: var(--spacing-md); display: block; opacity: 0.5;"></i>
+                <p style="font-size: 1.125rem;">No dioceses found</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

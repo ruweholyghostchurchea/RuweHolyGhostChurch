@@ -1,0 +1,495 @@
+/* Material Dashboard 3 Pro - Church Structure Pages */
+/* Inspired by Google's Material Design principles */
+
+:root {
+    /* Brand Colors */
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-red: #dc143c;
+    --color-dark-gray: #1a1a1a;
+    --color-light-gray: #f5f5f5;
+    --color-medium-gray: #666666;
+    
+    /* Material Design 3 Color Palette */
+    --md-primary: #dc2626;
+    --md-secondary: #7c3aed;
+    --md-success: #10b981;
+    --md-warning: #f59e0b;
+    --md-info: #3b82f6;
+    --md-danger: #ef4444;
+    
+    /* Background Colors */
+    --bg-dark: #0f0f0f;
+    --bg-card: #1a1a1a;
+    --bg-card-hover: #232323;
+    --bg-elevated: #2d2d2d;
+    
+    /* Text Colors */
+    --text-primary: #ffffff;
+    --text-secondary: #e5e7eb;
+    --text-muted: #9ca3af;
+    --text-disabled: #6b7280;
+    
+    /* Material Design Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    
+    /* Gradient Colors */
+    --gradient-primary: linear-gradient(135deg, var(--md-primary) 0%, #b01030 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--md-secondary) 0%, #6d28d9 100%);
+    --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    --gradient-elevated: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+    
+    /* Typography */
+    --font-primary: 'Roboto', sans-serif;
+    --font-secondary: 'Lora', serif;
+}
+
+/* Material Card Styles */
+.material-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.material-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    background: var(--bg-card-hover);
+}
+
+.material-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.material-card-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--spacing-md);
+    box-shadow: var(--shadow-md);
+}
+
+.material-card-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.material-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.material-card-body {
+    color: var(--text-secondary);
+}
+
+/* Info Cards Grid */
+.info-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.info-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--md-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.info-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateX(4px);
+}
+
+.info-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.info-card-header i {
+    font-size: 1.25rem;
+    margin-right: var(--spacing-sm);
+}
+
+.info-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.info-card-value {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.info-card-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* Stat Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.stat-card {
+    background: var(--gradient-dark);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: scale(1.05);
+}
+
+.stat-card-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-md);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card-icon i {
+    font-size: 1.75rem;
+    color: white;
+}
+
+.stat-card-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Hierarchy Cards */
+.hierarchy-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    border-left: 4px solid;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hierarchy-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.hierarchy-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+}
+
+.hierarchy-card-title i {
+    margin-right: var(--spacing-sm);
+}
+
+.hierarchy-card-content {
+    color: var(--text-secondary);
+}
+
+.hierarchy-card-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: var(--spacing-xs);
+}
+
+/* Diocese List Cards */
+.diocese-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.diocese-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+    border-color: var(--md-primary);
+}
+
+.diocese-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.diocese-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+}
+
+.diocese-card-title i {
+    color: var(--md-primary);
+    margin-right: var(--spacing-sm);
+}
+
+.diocese-card-badge {
+    background: var(--gradient-primary);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.diocese-card-body {
+    margin-bottom: var(--spacing-md);
+}
+
+.diocese-card-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.diocese-card-info-item {
+    display: flex;
+    align-items: flex-start;
+}
+
+.diocese-card-info-icon {
+    color: var(--md-primary);
+    margin-right: var(--spacing-sm);
+    margin-top: 2px;
+}
+
+.diocese-card-info-content {
+    flex: 1;
+}
+
+.diocese-card-info-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.diocese-card-info-value {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.diocese-card-footer {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+}
+
+/* Buttons */
+.btn-material {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.btn-material:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.btn-material-primary {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.btn-material-secondary {
+    background: var(--md-secondary);
+    color: white;
+}
+
+.btn-material-info {
+    background: var(--md-info);
+    color: white;
+}
+
+.btn-material-warning {
+    background: var(--md-warning);
+    color: white;
+}
+
+.btn-material-outline {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+}
+
+.btn-material-outline:hover {
+    border-color: var(--md-primary);
+    background: rgba(220, 38, 38, 0.1);
+}
+
+/* Page Header */
+.page-header {
+    background: var(--gradient-dark);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-2xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.page-header-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+}
+
+.page-header-title i {
+    color: var(--md-primary);
+    margin-right: var(--spacing-md);
+}
+
+.page-header-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-muted);
+}
+
+.page-header-actions {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .info-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .diocese-card-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header-title {
+        font-size: 1.75rem;
+    }
+    
+    .material-card {
+        padding: var(--spacing-md);
+    }
+    
+    .diocese-card {
+        padding: var(--spacing-md);
+    }
+    
+    .page-header {
+        padding: var(--spacing-lg);
+    }
+    
+    .diocese-card-footer {
+        flex-direction: column;
+    }
+    
+    .btn-material {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header-title {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card-value {
+        font-size: 1.5rem;
+    }
+}
