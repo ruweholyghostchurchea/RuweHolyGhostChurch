@@ -19,10 +19,10 @@
     --md-danger: #ef4444;
     
     /* Background Colors */
-    --bg-dark: #0f0f0f;
-    --bg-card: #1a1a1a;
-    --bg-card-hover: #232323;
-    --bg-elevated: #2d2d2d;
+    --bg-dark: #0f1419;
+    --bg-card: #1a1f2e;
+    --bg-card-hover: #222838;
+    --bg-elevated: #2a3142;
     
     /* Text Colors */
     --text-primary: #ffffff;
@@ -40,8 +40,8 @@
     /* Gradient Colors */
     --gradient-primary: linear-gradient(135deg, var(--md-primary) 0%, #b01030 100%);
     --gradient-secondary: linear-gradient(135deg, var(--md-secondary) 0%, #6d28d9 100%);
-    --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-    --gradient-elevated: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    --gradient-dark: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+    --gradient-elevated: linear-gradient(135deg, #2a3142 0%, #1a1f2e 100%);
     
     /* Spacing */
     --spacing-xs: 0.25rem;
