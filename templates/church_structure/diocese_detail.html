@@ -1,266 +1,270 @@
-
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ diocese.name }} Diocese - RuweHolyGhostChurch{% endblock %}
 
-{% block page_title %}{{ diocese.name }} Diocese{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/church_structure.css' %}">
+{% endblock %}
+
+{% block page_title %}{{ diocese.name}} Diocese{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <!-- Diocese Information Card -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title">
-                    <i class="fas fa-church" style="color: #dc2626; margin-right: 10px;"></i>
-                    Diocese Information
-                </h5>
-                <div style="float: right;">
-                    <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
-                       class="btn btn-primary btn-sm">
-                        <i class="fas fa-edit"></i> Edit Diocese
-                    </a>
-                    {% if diocese.has_detailed_description %}
-                    <a href="{% url 'church_structure:diocese_description' diocese_slug=diocese.slug %}" 
-                       class="btn btn-info btn-sm">
-                        <i class="fas fa-book-open"></i> About Diocese
-                    </a>
-                    {% endif %}
-                    <a href="{% url 'church_structure:index' %}" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-arrow-left"></i> Back
-                    </a>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-header-title">
+        <i class="fas fa-church"></i>
+        {{ diocese.name }} Diocese
+    </h1>
+    <p class="page-header-subtitle">{{ diocese.country }}</p>
+    <div class="page-header-actions">
+        <a href="{% url 'church_structure:edit_diocese' diocese_slug=diocese.slug %}" 
+           class="btn-material btn-material-primary">
+            <i class="fas fa-edit"></i> Edit Diocese
+        </a>
+        {% if diocese.rich_description %}
+        <a href="{% url 'church_structure:diocese_description' diocese_slug=diocese.slug %}" 
+           class="btn-material btn-material-info">
+            <i class="fas fa-book-open"></i> About Diocese
+        </a>
+        {% endif %}
+        <a href="{% url 'church_structure:dean_detail' %}" class="btn-material btn-material-secondary">
+            <i class="fas fa-crown"></i> View Headquarters
+        </a>
+        <a href="{% url 'church_structure:index' %}" class="btn-material btn-material-outline">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<!-- Diocese Information Card -->
+<div class="material-card">
+    <div class="material-card-header">
+        <div class="material-card-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <h2 class="material-card-title">Diocese Information</h2>
+    </div>
+    <div class="material-card-body">
+        <div class="info-cards-grid">
+            <div class="info-card" style="border-left-color: #22c55e;">
+                <div class="info-card-header">
+                    <i class="fas fa-id-card" style="color: #22c55e;"></i>
+                    <h3 class="info-card-title">Identifier</h3>
                 </div>
+                <div class="info-card-value" style="color: #22c55e; font-weight: bold;">{{ diocese.identifier }}</div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ diocese.identifier }}</span></p>
-                        <p><strong>Name:</strong> {{ diocese.name }}</p>
-                        <p><strong>Country:</strong> {{ diocese.country }}</p>
-                        <p><strong>Bishop:</strong> {{ diocese.bishop_name }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Bishop Phone:</strong> {{ diocese.bishop_phone|default:"Not provided" }}</p>
-                        <p><strong>Bishop Email:</strong> {{ diocese.bishop_email|default:"Not provided" }}</p>
-                        <p><strong>Established:</strong> {{ diocese.established_date|default:"Not specified" }}</p>
-                    </div>
+            <div class="info-card" style="border-left-color: #3b82f6;">
+                <div class="info-card-header">
+                    <i class="fas fa-globe" style="color: #3b82f6;"></i>
+                    <h3 class="info-card-title">Country</h3>
                 </div>
-                {% if diocese.description %}
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <p><strong>Description:</strong></p>
-                        <p>{{ diocese.description }}</p>
-                    </div>
+                <div class="info-card-value">{{ diocese.country }}</div>
+            </div>
+            <div class="info-card" style="border-left-color: #6366f1;">
+                <div class="info-card-header">
+                    <i class="fas fa-mitre" style="color: #6366f1;"></i>
+                    <h3 class="info-card-title">Bishop</h3>
                 </div>
+                <div class="info-card-value">{{ diocese.bishop_name }}</div>
+                {% if diocese.bishop_phone %}
+                    <div class="info-card-meta"><i class="fas fa-phone"></i> {{ diocese.bishop_phone }}</div>
+                {% endif %}
+                {% if diocese.bishop_email %}
+                    <div class="info-card-meta"><i class="fas fa-envelope"></i> {{ diocese.bishop_email }}</div>
                 {% endif %}
             </div>
-        </div>
-
-        <!-- Church Hierarchy Information -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title">
-                    <i class="fas fa-sitemap" style="color: #dc2626; margin-right: 10px;"></i>
-                    Church Hierarchy Information
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- Archbishop Information -->
-                    <div class="col-md-6 mb-3">
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
-                            <h6 style="color: #ffffff; margin-bottom: 10px;">
-                                <i class="fas fa-crown" style="color: #fbbf24; margin-right: 8px;"></i>
-                                Archbishop
-                            </h6>
-                            {% if archbishop %}
-                                <p style="color: #e5e7eb; margin-bottom: 5px;">
-                                    <strong>{{ archbishop.full_name }}</strong>
-                                </p>
-                                {% if archbishop.phone %}
-                                <p style="color: #9ca3af; margin-bottom: 5px;">
-                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
-                                    {{ archbishop.phone }}
-                                </p>
-                                {% endif %}
-                                {% if archbishop.email %}
-                                <p style="color: #9ca3af; margin-bottom: 0;">
-                                    <i class="fas fa-envelope" style="margin-right: 5px;"></i>
-                                    {{ archbishop.email }}
-                                </p>
-                                {% endif %}
-                            {% else %}
-                                <p style="color: #9ca3af; font-style: italic;">
-                                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
-                                    Archbishop information not available
-                                </p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Headquarters Information -->
-                    <div class="col-md-6 mb-3">
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #7c3aed;">
-                            <h6 style="color: #ffffff; margin-bottom: 10px;">
-                                <i class="fas fa-landmark" style="color: #7c3aed; margin-right: 8px;"></i>
-                                Headquarters
-                            </h6>
-                            <p style="color: #e5e7eb; margin-bottom: 5px;">
-                                <strong>Ruwe Archcathedral Church</strong>
-                            </p>
-                            <p style="color: #9ca3af; margin-bottom: 8px;">
-                                <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
-                                Ruwe Location
-                            </p>
-                            <a href="https://maps.google.com/?q=Ruwe+Archcathedral+Church+Ruwe" 
-                               target="_blank" 
-                               style="color: #3b82f6; text-decoration: none; font-size: 0.9em;">
-                                <i class="fas fa-external-link-alt" style="margin-right: 5px;"></i>
-                                View on Google Maps
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- King Information -->
-                    <div class="col-md-6 mb-3">
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #f59e0b;">
-                            <h6 style="color: #ffffff; margin-bottom: 10px;">
-                                <i class="fas fa-chess-king" style="color: #f59e0b; margin-right: 8px;"></i>
-                                King
-                            </h6>
-                            {% if king %}
-                                <p style="color: #e5e7eb; margin-bottom: 5px;">
-                                    <strong>{{ king.full_name }}</strong>
-                                </p>
-                                {% if king.phone %}
-                                <p style="color: #9ca3af; margin-bottom: 5px;">
-                                    <i class="fas fa-phone" style="margin-right: 5px;"></i>
-                                    {{ king.phone }}
-                                </p>
-                                {% endif %}
-                                {% if king.email %}
-                                <p style="color: #9ca3af; margin-bottom: 0;">
-                                    <i class="fas fa-envelope" style="margin-right: 5px;"></i>
-                                    {{ king.email }}
-                                </p>
-                                {% endif %}
-                            {% else %}
-                                <p style="color: #9ca3af; font-style: italic;">
-                                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
-                                    King information not available
-                                </p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- King's Place Information -->
-                    <div class="col-md-6 mb-3">
-                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #059669;">
-                            <h6 style="color: #ffffff; margin-bottom: 10px;">
-                                <i class="fas fa-monument" style="color: #059669; margin-right: 8px;"></i>
-                                King's Place
-                            </h6>
-                            <p style="color: #e5e7eb; margin-bottom: 5px;">
-                                <strong>The King's Pillar</strong>
-                            </p>
-                            <p style="color: #9ca3af; margin-bottom: 8px;">
-                                <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
-                                Musanda Location
-                            </p>
-                            <a href="https://maps.google.com/?q=The+King's+Pillar+Musanda" 
-                               target="_blank" 
-                               style="color: #3b82f6; text-decoration: none; font-size: 0.9em;">
-                                <i class="fas fa-external-link-alt" style="margin-right: 5px;"></i>
-                                View on Google Maps
-                            </a>
-                        </div>
-                    </div>
+            <div class="info-card" style="border-left-color: #8b5cf6;">
+                <div class="info-card-header">
+                    <i class="fas fa-calendar" style="color: #8b5cf6;"></i>
+                    <h3 class="info-card-title">Established</h3>
+                </div>
+                <div class="info-card-value">
+                    {% if diocese.established_date %}
+                        {{ diocese.established_date|date:"F d, Y" }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
                 </div>
             </div>
         </div>
-
-        <!-- Pastorates Under This Diocese -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">
-                    <i class="fas fa-users" style="color: #dc2626; margin-right: 10px;"></i>
-                    Pastorates ({{ pastorates.count }})
-                </h5>
+        {% if diocese.description %}
+            <div style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <h3 style="color: var(--text-primary); margin-bottom: var(--spacing-md); font-size: 1.125rem;">
+                    <i class="fas fa-align-left" style="color: var(--md-primary); margin-right: 8px;"></i>
+                    Description
+                </h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">{{ diocese.description }}</p>
             </div>
-            <div class="card-body">
-                {% if pastorates %}
-                <div class="row">
-                    {% for pastorate in pastorates %}
-                    <div class="col-md-6 mb-4">
-                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-left: 4px solid #dc2626;">
-                            <h6 style="color: #ffffff; margin-bottom: 10px;">
-                                <i class="fas fa-users" style="color: #dc2626; margin-right: 8px;"></i>
-                                {{ pastorate.name }}
-                            </h6>
-                            <p style="color: #e5e7eb; margin-bottom: 8px;">
-                                <strong>Pastor:</strong> {{ pastorate.pastor_name }}
-                            </p>
-                            {% if pastorate.pastor_phone %}
-                            <p style="color: #9ca3af; margin-bottom: 8px;">
-                                <i class="fas fa-phone" style="margin-right: 5px;"></i>
-                                {{ pastorate.pastor_phone }}
-                            </p>
-                            {% endif %}
-                            {% if pastorate.pastor_email %}
-                            <p style="color: #9ca3af; margin-bottom: 15px;">
-                                <i class="fas fa-envelope" style="margin-right: 5px;"></i>
-                                {{ pastorate.pastor_email }}
-                            </p>
-                            {% endif %}
-                            
-                            <!-- Churches in this Pastorate -->
-                            <div style="margin-top: 15px;">
-                                <strong style="color: #ffffff; font-size: 0.9em;">Churches ({{ pastorate.churches.count }}):</strong>
-                                {% for church in pastorate.churches.all %}
-                                <div style="margin-top: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">
-                                    <i class="fas fa-home" style="color: #dc2626; margin-right: 5px;"></i>
-                                    <span style="color: #ffffff; font-size: 0.9em;">{{ church.name }}</span>
-                                    <br>
-                                    <small style="color: #9ca3af;">{{ church.address }}</small>
-                                    <br>
-                                    <small style="color: #e5e7eb;">Head Teacher: {{ church.head_teacher_name }}</small>
-                                    <div style="margin-top: 5px;">
-                                        <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
-                                           class="btn btn-sm" style="background: #3b82f6; color: white; padding: 2px 6px; text-decoration: none; border-radius: 3px; font-size: 0.8em;">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Church Hierarchy Information -->
+<div class="material-card">
+    <div class="material-card-header">
+        <div class="material-card-icon">
+            <i class="fas fa-sitemap"></i>
+        </div>
+        <h2 class="material-card-title">Church Hierarchy</h2>
+    </div>
+    <div class="material-card-body">
+        <div class="info-cards-grid">
+            <!-- Archbishop Card -->
+            <div class="info-card" style="border-left-color: #dc2626;">
+                <div class="info-card-header">
+                    <i class="fas fa-crown" style="color: #fbbf24;"></i>
+                    <h3 class="info-card-title">Archbishop</h3>
+                </div>
+                {% if archbishop %}
+                    <div class="info-card-value">{{ archbishop.full_name }}</div>
+                    {% if archbishop.phone_number %}
+                        <div class="info-card-meta"><i class="fas fa-phone"></i> {{ archbishop.phone_number }}</div>
+                    {% endif %}
+                    {% if archbishop.email_address %}
+                        <div class="info-card-meta"><i class="fas fa-envelope"></i> {{ archbishop.email_address }}</div>
+                    {% endif %}
+                {% else %}
+                    <div class="info-card-meta" style="font-style: italic;">
+                        <i class="fas fa-info-circle"></i> Not assigned
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Headquarters Card -->
+            <div class="info-card" style="border-left-color: #7c3aed;">
+                <div class="info-card-header">
+                    <i class="fas fa-landmark" style="color: #7c3aed;"></i>
+                    <h3 class="info-card-title">Headquarters</h3>
+                </div>
+                <div class="info-card-value">Ruwe Archcathedral Church</div>
+                <div class="info-card-meta"><i class="fas fa-map-marker-alt"></i> Ruwe Location</div>
+                <div class="info-card-meta" style="margin-top: 8px;">
+                    <a href="https://maps.google.com/?q=Ruwe+Archcathedral+Church+Ruwe" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                        <i class="fas fa-external-link-alt"></i> View on Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- King Card -->
+            <div class="info-card" style="border-left-color: #f59e0b;">
+                <div class="info-card-header">
+                    <i class="fas fa-chess-king" style="color: #f59e0b;"></i>
+                    <h3 class="info-card-title">King</h3>
+                </div>
+                {% if king %}
+                    <div class="info-card-value">{{ king.full_name }}</div>
+                    {% if king.phone_number %}
+                        <div class="info-card-meta"><i class="fas fa-phone"></i> {{ king.phone_number }}</div>
+                    {% endif %}
+                    {% if king.email_address %}
+                        <div class="info-card-meta"><i class="fas fa-envelope"></i> {{ king.email_address }}</div>
+                    {% endif %}
+                {% else %}
+                    <div class="info-card-meta" style="font-style: italic;">
+                        <i class="fas fa-info-circle"></i> Not assigned
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- King's Place Card -->
+            <div class="info-card" style="border-left-color: #059669;">
+                <div class="info-card-header">
+                    <i class="fas fa-monument" style="color: #059669;"></i>
+                    <h3 class="info-card-title">King's Place</h3>
+                </div>
+                <div class="info-card-value">The King's Pillar</div>
+                <div class="info-card-meta"><i class="fas fa-map-marker-alt"></i> Musanda Location</div>
+                <div class="info-card-meta" style="margin-top: 8px;">
+                    <a href="https://maps.google.com/?q=The+King's+Pillar+Musanda" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                        <i class="fas fa-external-link-alt"></i> View on Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pastorates List -->
+<div class="material-card">
+    <div class="material-card-header">
+        <div class="material-card-icon" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
+            <i class="fas fa-users"></i>
+        </div>
+        <h2 class="material-card-title">Pastorates ({{ pastorates.count }})</h2>
+    </div>
+    <div class="material-card-body">
+        {% if pastorates %}
+            {% for pastorate in pastorates %}
+                <div class="hierarchy-card" style="border-left-color: #7c3aed; margin-bottom: var(--spacing-lg);">
+                    <div class="hierarchy-card-title">
+                        <i class="fas fa-users"></i>
+                        {{ pastorate.name }}
+                    </div>
+                    <div class="hierarchy-card-content">
+                        <div style="margin-bottom: var(--spacing-sm);">
+                            <strong style="color: var(--text-primary);">Pastor:</strong> {{ pastorate.pastor_name }}
+                        </div>
+                        {% if pastorate.pastor_phone %}
+                            <div class="hierarchy-card-meta">
+                                <i class="fas fa-phone"></i> {{ pastorate.pastor_phone }}
+                            </div>
+                        {% endif %}
+                        {% if pastorate.pastor_email %}
+                            <div class="hierarchy-card-meta">
+                                <i class="fas fa-envelope"></i> {{ pastorate.pastor_email }}
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Churches in Pastorate -->
+                        <div style="margin-top: var(--spacing-md); padding-top: var(--spacing-md); border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                            <strong style="color: var(--text-primary); font-size: 0.95rem;">
+                                <i class="fas fa-church" style="color: var(--md-primary); margin-right: 5px;"></i>
+                                Churches ({{ pastorate.churches.count }})
+                            </strong>
+                            {% if pastorate.churches.all %}
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
+                                    {% for church in pastorate.churches.all %}
+                                        <div style="background: rgba(255, 255, 255, 0.03); padding: var(--spacing-sm); border-radius: var(--radius-md); border-left: 3px solid var(--md-primary);">
+                                            <div style="color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">{{ church.name }}</div>
+                                            <div style="color: var(--text-muted); font-size: 0.875rem;">{{ church.location }}</div>
+                                            <div style="color: var(--text-muted); font-size: 0.875rem; margin-top: 4px;">
+                                                <strong>Head Teacher:</strong> {{ church.head_teacher_name }}
+                                            </div>
+                                            <div style="margin-top: var(--spacing-xs);">
+                                                <a href="{% url 'church_structure:church_detail' church_slug=church.slug %}" 
+                                                   class="btn-material btn-material-info" style="padding: 2px 8px; font-size: 0.8rem;">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
                                 </div>
-                                {% empty %}
-                                <div style="color: #9ca3af; font-style: italic; font-size: 0.9em; margin-top: 8px;">
-                                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                            {% else %}
+                                <div style="color: var(--text-muted); font-style: italic; font-size: 0.9rem; margin-top: 8px;">
                                     No churches yet
                                 </div>
-                                {% endfor %}
-                            </div>
-                            
-                            <div style="margin-top: 15px; text-align: right;">
-                                <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
-                                   class="btn btn-sm" style="background: #3b82f6; color: white; margin-right: 5px; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                                <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
-                                   class="btn btn-sm" style="background: #f59e0b; color: white; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endfor %}
+                    <div style="margin-top: var(--spacing-md); display: flex; gap: var(--spacing-sm); justify-content: flex-end; flex-wrap: wrap;">
+                        <a href="{% url 'church_structure:pastorate_detail' pastorate_slug=pastorate.slug %}" 
+                           class="btn-material btn-material-info">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a href="{% url 'church_structure:edit_pastorate' pastorate_slug=pastorate.slug %}" 
+                           class="btn-material btn-material-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
                 </div>
-                {% else %}
-                <div style="text-align: center; color: #9ca3af; font-style: italic; padding: 40px;">
-                    <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
-                    No pastorates in this diocese yet.
-                </div>
-                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; padding: var(--spacing-2xl); color: var(--text-muted);">
+                <i class="fas fa-info-circle" style="font-size: 3rem; margin-bottom: var(--spacing-md); display: block; opacity: 0.5;"></i>
+                <p style="font-size: 1.125rem;">No pastorates in this diocese yet</p>
             </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
