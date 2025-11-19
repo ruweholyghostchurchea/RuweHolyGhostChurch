@@ -1659,15 +1659,15 @@ XRegExp.matchChain = function (str, chain) {
  *
  * // Regex search, using named backreferences in replacement string
  * const name = XRegExp('(?<first>\\w+) (?<last>\\w+)');
- * XRegExp.replace('John Smith', name, '$<last>, $<first>');
- * // -> 'Smith, John'
+ * XRegExp.replace('Alfayo Odongo', name, '$<last>, $<first>');
+ * // -> 'Odongo, Alfayo'
  *
  * // Regex search, using named backreferences in replacement function
- * XRegExp.replace('John Smith', name, (...args) => {
+ * XRegExp.replace('Alfayo Odongo', name, (...args) => {
  *   const groups = args[args.length - 1];
  *   return `${groups.last}, ${groups.first}`;
  * });
- * // -> 'Smith, John'
+ * // -> 'Odongo, Alfayo'
  *
  * // String search, with replace-all
  * XRegExp.replace('RegExp builds RegExps', 'RegExp', 'XRegExp', 'all');
