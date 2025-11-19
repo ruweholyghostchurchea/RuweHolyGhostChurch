@@ -182,7 +182,7 @@ def church_main_office_detail(request, church_id):
 def church_main_office_add(request, church_id):
     church = get_object_or_404(Church, id=church_id)
     if request.method == 'POST':
-        form = ChurchMainOfficeForm(request.POST)
+        form = ChurchMainOfficeForm(request.POST, church=church)
         if form.is_valid():
             office = form.save(commit=False)
             office.church = church
@@ -192,7 +192,7 @@ def church_main_office_add(request, church_id):
             messages.success(request, f'{office.name} has been created successfully.')
             return redirect('ruwe_administration:church_main_detail', church_id=church.id)
     else:
-        form = ChurchMainOfficeForm(initial={'church': church})
+        form = ChurchMainOfficeForm(initial={'church': church}, church=church)
     
     return render(request, 'ruwe_administration/church/main_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -226,7 +226,7 @@ def church_youth_office_detail(request, church_id):
 def church_youth_office_add(request, church_id):
     church = get_object_or_404(Church, id=church_id)
     if request.method == 'POST':
-        form = ChurchYouthOfficeForm(request.POST)
+        form = ChurchYouthOfficeForm(request.POST, church=church)
         if form.is_valid():
             office = form.save(commit=False)
             office.church = church
@@ -236,7 +236,7 @@ def church_youth_office_add(request, church_id):
             messages.success(request, f'{office.name} has been created successfully.')
             return redirect('ruwe_administration:church_youth_detail', church_id=church.id)
     else:
-        form = ChurchYouthOfficeForm(initial={'church': church})
+        form = ChurchYouthOfficeForm(initial={'church': church}, church=church)
     
     return render(request, 'ruwe_administration/church/youth_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -270,7 +270,7 @@ def church_development_office_detail(request, church_id):
 def church_development_office_add(request, church_id):
     church = get_object_or_404(Church, id=church_id)
     if request.method == 'POST':
-        form = ChurchDevelopmentOfficeForm(request.POST)
+        form = ChurchDevelopmentOfficeForm(request.POST, church=church)
         if form.is_valid():
             office = form.save(commit=False)
             office.church = church
@@ -280,7 +280,7 @@ def church_development_office_add(request, church_id):
             messages.success(request, f'{office.name} has been created successfully.')
             return redirect('ruwe_administration:church_development_detail', church_id=church.id)
     else:
-        form = ChurchDevelopmentOfficeForm(initial={'church': church})
+        form = ChurchDevelopmentOfficeForm(initial={'church': church}, church=church)
     
     return render(request, 'ruwe_administration/church/development_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -314,7 +314,7 @@ def church_travel_office_detail(request, church_id):
 def church_travel_office_add(request, church_id):
     church = get_object_or_404(Church, id=church_id)
     if request.method == 'POST':
-        form = ChurchTravelOfficeForm(request.POST)
+        form = ChurchTravelOfficeForm(request.POST, church=church)
         if form.is_valid():
             office = form.save(commit=False)
             office.church = church
@@ -324,7 +324,7 @@ def church_travel_office_add(request, church_id):
             messages.success(request, f'{office.name} has been created successfully.')
             return redirect('ruwe_administration:church_travel_detail', church_id=church.id)
     else:
-        form = ChurchTravelOfficeForm(initial={'church': church})
+        form = ChurchTravelOfficeForm(initial={'church': church}, church=church)
     
     return render(request, 'ruwe_administration/church/travel_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -358,7 +358,7 @@ def church_disciplinary_office_detail(request, church_id):
 def church_disciplinary_office_add(request, church_id):
     church = get_object_or_404(Church, id=church_id)
     if request.method == 'POST':
-        form = ChurchDisciplinaryOfficeForm(request.POST)
+        form = ChurchDisciplinaryOfficeForm(request.POST, church=church)
         if form.is_valid():
             office = form.save(commit=False)
             office.church = church
@@ -368,7 +368,7 @@ def church_disciplinary_office_add(request, church_id):
             messages.success(request, f'{office.name} has been created successfully.')
             return redirect('ruwe_administration:church_disciplinary_detail', church_id=church.id)
     else:
-        form = ChurchDisciplinaryOfficeForm(initial={'church': church})
+        form = ChurchDisciplinaryOfficeForm(initial={'church': church}, church=church)
     
     return render(request, 'ruwe_administration/church/disciplinary_form.html', {
         'form': form, 'church': church, 'action': 'Add'

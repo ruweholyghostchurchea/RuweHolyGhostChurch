@@ -1,0 +1,161 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Church Youth Office - {{ church.name }} - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Church Youth Office - {{ church.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #7c3aed; margin-right: 10px;"></i>
+                    {{ church.name }} - Youth Office
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:church_youth_edit' office.pk %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:church_youth_add' church.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <!-- Office Information -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                    Office Information
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Office Name:</strong> {{ office.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Church:</strong> {{ church.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Identifier:</strong> {{ office.identifier }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Status:</strong> 
+                                    <span class="badge {% if office.is_active %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if office.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Youth Positions -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                    Youth Positions
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Chairperson:</strong> 
+                                    {% if office.chairperson %}
+                                        {{ office.chairperson.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Chairperson:</strong> 
+                                    {% if office.assistant_chairperson %}
+                                        {{ office.assistant_chairperson.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Secretary:</strong> 
+                                    {% if office.secretary %}
+                                        {{ office.secretary.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Secretary:</strong> 
+                                    {% if office.assistant_secretary %}
+                                        {{ office.assistant_secretary.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Treasurer:</strong> 
+                                    {% if office.treasurer %}
+                                        {{ office.treasurer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Treasurer:</strong> 
+                                    {% if office.assistant_treasurer %}
+                                        {{ office.assistant_treasurer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Organizer:</strong> 
+                                    {% if office.organizer %}
+                                        {{ office.organizer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Organizer:</strong> 
+                                    {% if office.assistant_organizer %}
+                                        {{ office.assistant_organizer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        {% if office.description %}
+                            <div class="col-12">
+                                <div class="info-box">
+                                    <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                        Description
+                                    </h6>
+                                    <p>{{ office.description|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-users fa-4x text-muted"></i>
+                        <h4>No Youth Office Created</h4>
+                        <p class="text-muted">Create a Youth Office for {{ church.name }} to manage youth activities.</p>
+                        <a href="{% url 'ruwe_administration:church_youth_add' church.id %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Youth Office
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

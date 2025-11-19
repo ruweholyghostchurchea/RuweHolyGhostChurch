@@ -49,13 +49,28 @@ class ChurchMainOfficeForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        church = kwargs.pop('church', None)
         super().__init__(*args, **kwargs)
-        # Filter to show only staff members
-        staff_members = get_staff_members_queryset()
+        
+        # Filter to show only staff members from the specific church
+        if church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=church
+            ).order_by('first_name', 'last_name')
+        elif self.instance and self.instance.pk and self.instance.church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=self.instance.church
+            ).order_by('first_name', 'last_name')
+        else:
+            staff_members = get_staff_members_queryset()
+        
         for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
                           'treasurer', 'assistant_treasurer', 'organizer', 'assistant_organizer']:
             self.fields[field_name].queryset = staff_members
             self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
 
 class ChurchYouthOfficeForm(forms.ModelForm):
     class Meta:
@@ -75,6 +90,30 @@ class ChurchYouthOfficeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
 
+    def __init__(self, *args, **kwargs):
+        church = kwargs.pop('church', None)
+        super().__init__(*args, **kwargs)
+        
+        # Filter to show only staff members from the specific church
+        if church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=church
+            ).order_by('first_name', 'last_name')
+        elif self.instance and self.instance.pk and self.instance.church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=self.instance.church
+            ).order_by('first_name', 'last_name')
+        else:
+            staff_members = get_staff_members_queryset()
+        
+        for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
+                          'treasurer', 'assistant_treasurer', 'organizer', 'assistant_organizer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
+
 class ChurchDevelopmentOfficeForm(forms.ModelForm):
     class Meta:
         model = ChurchDevelopmentOffice
@@ -86,6 +125,29 @@ class ChurchDevelopmentOfficeForm(forms.ModelForm):
             'treasurer': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+
+    def __init__(self, *args, **kwargs):
+        church = kwargs.pop('church', None)
+        super().__init__(*args, **kwargs)
+        
+        # Filter to show only staff members from the specific church
+        if church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=church
+            ).order_by('first_name', 'last_name')
+        elif self.instance and self.instance.pk and self.instance.church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=self.instance.church
+            ).order_by('first_name', 'last_name')
+        else:
+            staff_members = get_staff_members_queryset()
+        
+        for field_name in ['chairperson', 'secretary', 'treasurer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
 
 class ChurchTravelOfficeForm(forms.ModelForm):
     class Meta:
@@ -99,6 +161,29 @@ class ChurchTravelOfficeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
 
+    def __init__(self, *args, **kwargs):
+        church = kwargs.pop('church', None)
+        super().__init__(*args, **kwargs)
+        
+        # Filter to show only staff members from the specific church
+        if church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=church
+            ).order_by('first_name', 'last_name')
+        elif self.instance and self.instance.pk and self.instance.church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=self.instance.church
+            ).order_by('first_name', 'last_name')
+        else:
+            staff_members = get_staff_members_queryset()
+        
+        for field_name in ['chairperson', 'treasurer', 'organizer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
+
 class ChurchDisciplinaryOfficeForm(forms.ModelForm):
     class Meta:
         model = ChurchDisciplinaryOffice
@@ -110,6 +195,31 @@ class ChurchDisciplinaryOfficeForm(forms.ModelForm):
             'members': forms.CheckboxSelectMultiple(),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+
+    def __init__(self, *args, **kwargs):
+        church = kwargs.pop('church', None)
+        super().__init__(*args, **kwargs)
+        
+        # Filter to show only staff members from the specific church
+        if church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=church
+            ).order_by('first_name', 'last_name')
+        elif self.instance and self.instance.pk and self.instance.church:
+            staff_members = Member.objects.filter(
+                is_staff=True,
+                user_home_church=self.instance.church
+            ).order_by('first_name', 'last_name')
+        else:
+            staff_members = get_staff_members_queryset()
+        
+        for field_name in ['chairperson', 'messenger']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
+        
+        self.fields['members'].queryset = staff_members
 
 # ==========================
 # PASTORATE LEVEL FORMS (3)
