@@ -245,6 +245,21 @@ class PastorateMainOfficeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        
+        # Apply filtering for all position fields
+        for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
+                          'treasurer', 'assistant_treasurer', 'organizer', 'assistant_organizer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
+        
+        # Apply filtering for representatives
+        self.fields['church_representatives'].queryset = staff_members
+
 class PastorateYouthOfficeForm(forms.ModelForm):
     class Meta:
         model = PastorateYouthOffice
@@ -265,6 +280,21 @@ class PastorateYouthOfficeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        
+        # Apply filtering for all position fields
+        for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
+                          'treasurer', 'assistant_treasurer', 'organizer', 'assistant_organizer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
+        
+        # Apply filtering for representatives
+        self.fields['church_youth_representatives'].queryset = staff_members
+
 class PastorateTeachersOfficeForm(forms.ModelForm):
     class Meta:
         model = PastorateTeachersOffice
@@ -277,6 +307,24 @@ class PastorateTeachersOfficeForm(forms.ModelForm):
             'organizer': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are teachers (church_teacher clergy role)
+        # Using JSON field filtering to check if 'church_teacher' is in church_clergy_roles
+        from django.db.models import Q
+        import json
+        
+        teacher_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['church_teacher']
+        ).order_by('first_name', 'last_name')
+        
+        # Apply filtering for all position fields
+        for field_name in ['chairperson', 'secretary', 'treasurer', 'organizer']:
+            self.fields[field_name].queryset = teacher_staff_members
+            self.fields[field_name].empty_label = "Select a teacher (staff member)"
+            self.fields[field_name].required = False
 
 # ==========================
 # DIOCESE LEVEL FORMS (3)
@@ -303,6 +351,22 @@ class DioceseMainOfficeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        
+        # Apply filtering for all position fields
+        for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
+                          'treasurer', 'assistant_treasurer', 'organizer', 'assistant_organizer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
+        
+        # Apply filtering for representatives
+        self.fields['pastorate_representatives'].queryset = staff_members
+        self.fields['church_representatives'].queryset = staff_members
+
 class DioceseYouthOfficeForm(forms.ModelForm):
     class Meta:
         model = DioceseYouthOffice
@@ -324,6 +388,22 @@ class DioceseYouthOfficeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members
+        staff_members = get_staff_members_queryset()
+        
+        # Apply filtering for all position fields
+        for field_name in ['chairperson', 'assistant_chairperson', 'secretary', 'assistant_secretary',
+                          'treasurer', 'assistant_treasurer', 'organizer', 'assistant_organizer']:
+            self.fields[field_name].queryset = staff_members
+            self.fields[field_name].empty_label = "Select a staff member"
+            self.fields[field_name].required = False
+        
+        # Apply filtering for representatives
+        self.fields['pastorate_youth_representatives'].queryset = staff_members
+        self.fields['church_youth_representatives'].queryset = staff_members
+
 class DioceseTeachersOfficeForm(forms.ModelForm):
     class Meta:
         model = DioceseTeachersOffice
@@ -336,6 +416,21 @@ class DioceseTeachersOfficeForm(forms.ModelForm):
             'organizer': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are teachers (church_teacher clergy role)
+        # Using JSON field filtering to check if 'church_teacher' is in church_clergy_roles
+        teacher_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['church_teacher']
+        ).order_by('first_name', 'last_name')
+        
+        # Apply filtering for all position fields
+        for field_name in ['chairperson', 'secretary', 'treasurer', 'organizer']:
+            self.fields[field_name].queryset = teacher_staff_members
+            self.fields[field_name].empty_label = "Select a teacher (staff member)"
+            self.fields[field_name].required = False
 
 # ====================================
 # DEAN/HEADQUARTERS LEVEL FORMS (25)
@@ -469,26 +564,110 @@ class DeanStandardOfficeForm(forms.ModelForm):
 class DeanBishopsOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):
         model = DeanBishopsOffice
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are bishops
+        bishop_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['diocese_bishop']
+        ).order_by('first_name', 'last_name')
+        
+        for field_name in ['head', 'assistant_head', 'chairman', 'assistant_chair',
+                          'secretary', 'assistant_secretary', 'treasurer', 'organizing_secretary']:
+            if field_name in self.fields:
+                self.fields[field_name].queryset = bishop_staff_members
+                self.fields[field_name].empty_label = "Select a bishop (staff member)"
 
 class DeanPastorsOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):
         model = DeanPastorsOffice
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are pastors
+        pastor_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['pastorate_pastor']
+        ).order_by('first_name', 'last_name')
+        
+        for field_name in ['head', 'assistant_head', 'chairman', 'assistant_chair',
+                          'secretary', 'assistant_secretary', 'treasurer', 'organizing_secretary']:
+            if field_name in self.fields:
+                self.fields[field_name].queryset = pastor_staff_members
+                self.fields[field_name].empty_label = "Select a pastor (staff member)"
 
 class DeanLayReadersOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):
         model = DeanLayReadersOffice
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are lay readers
+        lay_reader_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['pastorate_lay_reader']
+        ).order_by('first_name', 'last_name')
+        
+        for field_name in ['head', 'assistant_head', 'chairman', 'assistant_chair',
+                          'secretary', 'assistant_secretary', 'treasurer', 'organizing_secretary']:
+            if field_name in self.fields:
+                self.fields[field_name].queryset = lay_reader_staff_members
+                self.fields[field_name].empty_label = "Select a lay reader (staff member)"
 
 class DeanDivisionsOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):
         model = DeanDivisionsOffice
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are divisions
+        division_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['pastorate_division']
+        ).order_by('first_name', 'last_name')
+        
+        for field_name in ['head', 'assistant_head', 'chairman', 'assistant_chair',
+                          'secretary', 'assistant_secretary', 'treasurer', 'organizing_secretary']:
+            if field_name in self.fields:
+                self.fields[field_name].queryset = division_staff_members
+                self.fields[field_name].empty_label = "Select a division (staff member)"
 
 class DeanTeachersOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):
         model = DeanTeachersOffice
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are teachers
+        teacher_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['church_teacher']
+        ).order_by('first_name', 'last_name')
+        
+        for field_name in ['head', 'assistant_head', 'chairman', 'assistant_chair',
+                          'secretary', 'assistant_secretary', 'treasurer', 'organizing_secretary']:
+            if field_name in self.fields:
+                self.fields[field_name].queryset = teacher_staff_members
+                self.fields[field_name].empty_label = "Select a teacher (staff member)"
 
 class DeanWomenLeadersOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):
         model = DeanWomenLeadersOffice
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to show only staff members who are women leaders
+        woman_leader_staff_members = Member.objects.filter(
+            is_staff=True,
+            church_clergy_roles__contains=['pastorate_woman_leader']
+        ).order_by('first_name', 'last_name')
+        
+        for field_name in ['head', 'assistant_head', 'chairman', 'assistant_chair',
+                          'secretary', 'assistant_secretary', 'treasurer', 'organizing_secretary']:
+            if field_name in self.fields:
+                self.fields[field_name].queryset = woman_leader_staff_members
+                self.fields[field_name].empty_label = "Select a woman leader (staff member)"
 
 class DeanEldersOfficeForm(DeanStandardOfficeForm):
     class Meta(DeanStandardOfficeForm.Meta):
