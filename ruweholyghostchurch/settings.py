@@ -108,8 +108,8 @@ INSTALLED_APPS = [
     'church_structure',
     'ruwe_administration',
     'members',
-    'visitors',
-    'attendance',
+    'visitors.apps.VisitorsConfig',  # Use full AppConfig path for signal registration
+    'attendance.apps.AttendanceConfig',  # Use full AppConfig path for signal registration
     'finance',
     'email_system',  # Email System between Finance and Bulk SMS
     'bulk_sms',

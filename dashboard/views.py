@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from members.models import Member
 from visitors.models import Visitor
-from attendance.models import Attendance, Service
+from attendance.models import AttendanceRecord, AttendanceSession
 from finance.models import Offering
 
 @login_required
@@ -19,13 +19,13 @@ def index(request):
 
     # Get statistics
     total_members = Member.objects.filter(membership_status='Active').count()
-    total_visitors = Visitor.objects.filter(visit_date__gte=current_month_start.date()).count()
+    total_visitors = Visitor.objects.filter(first_visit_date__gte=current_month_start.date()).count()
 
     # This week's attendance
-    this_week_services = Service.objects.filter(date__gte=current_week_start.date())
-    this_week_attendance = Attendance.objects.filter(
-        service__in=this_week_services, 
-        present=True
+    this_week_sessions = AttendanceSession.objects.filter(session_date__gte=current_week_start.date())
+    this_week_attendance = AttendanceRecord.objects.filter(
+        session__in=this_week_sessions, 
+        status='present'
     ).count()
 
     # Monthly offering
@@ -55,7 +55,7 @@ def index(request):
         },
         {
             'icon': 'fas fa-user-friends',
-            'activity': f'New visitors this week: {Visitor.objects.filter(visit_date__gte=current_week_start.date()).count()}',
+            'activity': f'New visitors this week: {Visitor.objects.filter(first_visit_date__gte=current_week_start.date()).count()}',
             'time': '2 days ago',
             'color': 'warning'
         }
