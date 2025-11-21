@@ -1,4 +1,4 @@
-modules = ["web", "nodejs-20", "python-3.11"]
+modules = ["web", "python-3.12", "nodejs-20"]
 run = "pip install -r requirements.txt"
 
 [nix]
@@ -73,20 +73,20 @@ args = "Django Server"
 name = "Django Server"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python3.11 manage.py runserver 0.0.0.0:5000"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 manage.py runserver 0.0.0.0:5000"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 33941
+localPort = 37839
 externalPort = 3000
 
 [agent]
