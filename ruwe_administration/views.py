@@ -180,19 +180,34 @@ def church_main_office_detail(request, church_id):
 
 @login_required
 def church_main_office_add(request, church_id):
+    """Add a new Church Main Office - with proper validation and messaging"""
     church = get_object_or_404(Church, id=church_id)
+    
+    # Check if office already exists
+    existing_office = ChurchMainOffice.objects.filter(church=church).first()
+    if existing_office:
+        messages.warning(request, f'A Main Office already exists for {church.name}. Redirecting to edit.')
+        return redirect('ruwe_administration:church_main_edit', pk=existing_office.pk)
+    
     if request.method == 'POST':
         form = ChurchMainOfficeForm(request.POST, church=church)
         if form.is_valid():
-            office = form.save(commit=False)
-            office.church = church
-            office.name = f"{church.name} Main Office"
-            office.save()
-            form.save_m2m()
-            messages.success(request, f'{office.name} has been created successfully.')
-            return redirect('ruwe_administration:church_main_detail', church_id=church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save(commit=False)
+                    office.church = church
+                    office.name = f"{church.name} Main Office"
+                    office.save()
+                    # No need to save_m2m() since there are no many-to-many fields in ChurchMainOffice
+                    messages.success(request, f'✅ {office.name} has been created successfully!')
+                    return redirect('ruwe_administration:church_main_detail', church_id=church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error creating office: {str(e)}')
+        else:
+            # Show form validation errors
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchMainOfficeForm(initial={'church': church}, church=church)
+        form = ChurchMainOfficeForm(church=church)
     
     return render(request, 'ruwe_administration/church/main_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -200,15 +215,23 @@ def church_main_office_add(request, church_id):
 
 @login_required
 def church_main_office_edit(request, pk):
+    """Edit an existing Church Main Office - with proper validation and messaging"""
     office = get_object_or_404(ChurchMainOffice, pk=pk)
+    
     if request.method == 'POST':
-        form = ChurchMainOfficeForm(request.POST, instance=office)
+        form = ChurchMainOfficeForm(request.POST, instance=office, church=office.church)
         if form.is_valid():
-            office = form.save()
-            messages.success(request, f'{office.name} has been updated successfully.')
-            return redirect('ruwe_administration:church_main_detail', church_id=office.church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save()
+                    messages.success(request, f'✅ {office.name} has been updated successfully!')
+                    return redirect('ruwe_administration:church_main_detail', church_id=office.church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error updating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchMainOfficeForm(instance=office)
+        form = ChurchMainOfficeForm(instance=office, church=office.church)
     
     return render(request, 'ruwe_administration/church/main_form.html', {
         'form': form, 'church': office.church, 'office': office, 'action': 'Edit'
@@ -224,19 +247,32 @@ def church_youth_office_detail(request, church_id):
 
 @login_required
 def church_youth_office_add(request, church_id):
+    """Add a new Church Youth Office - with proper validation and messaging"""
     church = get_object_or_404(Church, id=church_id)
+    
+    # Check if office already exists
+    existing_office = ChurchYouthOffice.objects.filter(church=church).first()
+    if existing_office:
+        messages.warning(request, f'A Youth Office already exists for {church.name}. Redirecting to edit.')
+        return redirect('ruwe_administration:church_youth_edit', pk=existing_office.pk)
+    
     if request.method == 'POST':
         form = ChurchYouthOfficeForm(request.POST, church=church)
         if form.is_valid():
-            office = form.save(commit=False)
-            office.church = church
-            office.name = f"{church.name} Youth Office"
-            office.save()
-            form.save_m2m()
-            messages.success(request, f'{office.name} has been created successfully.')
-            return redirect('ruwe_administration:church_youth_detail', church_id=church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save(commit=False)
+                    office.church = church
+                    office.name = f"{church.name} Youth Office"
+                    office.save()
+                    messages.success(request, f'✅ {office.name} has been created successfully!')
+                    return redirect('ruwe_administration:church_youth_detail', church_id=church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error creating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchYouthOfficeForm(initial={'church': church}, church=church)
+        form = ChurchYouthOfficeForm(church=church)
     
     return render(request, 'ruwe_administration/church/youth_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -244,15 +280,23 @@ def church_youth_office_add(request, church_id):
 
 @login_required
 def church_youth_office_edit(request, pk):
+    """Edit an existing Church Youth Office - with proper validation and messaging"""
     office = get_object_or_404(ChurchYouthOffice, pk=pk)
+    
     if request.method == 'POST':
-        form = ChurchYouthOfficeForm(request.POST, instance=office)
+        form = ChurchYouthOfficeForm(request.POST, instance=office, church=office.church)
         if form.is_valid():
-            office = form.save()
-            messages.success(request, f'{office.name} has been updated successfully.')
-            return redirect('ruwe_administration:church_youth_detail', church_id=office.church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save()
+                    messages.success(request, f'✅ {office.name} has been updated successfully!')
+                    return redirect('ruwe_administration:church_youth_detail', church_id=office.church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error updating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchYouthOfficeForm(instance=office)
+        form = ChurchYouthOfficeForm(instance=office, church=office.church)
     
     return render(request, 'ruwe_administration/church/youth_form.html', {
         'form': form, 'church': office.church, 'office': office, 'action': 'Edit'
@@ -268,19 +312,32 @@ def church_development_office_detail(request, church_id):
 
 @login_required
 def church_development_office_add(request, church_id):
+    """Add a new Church Development Office - with proper validation and messaging"""
     church = get_object_or_404(Church, id=church_id)
+    
+    # Check if office already exists
+    existing_office = ChurchDevelopmentOffice.objects.filter(church=church).first()
+    if existing_office:
+        messages.warning(request, f'A Development Office already exists for {church.name}. Redirecting to edit.')
+        return redirect('ruwe_administration:church_development_edit', pk=existing_office.pk)
+    
     if request.method == 'POST':
         form = ChurchDevelopmentOfficeForm(request.POST, church=church)
         if form.is_valid():
-            office = form.save(commit=False)
-            office.church = church
-            office.name = f"{church.name} Development Office"
-            office.save()
-            form.save_m2m()
-            messages.success(request, f'{office.name} has been created successfully.')
-            return redirect('ruwe_administration:church_development_detail', church_id=church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save(commit=False)
+                    office.church = church
+                    office.name = f"{church.name} Development Office"
+                    office.save()
+                    messages.success(request, f'✅ {office.name} has been created successfully!')
+                    return redirect('ruwe_administration:church_development_detail', church_id=church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error creating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchDevelopmentOfficeForm(initial={'church': church}, church=church)
+        form = ChurchDevelopmentOfficeForm(church=church)
     
     return render(request, 'ruwe_administration/church/development_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -288,15 +345,23 @@ def church_development_office_add(request, church_id):
 
 @login_required
 def church_development_office_edit(request, pk):
+    """Edit an existing Church Development Office - with proper validation and messaging"""
     office = get_object_or_404(ChurchDevelopmentOffice, pk=pk)
+    
     if request.method == 'POST':
-        form = ChurchDevelopmentOfficeForm(request.POST, instance=office)
+        form = ChurchDevelopmentOfficeForm(request.POST, instance=office, church=office.church)
         if form.is_valid():
-            office = form.save()
-            messages.success(request, f'{office.name} has been updated successfully.')
-            return redirect('ruwe_administration:church_development_detail', church_id=office.church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save()
+                    messages.success(request, f'✅ {office.name} has been updated successfully!')
+                    return redirect('ruwe_administration:church_development_detail', church_id=office.church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error updating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchDevelopmentOfficeForm(instance=office)
+        form = ChurchDevelopmentOfficeForm(instance=office, church=office.church)
     
     return render(request, 'ruwe_administration/church/development_form.html', {
         'form': form, 'church': office.church, 'office': office, 'action': 'Edit'
@@ -312,19 +377,32 @@ def church_travel_office_detail(request, church_id):
 
 @login_required
 def church_travel_office_add(request, church_id):
+    """Add a new Church Travel Office - with proper validation and messaging"""
     church = get_object_or_404(Church, id=church_id)
+    
+    # Check if office already exists
+    existing_office = ChurchTravelOffice.objects.filter(church=church).first()
+    if existing_office:
+        messages.warning(request, f'A Travel Office already exists for {church.name}. Redirecting to edit.')
+        return redirect('ruwe_administration:church_travel_edit', pk=existing_office.pk)
+    
     if request.method == 'POST':
         form = ChurchTravelOfficeForm(request.POST, church=church)
         if form.is_valid():
-            office = form.save(commit=False)
-            office.church = church
-            office.name = f"{church.name} Travel Office"
-            office.save()
-            form.save_m2m()
-            messages.success(request, f'{office.name} has been created successfully.')
-            return redirect('ruwe_administration:church_travel_detail', church_id=church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save(commit=False)
+                    office.church = church
+                    office.name = f"{church.name} Travel Office"
+                    office.save()
+                    messages.success(request, f'✅ {office.name} has been created successfully!')
+                    return redirect('ruwe_administration:church_travel_detail', church_id=church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error creating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchTravelOfficeForm(initial={'church': church}, church=church)
+        form = ChurchTravelOfficeForm(church=church)
     
     return render(request, 'ruwe_administration/church/travel_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -332,15 +410,23 @@ def church_travel_office_add(request, church_id):
 
 @login_required
 def church_travel_office_edit(request, pk):
+    """Edit an existing Church Travel Office - with proper validation and messaging"""
     office = get_object_or_404(ChurchTravelOffice, pk=pk)
+    
     if request.method == 'POST':
-        form = ChurchTravelOfficeForm(request.POST, instance=office)
+        form = ChurchTravelOfficeForm(request.POST, instance=office, church=office.church)
         if form.is_valid():
-            office = form.save()
-            messages.success(request, f'{office.name} has been updated successfully.')
-            return redirect('ruwe_administration:church_travel_detail', church_id=office.church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save()
+                    messages.success(request, f'✅ {office.name} has been updated successfully!')
+                    return redirect('ruwe_administration:church_travel_detail', church_id=office.church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error updating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchTravelOfficeForm(instance=office)
+        form = ChurchTravelOfficeForm(instance=office, church=office.church)
     
     return render(request, 'ruwe_administration/church/travel_form.html', {
         'form': form, 'church': office.church, 'office': office, 'action': 'Edit'
@@ -356,19 +442,34 @@ def church_disciplinary_office_detail(request, church_id):
 
 @login_required
 def church_disciplinary_office_add(request, church_id):
+    """Add a new Church Disciplinary Office - with proper validation and messaging"""
     church = get_object_or_404(Church, id=church_id)
+    
+    # Check if office already exists
+    existing_office = ChurchDisciplinaryOffice.objects.filter(church=church).first()
+    if existing_office:
+        messages.warning(request, f'A Disciplinary Office already exists for {church.name}. Redirecting to edit.')
+        return redirect('ruwe_administration:church_disciplinary_edit', pk=existing_office.pk)
+    
     if request.method == 'POST':
         form = ChurchDisciplinaryOfficeForm(request.POST, church=church)
         if form.is_valid():
-            office = form.save(commit=False)
-            office.church = church
-            office.name = f"{church.name} Disciplinary Office"
-            office.save()
-            form.save_m2m()
-            messages.success(request, f'{office.name} has been created successfully.')
-            return redirect('ruwe_administration:church_disciplinary_detail', church_id=church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save(commit=False)
+                    office.church = church
+                    office.name = f"{church.name} Disciplinary Office"
+                    office.save()
+                    # Save many-to-many fields (members)
+                    form.save_m2m()
+                    messages.success(request, f'✅ {office.name} has been created successfully!')
+                    return redirect('ruwe_administration:church_disciplinary_detail', church_id=church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error creating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchDisciplinaryOfficeForm(initial={'church': church}, church=church)
+        form = ChurchDisciplinaryOfficeForm(church=church)
     
     return render(request, 'ruwe_administration/church/disciplinary_form.html', {
         'form': form, 'church': church, 'action': 'Add'
@@ -376,15 +477,23 @@ def church_disciplinary_office_add(request, church_id):
 
 @login_required
 def church_disciplinary_office_edit(request, pk):
+    """Edit an existing Church Disciplinary Office - with proper validation and messaging"""
     office = get_object_or_404(ChurchDisciplinaryOffice, pk=pk)
+    
     if request.method == 'POST':
-        form = ChurchDisciplinaryOfficeForm(request.POST, instance=office)
+        form = ChurchDisciplinaryOfficeForm(request.POST, instance=office, church=office.church)
         if form.is_valid():
-            office = form.save()
-            messages.success(request, f'{office.name} has been updated successfully.')
-            return redirect('ruwe_administration:church_disciplinary_detail', church_id=office.church.id)
+            try:
+                with transaction.atomic():
+                    office = form.save()
+                    messages.success(request, f'✅ {office.name} has been updated successfully!')
+                    return redirect('ruwe_administration:church_disciplinary_detail', church_id=office.church.id)
+            except Exception as e:
+                messages.error(request, f'❌ Error updating office: {str(e)}')
+        else:
+            messages.error(request, '❌ Please correct the errors below.')
     else:
-        form = ChurchDisciplinaryOfficeForm(instance=office)
+        form = ChurchDisciplinaryOfficeForm(instance=office, church=office.church)
     
     return render(request, 'ruwe_administration/church/disciplinary_form.html', {
         'form': form, 'church': office.church, 'office': office, 'action': 'Edit'

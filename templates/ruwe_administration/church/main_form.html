@@ -21,6 +21,13 @@
                 </div>
             </div>
             <div class="card-body">
+                <!-- Display form-level errors -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
                 <form method="post">
                     {% csrf_token %}
                     
