@@ -158,5 +158,65 @@
 .empty-state i {
     margin-bottom: 20px;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .card-header h5 {
+        font-size: 1rem;
+    }
+    
+    .card-header div {
+        float: none !important;
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+    
+    .info-box {
+        padding: 15px;
+    }
+    
+    .info-box h6 {
+        font-size: 0.95rem;
+    }
+    
+    .info-item {
+        font-size: 0.9rem;
+        word-break: break-word;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-header h5 {
+        font-size: 0.9rem;
+    }
+    
+    .btn-sm {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+    }
+    
+    .info-box {
+        padding: 10px;
+    }
+    
+    .empty-state {
+        padding: 40px 15px;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+    }
+    
+    .empty-state h4 {
+        font-size: 1.2rem;
+    }
+}
 </style>
 {% endblock %}
