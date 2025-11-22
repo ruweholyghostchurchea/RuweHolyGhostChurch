@@ -1,0 +1,102 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Pastorate Teachers Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Pastorate Teachers Office - {{ pastorate.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-chalkboard-teacher" style="color: #0d9488; margin-right: 10px;"></i>
+                    {{ action }} Teachers Office - {{ pastorate.name }}
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:pastorate_teachers_detail' pastorate.id %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Teachers Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #0d9488; padding-left: 10px;">
+                                Teachers Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.chairperson.label_tag }}
+                                        {{ form.chairperson }}
+                                        {% if form.chairperson.errors %}
+                                            <div class="text-danger">{{ form.chairperson.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.secretary.label_tag }}
+                                        {{ form.secretary }}
+                                        {% if form.secretary.errors %}
+                                            <div class="text-danger">{{ form.secretary.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.treasurer.label_tag }}
+                                        {{ form.treasurer }}
+                                        {% if form.treasurer.errors %}
+                                            <div class="text-danger">{{ form.treasurer.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.organizer.label_tag }}
+                                        {{ form.organizer }}
+                                        {% if form.organizer.errors %}
+                                            <div class="text-danger">{{ form.organizer.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #0d9488; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                                <small class="text-muted">Note: Only staff members with 'church_teacher' clergy role can be selected for these positions.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Teachers Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:pastorate_teachers_detail' pastorate.id %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

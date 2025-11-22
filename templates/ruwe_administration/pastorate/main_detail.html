@@ -1,0 +1,224 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Pastorate Main Office - {{ pastorate.name }} - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Pastorate Main Office - {{ pastorate.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-church" style="color: #7c3aed; margin-right: 10px;"></i>
+                    {{ pastorate.name }} - Main Office
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:pastorate_main_edit' office.pk %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:pastorate_main_add' pastorate.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <!-- Office Information -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                    Office Information
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Office Name:</strong> {{ office.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Pastorate:</strong> {{ pastorate.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Diocese:</strong> {{ pastorate.diocese.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Identifier:</strong> {{ office.identifier }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Status:</strong> 
+                                    <span class="badge {% if office.is_active %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if office.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Positions -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                    Main Positions
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Chairperson:</strong> 
+                                    {% if office.chairperson %}
+                                        {{ office.chairperson.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Chairperson:</strong> 
+                                    {% if office.assistant_chairperson %}
+                                        {{ office.assistant_chairperson.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Secretary:</strong> 
+                                    {% if office.secretary %}
+                                        {{ office.secretary.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Secretary:</strong> 
+                                    {% if office.assistant_secretary %}
+                                        {{ office.assistant_secretary.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Treasurer:</strong> 
+                                    {% if office.treasurer %}
+                                        {{ office.treasurer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Treasurer:</strong> 
+                                    {% if office.assistant_treasurer %}
+                                        {{ office.assistant_treasurer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Organizer:</strong> 
+                                    {% if office.organizer %}
+                                        {{ office.organizer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Organizer:</strong> 
+                                    {% if office.assistant_organizer %}
+                                        {{ office.assistant_organizer.full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Not Assigned</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Church Representatives -->
+                        <div class="col-12 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #22c55e; padding-left: 10px;">
+                                    Church Representatives ({{ office.church_representatives.count }})
+                                </h6>
+                                {% if office.church_representatives.all %}
+                                    <div class="row">
+                                        {% for rep in office.church_representatives.all %}
+                                        <div class="col-md-4 mb-2">
+                                            <div class="rep-item">
+                                                <i class="fas fa-user" style="color: #22c55e; margin-right: 5px;"></i>
+                                                {{ rep.full_name }}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">No church representatives assigned</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        {% if office.description %}
+                            <div class="col-12">
+                                <div class="info-box">
+                                    <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                        Description
+                                    </h6>
+                                    <p>{{ office.description|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-church fa-4x text-muted"></i>
+                        <h4>No Main Office Created</h4>
+                        <p class="text-muted">Create a Main Office for {{ pastorate.name }} to manage pastorate activities.</p>
+                        <a href="{% url 'ruwe_administration:pastorate_main_add' pastorate.id %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Main Office
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.info-box {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.info-item {
+    color: #e5e7eb;
+    margin-bottom: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.rep-item {
+    color: #e5e7eb;
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+.empty-state i {
+    margin-bottom: 20px;
+}
+</style>
+{% endblock %}
