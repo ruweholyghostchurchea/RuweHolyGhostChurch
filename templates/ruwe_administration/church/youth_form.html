@@ -6,6 +6,28 @@
 {% block page_title %}{{ action }} Church Youth Office - {{ church.name }}{% endblock %}
 
 {% block content %}
+<style>
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; color: #e5e7eb; font-weight: 500; }
+    .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; background: #404040; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #ffffff; font-size: 14px; }
+    .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2); }
+    .text-danger { color: #ef4444; font-size: 0.875rem; margin-top: 5px; }
+    .form-actions { margin-top: 30px; display: flex; gap: 10px; flex-wrap: wrap; }
+    @media (max-width: 768px) {
+        .card-header h5 { font-size: 1rem; margin-bottom: 10px; }
+        .card-header > div { float: none !important; margin-top: 10px; }
+        .card-body h6 { font-size: 0.95rem; margin-bottom: 12px !important; }
+        .row > [class*='col-'] { padding-left: 10px; padding-right: 10px; }
+        .form-group select, .form-group textarea { font-size: 13px; }
+        .form-actions { flex-direction: column; }
+        .form-actions .btn { width: 100%; }
+    }
+    @media (max-width: 480px) {
+        .card { padding: 15px; }
+        .card-header h5 { font-size: 0.9rem; }
+        h6 { font-size: 0.85rem !important; }
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card">

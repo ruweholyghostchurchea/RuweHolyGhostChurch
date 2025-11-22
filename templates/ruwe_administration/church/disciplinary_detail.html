@@ -6,6 +6,27 @@
 {% block page_title %}Church Disciplinary Office - {{ church.name }}{% endblock %}
 
 {% block content %}
+<style>
+    .info-box { background: rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+    .info-item { padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .info-item:last-child { border-bottom: none; }
+    .empty-state { text-align: center; padding: 60px 20px; }
+    @media (max-width: 768px) {
+        .card-header h5 { font-size: 1rem; margin-bottom: 10px; }
+        .card-header > div { float: none !important; margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+        .btn-sm { font-size: 0.75rem; padding: 6px 10px; }
+        .info-box h6 { font-size: 0.95rem; }
+        .info-item { font-size: 0.9rem; }
+        .empty-state { padding: 40px 15px; }
+        .empty-state i { font-size: 3rem !important; }
+        .empty-state h4 { font-size: 1.2rem; }
+    }
+    @media (max-width: 480px) {
+        .card { padding: 15px; }
+        .info-box { padding: 15px; }
+        .btn-sm { width: 100%; margin-bottom: 5px; }
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card">
