@@ -1,0 +1,129 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Diocese Teachers Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Diocese Teachers Office - {{ diocese.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-chalkboard-teacher" style="color: #8b5cf6; margin-right: 10px;"></i>
+                    {{ action }} Teachers Office - {{ diocese.name }}
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:diocese_teachers_detail' diocese.id %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Office Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #8b5cf6; padding-left: 10px;">
+                                Office Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.chairperson.label_tag }}
+                                        {{ form.chairperson }}
+                                        {% if form.chairperson.errors %}
+                                            <div class="text-danger">{{ form.chairperson.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.secretary.label_tag }}
+                                        {{ form.secretary }}
+                                        {% if form.secretary.errors %}
+                                            <div class="text-danger">{{ form.secretary.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.treasurer.label_tag }}
+                                        {{ form.treasurer }}
+                                        {% if form.treasurer.errors %}
+                                            <div class="text-danger">{{ form.treasurer.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.organizer.label_tag }}
+                                        {{ form.organizer }}
+                                        {% if form.organizer.errors %}
+                                            <div class="text-danger">{{ form.organizer.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #8b5cf6; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Teachers Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:diocese_teachers_detail' diocese.id %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media (max-width: 768px) {
+    .card-header h5 {
+        font-size: 1rem;
+    }
+    
+    .card-header div {
+        float: none !important;
+        margin-top: 10px;
+    }
+    
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

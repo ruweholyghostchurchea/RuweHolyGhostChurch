@@ -1,0 +1,227 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Diocese Youth Office - {{ diocese.name }} - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}Diocese Youth Office - {{ diocese.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-users" style="color: #f59e0b; margin-right: 10px;"></i>
+                    {{ diocese.name }} - Youth Office
+                </h5>
+                <div style="float: right;">
+                    {% if office %}
+                        <a href="{% url 'ruwe_administration:diocese_youth_edit' office.pk %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    {% else %}
+                        <a href="{% url 'ruwe_administration:diocese_youth_add' diocese.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Create Office
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'ruwe_administration:index' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if office %}
+                    <div class="row">
+                        <!-- Office Information -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #f59e0b; padding-left: 10px;">
+                                    Office Information
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Office Name:</strong> {{ office.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Diocese:</strong> {{ diocese.name }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Identifier:</strong> <span style="color: #22c55e; font-weight: bold;">{{ office.identifier }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Status:</strong> 
+                                    <span class="badge {% if office.is_active %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if office.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Created:</strong> {{ office.created_at|date:"M d, Y" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Leadership Positions -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                    Leadership
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Chairperson:</strong> {{ office.chairperson.full_name|default:"Not Assigned" }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Chairperson:</strong> {{ office.assistant_chairperson.full_name|default:"Not Assigned" }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Secretary:</strong> {{ office.secretary.full_name|default:"Not Assigned" }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Secretary:</strong> {{ office.assistant_secretary.full_name|default:"Not Assigned" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Financial & Organizational Positions -->
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #3b82f6; padding-left: 10px;">
+                                    Financial
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Treasurer:</strong> {{ office.treasurer.full_name|default:"Not Assigned" }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Treasurer:</strong> {{ office.assistant_treasurer.full_name|default:"Not Assigned" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #22c55e; padding-left: 10px;">
+                                    Organizational
+                                </h6>
+                                <div class="info-item">
+                                    <strong>Organizer:</strong> {{ office.organizer.full_name|default:"Not Assigned" }}
+                                </div>
+                                <div class="info-item">
+                                    <strong>Assistant Organizer:</strong> {{ office.assistant_organizer.full_name|default:"Not Assigned" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Representatives -->
+                        <div class="col-12 mb-4">
+                            <div class="info-box">
+                                <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #8b5cf6; padding-left: 10px;">
+                                    Youth Representatives
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Pastorate Youth Representatives ({{ office.pastorate_youth_representatives.count }}):</strong>
+                                        {% if office.pastorate_youth_representatives.all %}
+                                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                                {% for rep in office.pastorate_youth_representatives.all %}
+                                                <li class="rep-item">{{ rep.full_name }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p style="color: #9ca3af; font-style: italic; margin-top: 5px;">No representatives assigned</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Church Youth Representatives ({{ office.church_youth_representatives.count }}):</strong>
+                                        {% if office.church_youth_representatives.all %}
+                                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                                {% for rep in office.church_youth_representatives.all %}
+                                                <li class="rep-item">{{ rep.full_name }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p style="color: #9ca3af; font-style: italic; margin-top: 5px;">No representatives assigned</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        {% if office.description %}
+                            <div class="col-12">
+                                <div class="info-box">
+                                    <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #f59e0b; padding-left: 10px;">
+                                        Description
+                                    </h6>
+                                    <p>{{ office.description|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-users fa-4x text-muted"></i>
+                        <h4>No Youth Office Created</h4>
+                        <p class="text-muted">Create a Youth Office for {{ diocese.name }} to manage youth activities.</p>
+                        <a href="{% url 'ruwe_administration:diocese_youth_add' diocese.id %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Youth Office
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.info-box {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.info-item {
+    color: #e5e7eb;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.rep-item {
+    color: #e5e7eb;
+    margin-bottom: 5px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+.empty-state i {
+    margin-bottom: 20px;
+}
+
+.empty-state h4 {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .card-header h5 {
+        font-size: 1rem;
+    }
+    
+    .card-header div {
+        float: none !important;
+        margin-top: 10px;
+    }
+    
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+</style>
+{% endblock %}
