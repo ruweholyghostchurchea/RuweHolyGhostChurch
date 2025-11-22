@@ -174,30 +174,60 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ruweholyghostchurch.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# ============================================================================
+# DATABASE CONFIGURATION - PostgreSQL (Python 3.12 Required)
+# ============================================================================
+# CRITICAL: This requires psycopg2-binary to be installed for Python 3.12
+# If you get "ModuleNotFoundError: No module named 'psycopg2._psycopg'":
+#   python3 -m pip install psycopg2-binary==2.9.10 --force-reinstall --no-cache-dir
+#
+# The database configuration supports two modes:
+#   1. Individual environment variables (DATABASE_NAME, DATABASE_USER, etc.)
+#   2. Single DATABASE_URL connection string (preferred for Replit/production)
+#
+# Replit Auto-Configuration:
+#   - When you create a PostgreSQL database in Replit, it automatically sets DATABASE_URL
+#   - The DATABASE_URL is parsed by dj-database-url package
+#   - This provides: host, port, user, password, database name all in one URL
+# ============================================================================
 
 import os
 
-# Use PostgreSQL for both development and production
+# Default PostgreSQL configuration using individual environment variables
+# This is used if DATABASE_URL is NOT provided
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql',  # Requires psycopg2-binary
         'NAME': os.environ.get('DATABASE_NAME', 'ruweholyghostchurch_db'),
         'USER': os.environ.get('DATABASE_USER', 'postgres'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
         'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
         'PORT': os.environ.get('DATABASE_PORT', '5432'),
         'OPTIONS': {
-            'sslmode': 'prefer',
+            'sslmode': 'prefer',  # Use SSL if available, fallback to non-SSL
         },
     }
 }
 
-# If DATABASE_URL is provided (for production/Replit PostgreSQL), use it
+# Override with DATABASE_URL if provided (Replit managed database)
+# This takes precedence over individual environment variables above
+# Format: postgresql://user:password@host:port/database
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
     DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'])
+    
+# ============================================================================
+# DATABASE TROUBLESHOOTING:
+# 
+# Error: "Error loading psycopg2 or psycopg module"
+# Solution: python3 -m pip install psycopg2-binary --force-reinstall
+#
+# Error: "fe_sendauth: no password supplied"
+# Solution: Check DATABASE_URL or DATABASE_PASSWORD is set correctly
+#
+# Error: "connection refused"
+# Solution: Check DATABASE_HOST and DATABASE_PORT, ensure PostgreSQL is running
+# ============================================================================
 
 
 # Password validation

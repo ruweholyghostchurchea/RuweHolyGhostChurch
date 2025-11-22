@@ -8,6 +8,70 @@ The project is ambitious, aiming to provide a multi-subdomain architecture with 
 
 Preferred communication style: Simple, everyday language.
 
+# 🔴 CRITICAL: Python Version Management
+
+## Python Version: 3.12 (LOCKED)
+
+This project **MUST** use Python 3.12. Any other version will cause package import failures, especially with `psycopg2-binary` and `Pillow`.
+
+### Version Lock Configuration
+- **Module**: `python-3.12` (in `.replit` file)
+- **Lock File**: `.python-version` contains `3.12`
+- **System Python**: Uses Nix Python 3.12 from `/nix/store/.../python3-3.12.x/`
+
+### Installing Packages (CRITICAL - Follow Exactly)
+```bash
+# ✅ ALWAYS use this method:
+python3 -m pip install -r requirements.txt
+
+# ❌ NEVER use these:
+pip install -r requirements.txt        # Wrong - may use wrong Python
+pip3 install -r requirements.txt       # Wrong - may use wrong Python
+```
+
+### Common Errors & Quick Fixes
+
+**Error**: "ModuleNotFoundError: No module named 'psycopg2._psycopg'"
+```bash
+python3 -m pip install psycopg2-binary==2.9.10 --force-reinstall --no-cache-dir
+```
+
+**Error**: "Cannot use ImageField because Pillow is not installed"
+```bash
+python3 -m pip install Pillow==11.3.0 --force-reinstall --no-cache-dir
+```
+
+**Error**: "Couldn't import Django"
+```bash
+python3 -m pip install -r requirements.txt --force-reinstall
+```
+
+### Verification Commands
+```bash
+# Check Python version (should be 3.12.x)
+python3 --version
+
+# Verify correct Python path
+which python3  # Should show /nix/store/.../python3-3.12.x/bin/python3
+
+# Test critical packages
+python3 -c "import psycopg2; print('✅ psycopg2 OK')"
+python3 -c "from PIL import Image; print('✅ Pillow OK')"
+python3 -c "import django; print('✅ Django OK')"
+```
+
+### Why This Matters
+- C extensions in `psycopg2-binary` and `Pillow` are compiled for specific Python versions
+- Python 3.12 vs 3.11 have different internal APIs (`_psycopg`, `_imaging`)
+- Mixing versions causes `ModuleNotFoundError` even when packages are "installed"
+
+### Documentation Files
+- **`PYTHON_VERSION_GUIDE.md`**: Comprehensive troubleshooting guide
+- **`requirements.txt`**: All package dependencies with comments
+- **`.python-version`**: Version lock file (contains `3.12`)
+
+**Last Updated**: November 22, 2025
+
 # System Architecture
 
 ## Core Framework

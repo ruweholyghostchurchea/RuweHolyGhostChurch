@@ -1,4 +1,4 @@
-modules = ["web", "nodejs-20", "python-3.11"]
+modules = ["web", "nodejs-20"]
 run = "pip install -r requirements.txt"
 
 [nix]
@@ -84,10 +84,6 @@ waitForPort = 5000
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 33355
-externalPort = 3001
 
 [[ports]]
 localPort = 45201
