@@ -1,0 +1,92 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Church Travel Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Church Travel Office - {{ church.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-plane" style="color: #7c3aed; margin-right: 10px;"></i>
+                    {{ action }} Travel Office - {{ church.name }}
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:church_travel_detail' church.id %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Travel Office Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                Travel Office Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form.chairperson.label_tag }}
+                                        {{ form.chairperson }}
+                                        {% if form.chairperson.errors %}
+                                            <div class="text-danger">{{ form.chairperson.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form.treasurer.label_tag }}
+                                        {{ form.treasurer }}
+                                        {% if form.treasurer.errors %}
+                                            <div class="text-danger">{{ form.treasurer.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form.organizer.label_tag }}
+                                        {{ form.organizer }}
+                                        {% if form.organizer.errors %}
+                                            <div class="text-danger">{{ form.organizer.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #7c3aed; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Travel Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:church_travel_detail' church.id %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

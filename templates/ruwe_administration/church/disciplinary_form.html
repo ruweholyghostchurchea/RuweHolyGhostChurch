@@ -1,0 +1,98 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Church Disciplinary Office - RuweHolyGhostChurch{% endblock %}
+
+{% block page_title %}{{ action }} Church Disciplinary Office - {{ church.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-gavel" style="color: #dc2626; margin-right: 10px;"></i>
+                    {{ action }} Disciplinary Office - {{ church.name }}
+                </h5>
+                <div style="float: right;">
+                    <a href="{% url 'ruwe_administration:church_disciplinary_detail' church.id %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Disciplinary Office Positions -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                Disciplinary Office Positions
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.chairperson.label_tag }}
+                                        {{ form.chairperson }}
+                                        {% if form.chairperson.errors %}
+                                            <div class="text-danger">{{ form.chairperson.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.messenger.label_tag }}
+                                        {{ form.messenger }}
+                                        {% if form.messenger.errors %}
+                                            <div class="text-danger">{{ form.messenger.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Committee Members -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                Committee Members
+                            </h6>
+                            <div class="form-group">
+                                {{ form.members.label_tag }}
+                                {{ form.members }}
+                                {% if form.members.errors %}
+                                    <div class="text-danger">{{ form.members.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Hold down "Control", or "Command" on a Mac, to select multiple members.</small>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <h6 style="color: #ffffff; margin-bottom: 15px; border-left: 4px solid #dc2626; padding-left: 10px;">
+                                Description & Responsibilities
+                            </h6>
+                            <div class="form-group">
+                                {{ form.description.label_tag }}
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }} Disciplinary Office
+                        </button>
+                        <a href="{% url 'ruwe_administration:church_disciplinary_detail' church.id %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
