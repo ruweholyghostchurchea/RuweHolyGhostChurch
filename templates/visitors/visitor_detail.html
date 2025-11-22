@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Main Visitor Information -->
+        <div class="col-12 col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-user"></i> Visitor Details</h5>
+                    <div class="btn-group">
+                        <a href="{% url 'visitors:visitor_edit' visitor.id %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        {% if not visitor.converted_to_member %}
+                        <a href="{% url 'visitors:convert_to_member' visitor.id %}" class="btn btn-sm btn-success">
+                            <i class="fas fa-user-check"></i> Convert to Member
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <strong>Full Name:</strong><br>{{ visitor.full_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Identifier:</strong><br>{{ visitor.identifier }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Phone:</strong><br>{{ visitor.phone_number|default:"N/A" }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Email:</strong><br>{{ visitor.email_address|default:"N/A" }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Church:</strong><br>{{ visitor.church.name|default:"N/A" }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>First Visit:</strong><br>{{ visitor.first_visit_date|date:"M d, Y" }}
+                        </div>
+                        <div class="col-12">
+                            <strong>Status:</strong><br>
+                            {% if visitor.converted_to_member %}
+                                <span class="badge bg-success">Converted to Member</span>
+                            {% elif visitor.interested_in_membership %}
+                                <span class="badge bg-warning">Interested in Membership</span>
+                            {% else %}
+                                <span class="badge bg-primary">Active Visitor</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-tasks"></i> Quick Actions</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'visitors:register_visit' visitor.id %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-calendar-check"></i> Register Another Visit
+                    </a>
+                    <a href="{% url 'visitors:record_followup' visitor.id %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-phone"></i> Record Follow-up
+                    </a>
+                    {% if not visitor.converted_to_member %}
+                    <a href="{% url 'visitors:convert_to_member' visitor.id %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-check"></i> Convert to Member
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visits History -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-history"></i> Visit History ({{ visits.count }} visit{{ visits.count|pluralize}})</h5>
+        </div>
+        <div class="card-body">
+            {% if visits %}
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Visit #</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for visit in visits %}
+                        <tr>
+                            <td>{{ visit.visit_number }}</td>
+                            <td>{{ visit.visit_date|date:"M d, Y" }}</td>
+                            <td>{{ visit.get_visit_type_display }}</td>
+                            <td>{{ visit.notes|truncatewords:10 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No additional visits recorded</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Follow-ups -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-phone-alt"></i> Follow-ups ({{ follow_ups.count }})</h5>
+        </div>
+        <div class="card-body">
+            {% if follow_ups %}
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for followup in follow_ups %}
+                        <tr>
+                            <td>{{ followup.follow_up_date|date:"M d, Y" }}</td>
+                            <td>{{ followup.get_follow_up_method_display }}</td>
+                            <td><span class="badge bg-info">{{ followup.get_status_display }}</span></td>
+                            <td>{{ followup.notes|truncatewords:10 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No follow-ups recorded</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

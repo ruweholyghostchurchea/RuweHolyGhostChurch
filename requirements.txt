@@ -51,3 +51,14 @@ starkbank-ecdsa==2.2.0
 packaging==25.0
 setuptools==80.4.0
 wheel==0.45.1
+dj-database-url==3.0.1
+Django==5.2.4
+django-ckeditor-5==0.2.17
+django-cors-headers==4.7.0
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.5.0
+gunicorn==23.0.0
+pillow==11.3.0
+psycopg2-binary==2.9.10
+python-dotenv==1.1.0
+whitenoise==6.9.0

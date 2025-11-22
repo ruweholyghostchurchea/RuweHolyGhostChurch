@@ -1,18 +1,112 @@
-
 {% extends 'base.html' %}
 
-{% block title %}Attendance - RuweHolyGhostChurch{% endblock %}
-
-{% block page_title %}Attendance Management{% endblock %}
+{% block title %}{{ page_title }} - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title">
-            <i class="fas fa-calendar-check" style="color: #dc2626; margin-right: 10px;"></i>
-            Service Attendance
-        </h5>
+<div class="container-fluid py-4">
+    <!-- Page Header with Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0"><i class="fas fa-calendar-check"></i> Attendance Management</h2>
+        <div class="btn-group">
+            <a href="{% url 'attendance:session_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Session
+            </a>
+            <a href="{% url 'attendance:session_list' %}" class="btn btn-outline-primary">
+                <i class="fas fa-list"></i> All Sessions
+            </a>
+            <a href="{% url 'attendance:attendance_statistics' %}" class="btn btn-info">
+                <i class="fas fa-chart-bar"></i> Statistics
+            </a>
+        </div>
     </div>
-    <p>Attendance tracking system coming soon...</p>
+
+    <!-- Quick Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sessions</h5>
+                    <h2 class="mb-0">{{ total_sessions|default:0 }}</h2>
+                    <small>All Time</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">This Month</h5>
+                    <h2 class="mb-0">{{ sessions_this_month|default:0 }}</h2>
+                    <small>Sessions</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Avg Attendance</h5>
+                    <h2 class="mb-0">{{ average_attendance|default:0|floatformat:0 }}</h2>
+                    <small>Per Session</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Absences</h5>
+                    <h2 class="mb-0">{{ consecutive_absences|default:0 }}</h2>
+                    <small>Consecutive (3+)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Sessions -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Recent Sessions</h5>
+            <a href="{% url 'attendance:session_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Session Name</th>
+                            <th class="d-none d-md-table-cell">Church</th>
+                            <th>Date</th>
+                            <th>Attendance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in recent_sessions %}
+                        <tr>
+                            <td>
+                                <strong>{{ session.session_name }}</strong><br>
+                                <small class="text-muted">{{ session.get_session_type_display }}</small>
+                            </td>
+                            <td class="d-none d-md-table-cell">{{ session.church.name }}</td>
+                            <td>{{ session.session_date|date:"M d, Y" }}</td>
+                            <td>
+                                {{ session.total_present|default:0 }} / {{ session.total_expected|default:0 }}
+                                {% if session.is_locked %}<span class="badge bg-secondary">Locked</span>{% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'attendance:session_detail' session.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <p class="text-muted mb-0">No recent sessions</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

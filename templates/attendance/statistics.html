@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance Statistics - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}Attendance Statistics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0"><i class="fas fa-chart-line"></i> Attendance Statistics</h2>
+        <a href="{% url 'attendance:index' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sessions</h5>
+                    <h2 class="mb-0">{{ total_sessions }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">This Month</h5>
+                    <h2 class="mb-0">{{ sessions_this_month }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Avg Attendance</h5>
+                    <h2 class="mb-0">{{ overall_average|floatformat:0 }}%</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Total Records</h5>
+                    <h2 class="mb-0">{{ total_records }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- By Session Type -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">By Session Type</h5></div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Type</th><th class="text-end">Sessions</th><th class="text-end">Avg %</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for item in by_session_type %}
+                            <tr>
+                                <td>{{ item.session_type }}</td>
+                                <td class="text-end">{{ item.count }}</td>
+                                <td class="text-end">{{ item.avg_percentage|floatformat:1 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">By Church</h5></div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Church</th><th class="text-end">Sessions</th><th class="text-end">Avg %</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for item in by_church %}
+                            <tr>
+                                <td>{{ item.church__name }}</td>
+                                <td class="text-end">{{ item.count }}</td>
+                                <td class="text-end">{{ item.avg_percentage|floatformat:1 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Sessions Performance -->
+    <div class="card">
+        <div class="card-header"><h5 class="mb-0">Recent Sessions Performance</h5></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Session</th>
+                            <th>Church</th>
+                            <th>Date</th>
+                            <th class="text-end">Present</th>
+                            <th class="text-end">Expected</th>
+                            <th class="text-end">%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in recent_sessions %}
+                        <tr>
+                            <td><a href="{% url 'attendance:session_detail' session.id %}">{{ session.session_name }}</a></td>
+                            <td>{{ session.church.name }}</td>
+                            <td>{{ session.session_date|date:"M d, Y" }}</td>
+                            <td class="text-end">{{ session.total_present }}</td>
+                            <td class="text-end">{{ session.total_expected }}</td>
+                            <td class="text-end">
+                                <span class="badge {% if session.attendance_percentage >= 80 %}bg-success{% elif session.attendance_percentage >= 60 %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ session.attendance_percentage|floatformat:0 }}%
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

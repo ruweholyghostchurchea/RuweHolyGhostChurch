@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Session Info Header -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="mb-3"><i class="fas fa-calendar-check"></i> {{ session.session_name }}</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Church:</strong> {{ session.church.name }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Date:</strong> {{ session.session_date|date:"M d, Y" }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Type:</strong> {{ session.get_session_type_display }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Attendance Form -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-check-double"></i> Mark Attendance (Bulk)</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Search Filter -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search members...">
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button type="button" class="btn btn-sm btn-success" onclick="markAllPresent()">
+                            <i class="fas fa-check-circle"></i> Mark All Present
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="markAllAbsent()">
+                            <i class="fas fa-times-circle"></i> Mark All Absent
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Members List -->
+                <div class="table-responsive">
+                    <table class="table table-hover" id="membersTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Member</th>
+                                <th class="d-none d-md-table-cell">Identifier</th>
+                                <th class="text-center">Status</th>
+                                <th class="d-none d-lg-table-cell">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ form.management_form }}
+                            {% for member_form in form %}
+                            <tr class="member-row">
+                                <td>
+                                    <strong class="member-name">{{ member_form.instance.member.full_name }}</strong>
+                                    {{ member_form.member }}
+                                </td>
+                                <td class="d-none d-md-table-cell">{{ member_form.instance.member.identifier }}</td>
+                                <td class="text-center">
+                                    {{ member_form.status }}
+                                </td>
+                                <td class="d-none d-lg-table-cell">
+                                    {{ member_form.notes }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'attendance:session_detail' session.id %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Save Attendance
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    let searchValue = this.value.toLowerCase();
+    let rows = document.querySelectorAll('.member-row');
+    
+    rows.forEach(row => {
+        let memberName = row.querySelector('.member-name').textContent.toLowerCase();
+        if (memberName.includes(searchValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Mark all present
+function markAllPresent() {
+    document.querySelectorAll('select[name$="-status"]').forEach(select => {
+        select.value = 'present';
+    });
+}
+
+// Mark all absent
+function markAllAbsent() {
+    document.querySelectorAll('select[name$="-status"]').forEach(select => {
+        select.value = 'absent';
+    });
+}
+</script>
+{% endblock %}

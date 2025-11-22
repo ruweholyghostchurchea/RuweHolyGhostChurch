@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Absence Tracking - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}Absence Tracking{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0"><i class="fas fa-exclamation-triangle"></i> Absence Tracking</h2>
+        <a href="{% url 'attendance:index' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <!-- Alert Summary -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Critical Alerts</h5>
+                    <h2 class="mb-0">{{ critical_count }}</h2>
+                    <small>3+ consecutive absences</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Warning Alerts</h5>
+                    <h2 class="mb-0">{{ warning_count }}</h2>
+                    <small>2 consecutive absences</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Total Monitored</h5>
+                    <h2 class="mb-0">{{ total_monitored }}</h2>
+                    <small>Active members</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absence Alerts Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Members with Consecutive Absences</h5>
+        </div>
+        <div class="card-body p-0">
+            {% if absence_alerts %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Member</th>
+                            <th class="d-none d-md-table-cell">Church</th>
+                            <th class="text-center">Consecutive Absences</th>
+                            <th class="d-none d-lg-table-cell">Last Attendance</th>
+                            <th class="text-center">Alert Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alert in absence_alerts %}
+                        <tr>
+                            <td>
+                                <strong>{{ alert.member.full_name }}</strong><br>
+                                <small class="text-muted">{{ alert.member.identifier }}</small>
+                            </td>
+                            <td class="d-none d-md-table-cell">{{ alert.member.user_home_church.name|default:"N/A" }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-dark">{{ alert.consecutive_count }} times</span>
+                            </td>
+                            <td class="d-none d-lg-table-cell">
+                                {% if alert.last_present_session %}
+                                    {{ alert.last_present_session.session_date|date:"M d, Y" }}
+                                {% else %}
+                                    <span class="text-muted">Never present</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if alert.consecutive_count >= 3 %}
+                                    <span class="badge bg-danger">CRITICAL</span>
+                                {% elif alert.consecutive_count == 2 %}
+                                    <span class="badge bg-warning">WARNING</span>
+                                {% else %}
+                                    <span class="badge bg-info">MONITOR</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if alert.member.phone_number %}
+                                <a href="tel:{{ alert.member.phone_number }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-phone"></i> Call
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <p class="text-muted mb-0">No absence alerts at this time. Great job!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

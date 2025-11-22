@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Visit - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}Register Visit{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-calendar-plus"></i> Register Visit for {{ visitor.full_name }}</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Visit Date <span class="text-danger">*</span></label>
+                                {{ form.visit_date }}
+                                {% if form.visit_date.errors %}<div class="text-danger small">{{ form.visit_date.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Visit Type</label>
+                                {{ form.visit_type }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                {{ form.notes }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'visitors:visitor_detail' visitor.id %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Register Visit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

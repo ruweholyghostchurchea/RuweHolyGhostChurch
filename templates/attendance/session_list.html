@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0"><i class="fas fa-list"></i> {{ page_title }}</h2>
+        <a href="{% url 'attendance:session_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> New Session</a>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-12 col-md-4">
+                    <select name="church" class="form-select">
+                        <option value="">All Churches</option>
+                        {% for church in churches %}
+                        <option value="{{ church.id }}">{{ church.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <select name="session_type" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="sunday_service">Sunday Service</option>
+                        <option value="bible_study">Bible Study</option>
+                        <option value="prayer_meeting">Prayer Meeting</option>
+                        <option value="special_event">Special Event</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <input type="date" name="start_date" class="form-control" placeholder="Start Date">
+                </div>
+                <div class="col-12 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sessions Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">{{ total_count }} Session{{ total_count|pluralize }}</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Session</th>
+                            <th class="d-none d-md-table-cell">Church</th>
+                            <th>Date</th>
+                            <th>Attendance</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in sessions %}
+                        <tr>
+                            <td>
+                                <strong>{{ session.session_name }}</strong><br>
+                                <small class="text-muted">{{ session.get_session_type_display }}</small>
+                            </td>
+                            <td class="d-none d-md-table-cell">{{ session.church.name }}</td>
+                            <td>{{ session.session_date|date:"M d, Y" }}</td>
+                            <td>
+                                <strong>{{ session.total_present|default:0 }}</strong> / {{ session.total_expected|default:0 }}
+                                <small class="text-muted">({{ session.attendance_percentage|floatformat:0 }}%)</small>
+                            </td>
+                            <td>
+                                {% if session.is_locked %}
+                                    <span class="badge bg-secondary">Locked</span>
+                                {% else %}
+                                    <span class="badge bg-success">Open</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'attendance:session_detail' session.id %}" class="btn btn-outline-primary">View</a>
+                                    {% if not session.is_locked %}
+                                    <a href="{% url 'attendance:mark_attendance' session.id %}" class="btn btn-outline-success">Mark</a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <p class="text-muted mb-0">No sessions found</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if sessions.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if sessions.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ sessions.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">Page {{ sessions.number }} of {{ sessions.paginator.num_pages }}</span></li>
+            {% if sessions.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ sessions.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Visitor Statistics - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}Visitor Statistics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0"><i class="fas fa-chart-bar"></i> Visitor Statistics & Demographics</h2>
+        <a href="{% url 'visitors:index' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Visitors</h5>
+                    <h2 class="mb-0">{{ total_visitors }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">This Month</h5>
+                    <h2 class="mb-0">{{ visitors_this_month }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Converted</h5>
+                    <h2 class="mb-0">{{ converted_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Conversion Rate</h5>
+                    <h2 class="mb-0">{{ conversion_rate|floatformat:1 }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demographics Tables -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">By Gender</h5></div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead><tr><th>Gender</th><th class="text-end">Count</th><th class="text-end">%</th></tr></thead>
+                        <tbody>
+                            {% for item in by_gender %}
+                            <tr>
+                                <td>{{ item.gender|default:"Not Specified" }}</td>
+                                <td class="text-end">{{ item.count }}</td>
+                                <td class="text-end">{{ item.percentage|floatformat:1 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">By Age Group</h5></div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead><tr><th>Age Group</th><th class="text-end">Count</th><th class="text-end">%</th></tr></thead>
+                        <tbody>
+                            {% for item in by_age_group %}
+                            <tr>
+                                <td>{{ item.age_group|default:"Not Specified" }}</td>
+                                <td class="text-end">{{ item.count }}</td>
+                                <td class="text-end">{{ item.percentage|floatformat:1 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Church Distribution -->
+    <div class="card">
+        <div class="card-header"><h5 class="mb-0">Visitors by Church</h5></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr><th>Church</th><th class="text-end">Total Visitors</th><th class="text-end">This Month</th><th class="text-end">Converted</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for item in by_church %}
+                        <tr>
+                            <td>{{ item.church__name|default:"Unknown" }}</td>
+                            <td class="text-end">{{ item.count }}</td>
+                            <td class="text-end">{{ item.this_month|default:0 }}</td>
+                            <td class="text-end">{{ item.converted|default:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

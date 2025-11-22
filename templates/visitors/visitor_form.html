@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - Ruwe Holy Ghost Church{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> {{ action }} Visitor</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Personal Information -->
+                        <h6 class="border-bottom pb-2 mb-3">Personal Information</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}<div class="text-danger small">{{ form.first_name.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}<div class="text-danger small">{{ form.last_name.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Gender</label>
+                                {{ form.gender }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Age Group</label>
+                                {{ form.age_group }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Date of Birth</label>
+                                {{ form.date_of_birth }}
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <h6 class="border-bottom pb-2 mb-3">Contact Information</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                {{ form.phone_number }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address</label>
+                                {{ form.email_address }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Physical Address</label>
+                                {{ form.physical_address }}
+                            </div>
+                        </div>
+
+                        <!-- Church Information -->
+                        <h6 class="border-bottom pb-2 mb-3">Church Information</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-8">
+                                <label class="form-label">Church <span class="text-danger">*</span></label>
+                                {{ form.church }}
+                                {% if form.church.errors %}<div class="text-danger small">{{ form.church.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">First Visit Date</label>
+                                {{ form.first_visit_date }}
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <h6 class="border-bottom pb-2 mb-3">Additional Information</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    {{ form.interested_in_membership }}
+                                    <label class="form-check-label">Interested in Membership</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Prayer Request</label>
+                                {{ form.prayer_request }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                {{ form.notes }}
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'visitors:visitor_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {{ action }} Visitor
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
